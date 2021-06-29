@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CART_ADD_ITEM } from "../constants/cartConstants";
+import { CART_ADD_ITEM, CART_REMOVE_ITEM } from "../constants/cartConstants";
 
 export const addToCart = (id, quantity) => async (dispatch, getState) => {
   // getState gets any reducer from store, state tree
@@ -17,5 +17,15 @@ export const addToCart = (id, quantity) => async (dispatch, getState) => {
     },
   });
 
+  localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
+};
+
+export const removeFromCart = (id) => (dispatch, getState) => {
+  //getState to get all items in cart
+  //set localstorage cart minus removed item
+  dispatch({
+    type: CART_REMOVE_ITEM,
+    payload: id,
+  });
   localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
 };
