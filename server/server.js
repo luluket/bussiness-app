@@ -22,8 +22,12 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/products", productRoutes); // anything that goes to that routes calles that module
-app.use("/api/users", userRoutes); // anything that goes to that routes calles that module
-app.use("/api/orders", orderRoutes); // anything that goes to that routes calles that module
+app.use("/api/users", userRoutes);
+app.use("/api/orders", orderRoutes);
+
+app.get("/api/config/paypal", (req, res) =>
+  res.send(process.env.PAYPAL_CLIENT_ID)
+); // use this route upon paying
 
 app.use(notFound);
 
