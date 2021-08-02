@@ -3,9 +3,11 @@ import dotenv from "dotenv";
 import colors from "colors";
 import users from "./data/users.js";
 import products from "./data/products.js";
+import articles from "./data/articles.js";
 import User from "./models/User.js";
 import Product from "./models/Product.js";
 import Order from "./models/Order.js";
+import Article from "./models/Article.js";
 import connectDB from "./config/db.js";
 
 dotenv.config();
@@ -14,20 +16,20 @@ connectDB();
 
 const importData = async () => {
   try {
-    console.log("asdasd");
     await Order.deleteMany();
     await Product.deleteMany();
     await User.deleteMany();
-    console.log("a");
+    await Article.deleteMany();
 
     const createdUsers = await User.insertMany(users);
-    console.log("ab");
 
     const adminUser = createdUsers.find(({ isAdmin }) => isAdmin === true);
 
     const sampleProducts = products.map((product) => {
       return { ...product, user: adminUser };
     });
+
+    await Article.insertMany(articles);
 
     await Product.insertMany(sampleProducts);
 
