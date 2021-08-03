@@ -4,12 +4,17 @@ import { listArticles } from "../actions/articleActions";
 import { Table } from "react-bootstrap";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import { useHistory } from "react-router-dom";
 
 const ArticleListScreen = () => {
   const dispatch = useDispatch();
-
+  const history = useHistory();
   const articleList = useSelector((state) => state.articleList);
   const { loading, error, articles } = articleList;
+
+  const handleRowClick = (id) => {
+    history.push(`/article/${id}`);
+  };
 
   useEffect(() => {
     dispatch(listArticles());
@@ -32,9 +37,12 @@ const ArticleListScreen = () => {
             <tbody>
               {articles.map((article) => {
                 return (
-                  <tr key={article._id}>
-                    <td>{article._id}aa</td>
-                    <td>{article.name}aa</td>
+                  <tr
+                    key={article._id}
+                    onClick={() => handleRowClick(article._id)}
+                  >
+                    <td>{article._id}</td>
+                    <td>{article.name}</td>
                   </tr>
                 );
               })}
