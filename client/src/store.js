@@ -35,6 +35,7 @@ import {
   articleListReducer,
   articleDetailsReducer,
   articleUpdateReducer,
+  articleCreateReducer,
 } from "./reducers/articleReducers.js";
 
 const reducer = combineReducers({
@@ -62,6 +63,7 @@ const reducer = combineReducers({
 
   articleList: articleListReducer,
   articleDetails: articleDetailsReducer,
+  articleCreate: articleCreateReducer,
   articleUpdate: articleUpdateReducer,
 });
 const cartItemsFromStorage = localStorage.getItem("cartItems")

@@ -10,7 +10,6 @@ const ArticleScreen = ({ match }) => {
   const [type, setType] = useState("");
   const [pdv, setPdv] = useState("");
   const [description, setDescription] = useState("");
-  const [countInStock, setCountInStock] = useState(0);
 
   const dispatch = useDispatch();
 
@@ -28,7 +27,6 @@ const ArticleScreen = ({ match }) => {
     setType(article.type);
     setPdv(article.pdv);
     setDescription(article.description);
-    setCountInStock(article.countInStock);
 
     dispatch(listArticleDetails(match.params.id));
   }, [dispatch, loading]);
@@ -99,10 +97,6 @@ const ArticleScreen = ({ match }) => {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               ></Form.Control>
-            </Form.Group>
-
-            <Form.Group>
-              <Form.Label>Raspoloživo: {article.countInStock}</Form.Label>
             </Form.Group>
 
             <Button type="submit" variant="primary">

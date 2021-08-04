@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { listArticles } from "../actions/articleActions";
-import { Table } from "react-bootstrap";
+import { Table, Button, Row, Col } from "react-bootstrap";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
+import { createArticle } from "../actions/articleActions";
 
 const ArticleListScreen = () => {
   const dispatch = useDispatch();
@@ -19,6 +20,11 @@ const ArticleListScreen = () => {
   useEffect(() => {
     dispatch(listArticles());
   }, [dispatch]);
+
+  const handleButtonClick = () => {
+    history.push("/articles/create");
+  };
+
   return (
     <>
       {loading ? (
@@ -27,6 +33,21 @@ const ArticleListScreen = () => {
         <Message variant="danger">{error}</Message>
       ) : (
         <>
+          <Row className="align-items-center">
+            <Col>
+              <h1>Artikli</h1>
+            </Col>
+            <Col>
+              <Button
+                type="button"
+                className="mb-3"
+                onClick={handleButtonClick}
+              >
+                <i className="fas fa-plus"></i> Novi Artikal
+              </Button>
+            </Col>
+          </Row>
+
           <Table striped bordered hover responsive>
             <thead>
               <tr>

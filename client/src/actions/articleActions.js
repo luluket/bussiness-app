@@ -9,6 +9,9 @@ import {
   ARTICLE_UPDATE_REQUEST,
   ARTICLE_UPDATE_SUCCESS,
   ARTICLE_UPDATE_FAIL,
+  ARTICLE_CREATE_REQUEST,
+  ARTICLE_CREATE_SUCCESS,
+  ARTICLE_CREATE_FAIL,
 } from "../constants/articleConstants";
 
 export const listArticles = () => async (dispatch) => {
@@ -44,7 +47,23 @@ export const listArticleDetails = (id) => async (dispatch) => {
   }
 };
 
-export const updateArticle = (article) => async (dispatch, getState) => {
+export const createArticle = (article) => async (dispatch) => {
+  try {
+    dispatch({ type: ARTICLE_CREATE_REQUEST });
+    const { data } = await axios.post("/api/articles", article);
+    dispatch({ type: ARTICLE_CREATE_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: ARTICLE_CREATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const updateArticle = (article) => async (dispatch) => {
   try {
     dispatch({ type: ARTICLE_UPDATE_REQUEST });
     const { data } = await axios.put(`/api/articles/${article._id}`, article);

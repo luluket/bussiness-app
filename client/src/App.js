@@ -22,6 +22,7 @@ import ProductEditScreen from "./screens/ProductEditScreen";
 import MenuScreen from "./screens/MenuScreen";
 import ArticleListScreen from "./screens/ArticleListScreen";
 import ArticleScreen from "./screens/ArticleScreen";
+import ArticleCreateScreen from "./screens/ArticleCreateScreen";
 
 const App = () => {
   return (
@@ -30,8 +31,10 @@ const App = () => {
       <main className="py-3">
         <Container>
           <Route path="/menu" component={MenuScreen} />
-          <Route path="/articles" component={ArticleListScreen} />
+          <Route path="/articles" component={ArticleListScreen} exact />
           <Route path="/article/:id" component={ArticleScreen} />
+          <Route path="/articles/create" component={ArticleCreateScreen} />
+
           <Route path="/shipping" component={ShippingScreen} />
           <Route path="/order/:id" component={OrderScreen} />
           <Route path="/admin/orderlist" component={OrderListScreen} />

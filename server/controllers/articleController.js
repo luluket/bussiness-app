@@ -22,6 +22,21 @@ const getArticle = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Create single article
+// @route POST /api/articles
+// @access Public
+const createArticle = asyncHandler(async (req, res) => {
+  const article = new Article({
+    name: req.body.name,
+    type: req.body.type,
+    image: req.body.image,
+    pdv: req.body.pdv,
+    description: req.body.description,
+  });
+  const createdArticle = await article.save();
+  res.status(201).json(createdArticle);
+});
+
 // @desc Update single article
 // @route PUT /api/articles/:id
 // @access Public
@@ -40,4 +55,4 @@ const updateArticle = asyncHandler(async (req, res) => {
     throw new Error("Article not found");
   }
 });
-export { getArticles, getArticle, updateArticle };
+export { getArticles, getArticle, createArticle, updateArticle };

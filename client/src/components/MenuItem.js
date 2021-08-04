@@ -1,26 +1,39 @@
 import React from "react";
-import { Card } from "react-bootstrap";
+import { Card, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-const MenuItem = ({ title, image }) => {
+const MenuItem = ({ title, image, link }) => {
   return (
-    <Link to="/articles">
-      <Card className="bg-dark text-white text-uppercase menu-item">
-        <Card.Img src={image} alt="picture" style={{ opacity: "0.5" }} />
-        <Card.ImgOverlay>
-          <span
-            className="d-flex justify-content-center"
+    <Col lg={4} md={6}>
+      <Link to={link}>
+        <Card
+          className="bg-dark shadow-lg rounded text-white text-uppercase menu-item my-2"
+          style={{ position: "relative", paddingBottom: "56.2%" }}
+        >
+          <Card.Img
+            src={image}
+            alt="picture"
             style={{
-              position: "relative",
-              top: "50%",
-              fontSize: 48,
+              opacity: "0.5",
+              position: "absolute",
+              objectFit: "cover",
+              widht: "100%",
+              height: "100%",
             }}
-          >
-            {title}
-          </span>
-        </Card.ImgOverlay>
-      </Card>
-    </Link>
+          />
+          <Card.ImgOverlay className="d-flex flex-column justify-content-center">
+            <Card.Title
+              className="text-center"
+              style={{
+                fontSize: 36,
+              }}
+            >
+              {title}
+            </Card.Title>
+          </Card.ImgOverlay>
+        </Card>
+      </Link>
+    </Col>
   );
 };
 
