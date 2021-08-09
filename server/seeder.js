@@ -26,7 +26,7 @@ const importData = async () => {
 
     const createdUsers = await User.insertMany(users);
 
-    const adminUser = createdUsers.find(({ isAdmin }) => isAdmin === true);
+    const adminUser = createdUsers.find(({ role }) => role === "admin");
 
     const sampleProducts = products.map((product) => {
       return { ...product, user: adminUser };

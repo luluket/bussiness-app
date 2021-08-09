@@ -9,4 +9,18 @@ const getPartners = asyncHandler(async (req, res) => {
   res.json(partners);
 });
 
-export { getPartners };
+// @desc Create Partner
+// @route POST /api/partners
+// @access Public
+const createPartner = asyncHandler(async (req, res) => {
+  const partner = new Partner({
+    name: req.body.name,
+    surname: req.body.surname,
+    oib: req.body.oib,
+    email: req.body.email,
+    type: req.body.type,
+    role: req.body.role,
+  });
+});
+
+export { getPartners, createPartner };

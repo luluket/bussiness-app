@@ -40,7 +40,7 @@ const ProductListScreen = ({ history, match }) => {
 
   useEffect(() => {
     dispatch({ type: PRODUCT_CREATE_RESET });
-    if (!userInfo.isAdmin) {
+    if (userInfo.role !== "admin") {
       history.push("/login");
     }
     if (successCreate) {
@@ -127,7 +127,7 @@ const ProductListScreen = ({ history, match }) => {
               ))}
             </tbody>
           </Table>
-          <Paginate pages={pages} page={page} isAdmin={true} />
+          <Paginate pages={pages} page={page} role="admin" />
         </>
       )}
     </>
