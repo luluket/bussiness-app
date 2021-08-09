@@ -3,7 +3,7 @@ import { Container, Row, Col, Card } from "react-bootstrap";
 import MenuItem from "../components/MenuItem";
 import artikli from "../../src/artikli.jpg";
 import central from "../../src/central.jpg";
-import staff from "../../src/staff.png";
+import partners from "../../src/staff.png";
 import normativ from "../../src/normativ.jpg";
 import radninalog from "../../src/radninalog.png";
 import material from "../../src/skladistematerijala.jpg";
@@ -28,7 +28,7 @@ const MenuScreen = () => {
           image={products}
           link="/builtproducts"
         />
-        <MenuItem title="osoblje" image={staff} link="/staff" />
+        <MenuItem title="partneri" image={partners} link="/partners" />
         <MenuItem
           title="utrošak materijala"
           image={materialcost}
