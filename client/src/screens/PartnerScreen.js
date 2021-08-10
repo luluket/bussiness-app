@@ -1,13 +1,15 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { listPartners } from "../actions/partnerActions";
-import { Row, Card, Col, ListGroup } from "react-bootstrap";
+import { Row, Card, Col, ListGroup, Button } from "react-bootstrap";
+import { useHistory } from "react-router-dom";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import picture from "../../src/staff.png";
 
 const PartnerScreen = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const partnerList = useSelector((state) => state.partnerList);
   const { loading, error, partners } = partnerList;
@@ -16,9 +18,22 @@ const PartnerScreen = () => {
     dispatch(listPartners());
   }, [dispatch]);
 
+  const handleButtonClick = () => {
+    history.push("/partners/create");
+  };
+
   return (
     <>
-      <h1>PARTNERI</h1>
+      <Row className="align-items-center">
+        <Col>
+          <h1>Partneri</h1>
+        </Col>
+        <Col>
+          <Button type="button" className="mb-3" onClick={handleButtonClick}>
+            <i className="fas fa-plus"></i> Novi Partner
+          </Button>
+        </Col>
+      </Row>
       {loading ? (
         <Loader />
       ) : error ? (
@@ -27,7 +42,7 @@ const PartnerScreen = () => {
         <Row>
           {partners.map((partner) => {
             return (
-              <Col lg={4} md={6} className="mb-3">
+              <Col lg={4} md={6} className="mb-3" key={partner._id}>
                 <Card className="bg-dark shadow-lg rounded">
                   <Card.Img src={picture} alt="picture" variant="top" />
                   <Card.Body className="bg-light">
@@ -36,7 +51,7 @@ const PartnerScreen = () => {
                     </Card.Title>
                     <ListGroup className="list-group-flush">
                       <ListGroup.Item>
-                        <stron>oib: </stron>
+                        <strong>oib: </strong>
                         {partner.oib}
                       </ListGroup.Item>
                       <ListGroup.Item>

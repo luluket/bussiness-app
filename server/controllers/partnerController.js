@@ -5,7 +5,7 @@ import Partner from "../models/Partner.js";
 // @route GET /api/partners
 // @access Public
 const getPartners = asyncHandler(async (req, res) => {
-  const partners = await Partner.find({});
+  const partners = await Partner.find({}).sort({ type: "ASC" });
   res.json(partners);
 });
 
@@ -19,8 +19,9 @@ const createPartner = asyncHandler(async (req, res) => {
     oib: req.body.oib,
     email: req.body.email,
     type: req.body.type,
-    role: req.body.role,
   });
+  const createdPartner = await partner.save();
+  res.status(201).json(createdPartner);
 });
 
 export { getPartners, createPartner };

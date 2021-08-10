@@ -4,8 +4,7 @@ import { listArticles } from "../actions/articleActions";
 import { Table, Button, Row, Col } from "react-bootstrap";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import { useHistory, Link } from "react-router-dom";
-import { createArticle } from "../actions/articleActions";
+import { useHistory } from "react-router-dom";
 
 const ArticleListScreen = () => {
   const dispatch = useDispatch();

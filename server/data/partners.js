@@ -6,7 +6,7 @@ const partners = [
     oib: "46172152325",
     type: "dobavljač",
     email: "marko@fesb.hr",
-    password: encrypt.hashSync("123456", 10),
+    // password: encrypt.hashSync("123456", 10),
   },
   {
     name: "Mate",
@@ -14,7 +14,7 @@ const partners = [
     oib: "34792832129",
     type: "kupac",
     email: "mate@fesb.hr",
-    password: encrypt.hashSync("123456", 10),
+    // password: encrypt.hashSync("123456", 10),
   },
 ];
 export default partners;
