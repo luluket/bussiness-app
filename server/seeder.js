@@ -5,11 +5,13 @@ import users from "./data/users.js";
 import partners from "./data/partners.js";
 import products from "./data/products.js";
 import articles from "./data/articles.js";
+import lager from "./data/lager.js";
 import User from "./models/User.js";
 import Product from "./models/Product.js";
 import Order from "./models/Order.js";
 import Article from "./models/Article.js";
 import Partner from "./models/Partner.js";
+import Lager from "./models/Lager.js";
 import connectDB from "./config/db.js";
 
 dotenv.config();
@@ -23,16 +25,30 @@ const importData = async () => {
     await User.deleteMany();
     await Article.deleteMany();
     await Partner.deleteMany();
+    await Lager.deleteMany();
 
     const createdUsers = await User.insertMany(users);
-
     const adminUser = createdUsers.find(({ role }) => role === "admin");
-
     const sampleProducts = products.map((product) => {
       return { ...product, user: adminUser };
     });
 
-    await Article.insertMany(articles);
+    const createdArticles = await Article.insertMany(articles);
+    let sampleLager = {};
+    lager.map((item, index) => {
+      createdArticles.map((article, index2) => {
+        if (index === index2) {
+          sampleLager = {
+            ...item,
+            articleId: article._id,
+            articleName: article.name,
+            articleUnit: article.unit,
+          };
+        }
+      });
+    });
+
+    await Lager.insertMany(sampleLager);
 
     await Product.insertMany(sampleProducts);
 

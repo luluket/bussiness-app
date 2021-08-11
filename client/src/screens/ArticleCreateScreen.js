@@ -13,6 +13,7 @@ const ArticleCreateScreen = () => {
   const [image, setImage] = useState("");
   const [pdv, setPdv] = useState("");
   const [description, setDescription] = useState("");
+  const [unit, setUnit] = useState("");
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -23,6 +24,7 @@ const ArticleCreateScreen = () => {
         image,
         pdv,
         description,
+        unit,
       })
     );
   };
@@ -100,7 +102,7 @@ const ArticleCreateScreen = () => {
         </Form.Group>
 
         <Form.Group controlId="description" className="mb-3">
-          <Form.Label>Description</Form.Label>
+          <Form.Label>Opis artikla</Form.Label>
           <Form.Control
             as="textarea"
             style={{ height: 150 }}
@@ -108,6 +110,19 @@ const ArticleCreateScreen = () => {
             placeholder="Unesite opis proizvoda"
             onChange={(e) => setDescription(e.target.value)}
           ></Form.Control>
+        </Form.Group>
+
+        <Form.Group controlId="unit" className="mb-3">
+          <Form.Label>Jedinica mjere</Form.Label>
+          <Form.Control
+            as="select"
+            type="text"
+            onChange={(e) => setUnit(e.target.value)}
+          >
+            <option>Izaberite jedinicu mjere</option>
+            <option value="komad">komad</option>
+            <option value="kilogram">kilogram</option>
+          </Form.Control>
         </Form.Group>
         <Button type="submit">Unesi</Button>
       </Form>

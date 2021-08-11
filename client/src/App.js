@@ -25,6 +25,7 @@ import PartnerCreateScreen from "./screens/PartnerCreateScreen";
 import ArticleListScreen from "./screens/ArticleListScreen";
 import ArticleScreen from "./screens/ArticleScreen";
 import ArticleCreateScreen from "./screens/ArticleCreateScreen";
+import LagerScreen from "./screens/LagerScreen";
 
 const App = () => {
   return (
@@ -42,6 +43,7 @@ const App = () => {
             component={PartnerCreateScreen}
             exact
           />
+          <Route path="/central" component={LagerScreen} exact />
 
           <Route path="/shipping" component={ShippingScreen} />
           <Route path="/order/:id" component={OrderScreen} />

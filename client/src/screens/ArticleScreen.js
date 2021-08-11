@@ -10,6 +10,7 @@ const ArticleScreen = ({ match }) => {
   const [type, setType] = useState("");
   const [pdv, setPdv] = useState("");
   const [description, setDescription] = useState("");
+  const [unit, setUnit] = useState("");
 
   const dispatch = useDispatch();
 
@@ -19,14 +20,12 @@ const ArticleScreen = ({ match }) => {
   const articleUpdate = useSelector((state) => state.articleUpdate);
   const { success } = articleUpdate;
 
-  console.log(article);
-  console.log(match.params.id);
-
   useEffect(() => {
     setName(article.name);
     setType(article.type);
     setPdv(article.pdv);
     setDescription(article.description);
+    setUnit(article.unit);
 
     dispatch(listArticleDetails(match.params.id));
   }, [dispatch, loading]);
@@ -40,6 +39,7 @@ const ArticleScreen = ({ match }) => {
         type,
         pdv,
         description,
+        unit,
       })
     );
   };
@@ -71,8 +71,8 @@ const ArticleScreen = ({ match }) => {
                 value={type}
                 onChange={(e) => setType(e.target.value)}
               >
-                <option value="materijal">materijal</option>
                 <option value="proizvod">proizvod</option>
+                <option value="materijal">materijal</option>
               </Form.Control>
             </Form.Group>
 
@@ -97,6 +97,18 @@ const ArticleScreen = ({ match }) => {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               ></Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId="unit" className="mb-3">
+              <Form.Label>Jedinica mjere</Form.Label>
+              <Form.Control
+                as="select"
+                value={unit}
+                onChange={(e) => setUnit(e.target.value)}
+              >
+                <option value="komad">komad</option>
+                <option value="kilogram">kilogram</option>
+              </Form.Control>
             </Form.Group>
 
             <Button type="submit" variant="primary">

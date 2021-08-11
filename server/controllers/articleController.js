@@ -32,6 +32,7 @@ const createArticle = asyncHandler(async (req, res) => {
     image: req.body.image,
     pdv: req.body.pdv,
     description: req.body.description,
+    unit: req.body.unit,
   });
   const createdArticle = await article.save();
   res.status(201).json(createdArticle);

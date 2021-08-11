@@ -5,7 +5,7 @@ const articles = [
     type: "materijal",
     pdv: "PDV 25 - Porez na dodanu vrijednost",
     description: "Materijal za proizvodni pogon",
-    countInStock: 25,
+    unit: "komad",
   },
 ];
 export default articles;
