@@ -40,6 +40,7 @@ import {
 
 import {
   partnerListReducer,
+  partnerDetailsReducer,
   partnerCreateReducer,
 } from "./reducers/partnerReducers.js";
 
@@ -73,6 +74,7 @@ const reducer = combineReducers({
   articleCreate: articleCreateReducer,
   articleUpdate: articleUpdateReducer,
   partnerList: partnerListReducer,
+  partnerDetails: partnerDetailsReducer,
   partnerCreate: partnerCreateReducer,
   lagerList: lagerListReducer,
 });

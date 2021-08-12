@@ -9,6 +9,19 @@ const getPartners = asyncHandler(async (req, res) => {
   res.json(partners);
 });
 
+// @desc Get single partner
+// @route GET /api/partners/:id
+// @access Public
+const getPartner = asyncHandler(async (req, res) => {
+  const partner = await Partner.findById(req.params.id);
+  if (partner) {
+    res.json(partner);
+  } else {
+    res.status(404);
+    throw new Error("Partner not found");
+  }
+});
+
 // @desc Create Partner
 // @route POST /api/partners
 // @access Public
@@ -19,9 +32,15 @@ const createPartner = asyncHandler(async (req, res) => {
     oib: req.body.oib,
     email: req.body.email,
     type: req.body.type,
+    street: req.body.street,
+    houseNumber: req.body.houseNumber,
+    zip: req.body.zip,
+    country: req.body.country,
+    telephone: req.body.telephone,
+    city: req.body.city,
   });
   const createdPartner = await partner.save();
   res.status(201).json(createdPartner);
 });
 
-export { getPartners, createPartner };
+export { getPartners, getPartner, createPartner };

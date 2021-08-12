@@ -24,6 +24,30 @@ const partnerSchema = mongoose.Schema(
       required: true,
       unique: true,
     },
+    street: {
+      type: String,
+      required: true,
+    },
+    houseNumber: {
+      type: Number,
+      required: true,
+    },
+    city: {
+      type: String,
+      required: true,
+    },
+    zip: {
+      type: Number,
+      required: true,
+    },
+    telephone: {
+      type: Number,
+      required: true,
+    },
+    country: {
+      type: String,
+      required: true,
+    },
     // password: {
     //   type: String,
     //   required: true,
