@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { listPartners } from "../actions/partnerActions";
 import { Row, Card, Col, ListGroup, Button } from "react-bootstrap";
@@ -7,7 +8,7 @@ import Loader from "../components/Loader";
 import Message from "../components/Message";
 import picture from "../../src/staff.png";
 
-const PartnerScreen = () => {
+const PartnerListScreen = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -43,34 +44,36 @@ const PartnerScreen = () => {
           {partners.map((partner) => {
             return (
               <Col lg={4} md={6} className="mb-3" key={partner._id}>
-                <Card className="bg-dark shadow-lg rounded">
-                  <Card.Img src={picture} alt="picture" variant="top" />
-                  <Card.Body className="bg-light">
-                    <Card.Title>
-                      {partner.name} {partner.surname}
-                    </Card.Title>
-                    <ListGroup className="list-group-flush">
-                      <ListGroup.Item>
-                        <strong>oib: </strong>
-                        {partner.oib}
-                      </ListGroup.Item>
-                      <ListGroup.Item>
-                        <strong>vrsta partnera: </strong>
-                        {partner.type}
-                      </ListGroup.Item>
-                      <ListGroup.Item>
-                        <strong>email: </strong>
-                        {partner.email}
-                      </ListGroup.Item>
-                      {partner.role && (
+                <Link to={`/partners/${partner._id}`}>
+                  <Card className="bg-dark shadow-lg rounded partner-card">
+                    <Card.Img src={picture} alt="picture" variant="top" />
+                    <Card.Body className="bg-light">
+                      <Card.Title>
+                        {partner.name} {partner.surname}
+                      </Card.Title>
+                      <ListGroup className="list-group-flush">
                         <ListGroup.Item>
-                          <strong>pozicija: </strong>
-                          {partner.role}
+                          <strong>oib: </strong>
+                          {partner.oib}
                         </ListGroup.Item>
-                      )}
-                    </ListGroup>
-                  </Card.Body>
-                </Card>
+                        <ListGroup.Item>
+                          <strong>vrsta partnera: </strong>
+                          {partner.type}
+                        </ListGroup.Item>
+                        <ListGroup.Item>
+                          <strong>email: </strong>
+                          {partner.email}
+                        </ListGroup.Item>
+                        {partner.role && (
+                          <ListGroup.Item>
+                            <strong>pozicija: </strong>
+                            {partner.role}
+                          </ListGroup.Item>
+                        )}
+                      </ListGroup>
+                    </Card.Body>
+                  </Card>
+                </Link>
               </Col>
             );
           })}
@@ -80,4 +83,4 @@ const PartnerScreen = () => {
   );
 };
 
-export default PartnerScreen;
+export default PartnerListScreen;

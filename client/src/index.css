@@ -58,3 +58,8 @@ h2 {
   transform: scale(1.05);
   transition: 0.5s ease-in-out;
 }
+
+.partner-card:hover {
+  opacity: 0.8;
+  transition: 0.3s ease-in-out;
+}
