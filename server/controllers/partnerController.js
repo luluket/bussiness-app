@@ -9,6 +9,44 @@ const getPartners = asyncHandler(async (req, res) => {
   res.json(partners);
 });
 
+// @desc Update single partner
+// @route PUT /api/partners/:id
+// @access Public
+const updatePartner = asyncHandler(async (req, res) => {
+  const partner = await Partner.findById(req.params.id);
+  if (partner) {
+    partner.name = req.body.name || partner.name;
+    partner.surname = req.body.surname || partner.surname;
+    partner.oib = req.body.oib || partner.oib;
+    partner.type = req.body.type || partner.type;
+    partner.email = req.body.email || partner.email;
+    partner.street = req.body.street || partner.street;
+    partner.houseNumber = req.body.houseNumber || partner.houseNumber;
+    partner.zip = req.body.zip || partner.zip;
+    partner.city = req.body.city || partner.city;
+    partner.country = req.body.country || partner.country;
+    partner.telephone = req.body.telephone || partner.telephone;
+    const updatedPartner = await partner.save();
+    res.json({
+      _id: updatedPartner._id,
+      name: updatedPartner.name,
+      surname: updatedPartner.surname,
+      oib: updatedPartner._id,
+      type: updatedPartner.type,
+      email: updatedPartner.email,
+      street: updatedPartner.street,
+      houseNumber: updatedPartner.houseNumber,
+      zip: updatedPartner.zip,
+      city: updatedPartner.city,
+      country: updatedPartner.country,
+      telephone: updatedPartner.telephone,
+    });
+  } else {
+    res.status(404);
+    throw new Error("Partner not found");
+  }
+});
+
 // @desc Get single partner
 // @route GET /api/partners/:id
 // @access Public
@@ -43,4 +81,4 @@ const createPartner = asyncHandler(async (req, res) => {
   res.status(201).json(createdPartner);
 });
 
-export { getPartners, getPartner, createPartner };
+export { getPartners, getPartner, createPartner, updatePartner };

@@ -10,6 +10,10 @@ import {
   PARTNER_LIST_FAIL,
   PARTNER_LIST_REQUEST,
   PARTNER_LIST_SUCCESS,
+  PARTNER_UPDATE_FAIL,
+  PARTNER_UPDATE_REQUEST,
+  PARTNER_UPDATE_RESET,
+  PARTNER_UPDATE_SUCCESS,
 } from "../constants/partnerConstants";
 
 export const partnerListReducer = (state = { partners: [] }, action) => {
@@ -49,6 +53,21 @@ export const partnerCreateReducer = (state = { partner: {} }, action) => {
     case PARTNER_CREATE_FAIL:
       return { loading: false, error: action.payload };
     case PARTNER_CREATE_RESET:
+      return { partner: {} };
+    default:
+      return state;
+  }
+};
+
+export const partnerUpdateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case PARTNER_UPDATE_REQUEST:
+      return { loading: true };
+    case PARTNER_UPDATE_SUCCESS:
+      return { loading: false, success: true };
+    case PARTNER_UPDATE_FAIL:
+      return { loading: false, error: action.payload };
+    case PARTNER_UPDATE_RESET:
       return { partner: {} };
     default:
       return state;

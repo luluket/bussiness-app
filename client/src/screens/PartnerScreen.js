@@ -4,125 +4,214 @@ import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import {
-  getPartnerDetails,
-  updatePartnerProfile,
-} from "../actions/partnerActions";
-import { listAuthUserOrders } from "../actions/orderActions";
+import { getPartnerDetails, updatePartner } from "../actions/partnerActions";
 import { USER_UPDATE_PROFILE_RESET } from "../constants/userConstants";
 
 const PartnerScreen = ({ location, history, match }) => {
   const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [message, setMessage] = useState(null);
+  const [oib, setOib] = useState(0);
+  const [type, setType] = useState("");
+  const [street, setStreet] = useState("");
+  const [houseNumber, setHouseNumber] = useState(0);
+  const [zip, setZip] = useState(0);
+  const [city, setCity] = useState("");
+  const [country, setCountry] = useState("");
+  const [telephone, setTelephone] = useState(0);
+  const [message, setMessage] = useState("");
 
   const dispatch = useDispatch();
 
   const partnerDetails = useSelector((state) => state.partnerDetails);
   const { loading, error, partner } = partnerDetails;
 
+  const partnerUpdate = useSelector((state) => state.partnerUpdate);
+  const { success } = partnerUpdate;
+
   useEffect(() => {
     if (!partner || !partner.name) {
-      // dispatch({ type: USER_UPDATE_PROFILE_RESET });
       dispatch(getPartnerDetails(match.params.id));
     } else {
       setName(partner.name);
+      setSurname(partner.surname);
+      setOib(partner.oib);
+      setType(partner.type);
       setEmail(partner.email);
+      setStreet(partner.street);
+      setHouseNumber(partner.houseNumber);
+      setZip(partner.zip);
+      setCity(partner.city);
+      setCountry(partner.country);
+      setTelephone(partner.telephone);
     }
-  }, [dispatch, history, , partner]);
+    if (success) {
+      history.push("/partners");
+    }
+  }, [dispatch, history, , partner, success]);
 
   const submitHandler = (e) => {
     e.preventDefault();
-    //   dispatch(updateUserProfile({ id: user._id, name, email, password }));
+    dispatch(
+      updatePartner({
+        _id: partner._id,
+        name,
+        surname,
+        oib,
+        type,
+        email,
+        street,
+        houseNumber,
+        zip,
+        city,
+        country,
+        telephone,
+      })
+    );
   };
 
   return (
     <Row>
-      <Col md={3}>
+      <Col md={4}>
         <h2>Partner Profile</h2>
         {message && <Message variant="danger">{message}</Message>}
         {error && <Message variant="danger">{error}</Message>}
         {/* {success && <Message variant="success">Profile Updated</Message>} */}
         {loading && <Loader />}
         <Form onSubmit={submitHandler}>
-          <Form.Group controlId="name" className="mb-3">
-            <Form.Label>Name</Form.Label>
+          <Row className="mb-3">
+            <Col lg={6} md={6} sm={12}>
+              <Form.Group controlId="name">
+                <Form.Label>Ime</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder={name}
+                  onChange={(e) => setName(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
+            </Col>
+
+            <Col lg={6} md={6} sm={12}>
+              <Form.Group controlId="surname">
+                <Form.Label>Prezime</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder={surname}
+                  onChange={(e) => setSurname(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
+            </Col>
+          </Row>
+          <Form.Group controlId="oib">
+            <Form.Label>OIB</Form.Label>
             <Form.Control
-              type="name"
-              placeholder="Enter name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              type="number"
+              placeholder={oib}
+              onChange={(e) => setOib(e.target.value)}
+              style={{ width: "15rem" }}
             ></Form.Control>
           </Form.Group>
 
+          <Form.Group controlId="type" className="mb-3">
+            <Form.Label>Vrsta</Form.Label>
+            <Form.Control
+              as="select"
+              type="name"
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              style={{ width: "15rem" }}
+            >
+              <option>Izaberite vrstu partnera</option>
+              <option value="dobavljač">dobavljač</option>
+              <option value="kupac">kupac</option>
+            </Form.Control>
+          </Form.Group>
+
           <Form.Group controlId="email" className="mb-3">
-            <Form.Label>Email Address</Form.Label>
+            <Form.Label>Email</Form.Label>
             <Form.Control
               type="email"
-              placeholder="Enter email"
-              value={email}
+              placeholder={email}
               onChange={(e) => setEmail(e.target.value)}
+              style={{ width: "15rem" }}
+            ></Form.Control>
+          </Form.Group>
+
+          <Row className="mb-3">
+            <Col lg={6} md={6} sm={12}>
+              <Form.Group controlId="street" className="mb-3">
+                <Form.Label>Ulica</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder={street}
+                  onChange={(e) => setStreet(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
+            </Col>
+            <Col lg={6} md={6} sm={12}>
+              <Form.Group controlId="houseNumber" className="mb-3">
+                <Form.Label>Kućni broj</Form.Label>
+                <Form.Control
+                  type="number"
+                  placeholder={houseNumber}
+                  onChange={(e) => setHouseNumber(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
+            </Col>
+          </Row>
+
+          <Row className="mb-3">
+            <Col lg={4} md={4} sm={12}>
+              <Form.Group controlId="zip" className="mb-3">
+                <Form.Label>Poštanski broj</Form.Label>
+                <Form.Control
+                  type="number"
+                  placeholder={zip}
+                  onChange={(e) => setZip(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
+            </Col>
+            <Col lg={4} md={4} sm={12}>
+              <Form.Group controlId="city" className="mb-3">
+                <Form.Label>Grad</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder={city}
+                  onChange={(e) => setCity(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
+            </Col>
+            <Col lg={4} md={4} sm={12}>
+              <Form.Group controlId="country" className="mb-3">
+                <Form.Label>Država</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
+            </Col>
+          </Row>
+
+          <Form.Group controlId="telephone" className="mb-3">
+            <Form.Label>Telefon</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder={telephone}
+              onChange={(e) => setTelephone(e.target.value)}
+              style={{ width: "15rem" }}
             ></Form.Control>
           </Form.Group>
 
           <Button type="submit" variant="primary">
-            Update
+            Izmijeni
           </Button>
         </Form>
       </Col>
-      {/* <Col md={9}>
-        <h2>My Orders</h2>
-        {loadingOrders ? (
-          <Loader />
-        ) : errorOrders ? (
-          <Message variant="danger">{errorOrders}</Message>
-        ) : (
-          <Table striped bordered hover responsive className="table-sm">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>DATE</th>
-                <th>TOTAL</th>
-                <th>PAID</th>
-                <th>DELIVERED</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((order) => (
-                <tr key={order._id}>
-                  <td>{order._id}</td>
-                  <td>{order.createdAt.substring(0, 10)}</td>
-                  <td>{order.totalPrice}</td>
-                  <td>
-                    {order.isPaid ? (
-                      order.paidAt.substring(0, 10)
-                    ) : (
-                      <i className="fas fa-times" style={{ color: "red" }} />
-                    )}
-                  </td>
-                  <td>
-                    {order.isDelivered ? (
-                      order.deliveredAt.substring(0, 10)
-                    ) : (
-                      <i className="fas fa-times" style={{ color: "red" }} />
-                    )}
-                  </td>
-                  <td>
-                    <LinkContainer to={`/oder/${order._id}`}>
-                      <Button className="btn-sm" variant="light">
-                        Details
-                      </Button>
-                    </LinkContainer>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        )}
-      </Col> */}
+      <Col md={8}>
+        <h2>Primke</h2>
+        <Table striped bordered hover responsive className="table-sm"></Table>
+      </Col>
     </Row>
   );
 };

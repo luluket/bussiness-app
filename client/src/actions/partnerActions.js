@@ -9,6 +9,9 @@ import {
   PARTNER_DETAILS_REQUEST,
   PARTNER_DETAILS_SUCCESS,
   PARTNER_DETAILS_FAIL,
+  PARTNER_UPDATE_REQUEST,
+  PARTNER_UPDATE_SUCCESS,
+  PARTNER_UPDATE_FAIL,
 } from "../constants/partnerConstants";
 
 export const listPartners = () => async (dispatch) => {
@@ -41,6 +44,22 @@ export const getPartnerDetails = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: PARTNER_DETAILS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const updatePartner = (partner) => async (dispatch) => {
+  try {
+    dispatch({ type: PARTNER_UPDATE_REQUEST });
+    const { data } = await axios.put(`/api/partners/${partner._id}`, partner);
+    dispatch({ type: PARTNER_UPDATE_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: PARTNER_UPDATE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

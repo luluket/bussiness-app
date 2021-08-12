@@ -42,6 +42,7 @@ import {
   partnerListReducer,
   partnerDetailsReducer,
   partnerCreateReducer,
+  partnerUpdateReducer,
 } from "./reducers/partnerReducers.js";
 
 import { lagerListReducer } from "./reducers/lagerReducers.js";
@@ -76,6 +77,7 @@ const reducer = combineReducers({
   partnerList: partnerListReducer,
   partnerDetails: partnerDetailsReducer,
   partnerCreate: partnerCreateReducer,
+  partnerUpdate: partnerUpdateReducer,
   lagerList: lagerListReducer,
 });
 const cartItemsFromStorage = localStorage.getItem("cartItems")

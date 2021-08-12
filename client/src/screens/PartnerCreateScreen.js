@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import FormContainer from "../components/FormContainer";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { createPartner } from "../actions/partnerActions";
 import { useHistory } from "react-router-dom";
@@ -48,43 +48,51 @@ const PartnerCreateScreen = () => {
     );
   };
 
-  // useEffect(() => {
-  //   if (success) {
-  //     dispatch({ type: PARTNER_CREATE_RESET });
-  //     history.push("/partners");
-  //   }
-  // }, [success]);
+  useEffect(() => {
+    if (success) {
+      dispatch({ type: PARTNER_CREATE_RESET });
+      history.push("/partners");
+    }
+  }, [success]);
 
   return (
-    <FormContainer>
+    <>
       <h1>NOVI PARTNER</h1>
       <Form onSubmit={submitHandler}>
-        <Form.Group controlId="name" className="mb-3">
-          <Form.Label>Ime</Form.Label>
-          <Form.Control
-            type="name"
-            placeholder="Unesite ime partnera"
-            onChange={(e) => setName(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+        <Row className="mb-3">
+          <Col lg={4} md={4} sm={12}>
+            <Form.Group controlId="name">
+              <Form.Label>Ime</Form.Label>
+              <Form.Control
+                type="name"
+                placeholder="Unesite ime partnera"
+                onChange={(e) => setName(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+          </Col>
 
-        <Form.Group controlId="surname" className="mb-3">
-          <Form.Label>Prezime</Form.Label>
-          <Form.Control
-            type="name"
-            placeholder="Unesite prezime partnera"
-            onChange={(e) => setSurname(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+          <Col lg={4} md={4} sm={12}>
+            <Form.Group controlId="surname">
+              <Form.Label>Prezime</Form.Label>
+              <Form.Control
+                type="name"
+                placeholder="Unesite prezime partnera"
+                onChange={(e) => setSurname(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+          </Col>
 
-        <Form.Group controlId="oib" className="mb-3">
-          <Form.Label>OIB</Form.Label>
-          <Form.Control
-            type="number"
-            placeholder="Unesite oib partnera"
-            onChange={(e) => setOib(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+          <Col lg={4} md={4} sm={12}>
+            <Form.Group controlId="oib">
+              <Form.Label>OIB</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Unesite oib partnera"
+                onChange={(e) => setOib(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+          </Col>
+        </Row>
 
         <Form.Group controlId="type" className="mb-3">
           <Form.Label>Vrsta</Form.Label>
@@ -92,6 +100,7 @@ const PartnerCreateScreen = () => {
             as="select"
             type="name"
             onChange={(e) => setType(e.target.value)}
+            style={{ width: "15rem" }}
           >
             <option>Izaberite vrstu partnera</option>
             <option value="dobavljač">dobavljač</option>
@@ -105,44 +114,65 @@ const PartnerCreateScreen = () => {
             type="email"
             placeholder="Unesite email partnera"
             onChange={(e) => setEmail(e.target.value)}
+            style={{ width: "15rem" }}
           ></Form.Control>
         </Form.Group>
 
-        <Form.Group controlId="street" className="mb-3">
-          <Form.Label>Ulica</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Unesite ulicu partnera"
-            onChange={(e) => setStreet(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+        <Row className="mb-3">
+          <Col lg={6} md={6} sm={12}>
+            <Form.Group controlId="street" className="mb-3">
+              <Form.Label>Ulica</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Unesite ulicu partnera"
+                onChange={(e) => setStreet(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+          </Col>
+          <Col lg={6} md={6} sm={12}>
+            <Form.Group controlId="houseNumber" className="mb-3">
+              <Form.Label>Kućni broj</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Unesite kućni broj partnera"
+                onChange={(e) => setHouseNumber(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+          </Col>
+        </Row>
 
-        <Form.Group controlId="houseNumber" className="mb-3">
-          <Form.Label>Kućni broj</Form.Label>
-          <Form.Control
-            type="number"
-            placeholder="Unesite kućni broj partnera"
-            onChange={(e) => setHouseNumber(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
-
-        <Form.Group controlId="city" className="mb-3">
-          <Form.Label>Grad</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Unesite grad partnera"
-            onChange={(e) => setCity(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
-
-        <Form.Group controlId="zip" className="mb-3">
-          <Form.Label>Poštanski broj</Form.Label>
-          <Form.Control
-            type="number"
-            placeholder="Unesite poštanski broj partnera"
-            onChange={(e) => setZip(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+        <Row className="mb-3">
+          <Col lg={4} md={4} sm={12}>
+            <Form.Group controlId="zip" className="mb-3">
+              <Form.Label>Poštanski broj</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Unesite poštanski broj partnera"
+                onChange={(e) => setZip(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+          </Col>
+          <Col lg={4} md={4} sm={12}>
+            <Form.Group controlId="city" className="mb-3">
+              <Form.Label>Grad</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Unesite grad partnera"
+                onChange={(e) => setCity(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+          </Col>
+          <Col lg={4} md={4} sm={12}>
+            <Form.Group controlId="country" className="mb-3">
+              <Form.Label>Država</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Unesite državu partnera"
+                onChange={(e) => setCountry(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+          </Col>
+        </Row>
 
         <Form.Group controlId="telephone" className="mb-3">
           <Form.Label>Telefon</Form.Label>
@@ -150,21 +180,13 @@ const PartnerCreateScreen = () => {
             type="text"
             placeholder="Unesite telefon partnera"
             onChange={(e) => setTelephone(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
-
-        <Form.Group controlId="country" className="mb-3">
-          <Form.Label>Država</Form.Label>
-          <Form.Control
-            type="number"
-            placeholder="Unesite državu partnera"
-            onChange={(e) => setCountry(e.target.value)}
+            style={{ width: "15rem" }}
           ></Form.Control>
         </Form.Group>
 
         <Button type="submit">Unesi</Button>
       </Form>
-    </FormContainer>
+    </>
   );
 };
 
