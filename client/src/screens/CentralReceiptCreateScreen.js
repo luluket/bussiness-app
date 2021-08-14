@@ -15,12 +15,14 @@ import Loader from "../components/Loader";
 import Message from "../components/Message";
 
 const CentralReceiptCreateScreen = () => {
+  let count = 1;
   const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [document, setDocument] = useState();
-  const [items, setItems] = useState([]);
+  // const [items, setItems] = useState([]);
   const [quantity, setQuantity] = useState(0);
   const [purchasePrice, setPurchasePrice] = useState(0);
+  const [counter, setCounter] = useState(0);
 
   const [rows, setRows] = useState([]);
 
@@ -28,7 +30,7 @@ const CentralReceiptCreateScreen = () => {
   const { loading, error, suppliers } = supplierList;
 
   const articleList = useSelector((state) => state.articleList);
-  const { articles } = articleList;
+  const { loading: loadingArticles, articles } = articleList;
 
   useEffect(() => {
     dispatch(listSuppliers());
@@ -39,20 +41,11 @@ const CentralReceiptCreateScreen = () => {
     e.preventDefault();
   };
 
-  const handleChange = (event) => {
-    const input = { id: event.target.id, name: event.target.value };
-    items.find(({ id }) => id === input.id)
-      ? setItems(items.filter((item) => item.id !== input.id))
-      : setItems([...items, input]);
+  const addRow = () => {
+    setRows([...rows, counter]);
+    setCounter(counter + 1);
   };
-
-  const handleRow = (event) => {
-    event.preventDefault();
-    setRows([...rows, "row"]);
-    console.log("aa");
-  };
-
-  const removeRow = () => {};
+  const removeRow = (index) => {};
 
   return (
     <>
@@ -95,41 +88,11 @@ const CentralReceiptCreateScreen = () => {
             </Col>
           </Row>
 
-          {items.map((item) => {
-            return (
-              <Row>
-                <Col lg={4} md={6}>
-                  <Card>
-                    <Card.Header>{item.name}</Card.Header>
-                    <ListGroup variant="flush">
-                      <ListGroup.Item>
-                        <Form.Group controlId="quantity">
-                          <Form.Control
-                            type="number"
-                            placeholder="Unesite količinu"
-                            onChange={(e) => setQuantity(e.target.value)}
-                          ></Form.Control>
-                        </Form.Group>
-                      </ListGroup.Item>
-                      <ListGroup.Item>
-                        <Form.Group controlId="purchasePrice">
-                          <Form.Control
-                            type="number"
-                            placeholder="Unesite nabavnu cijenu"
-                            onChange={(e) => setPurchasePrice(e.target.value)}
-                          ></Form.Control>
-                        </Form.Group>
-                      </ListGroup.Item>
-                    </ListGroup>
-                  </Card>
-                </Col>
-              </Row>
-            );
-          })}
           {rows.length > 0 && (
             <Table bordered responsive>
               <thead>
                 <tr>
+                  <th>RB</th>
                   <th>ARTIKAL</th>
                   <th>KOLIČINA</th>
                   <th>PNC</th>
@@ -139,12 +102,14 @@ const CentralReceiptCreateScreen = () => {
               <tbody>
                 {rows.map((row, index) => (
                   <tr key={index}>
+                    <td>{index}</td>
                     <td>
                       <Form.Control as="select" type="text">
+                        <option>Izaberite artikal</option>
                         {articles.map((article) => {
                           return (
                             <option value={article._id}>
-                              {article.name} {article.surname} ({article._id})
+                              {article.name} ({article._id})
                             </option>
                           );
                         })}
@@ -166,7 +131,7 @@ const CentralReceiptCreateScreen = () => {
                       <Button
                         type="button"
                         variant="light"
-                        onClick={() => removeRow()}
+                        onClick={() => removeRow(index)}
                       >
                         <i className="fas fa-trash"></i>
                       </Button>
@@ -176,7 +141,11 @@ const CentralReceiptCreateScreen = () => {
               </tbody>
             </Table>
           )}
-          <Button type="btn" onClick={handleRow}>
+          <Button
+            type="btn"
+            onClick={addRow}
+            disabled={articles.length <= rows.length}
+          >
             Dodaj artikal
           </Button>
         </Form>
