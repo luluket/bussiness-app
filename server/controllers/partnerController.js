@@ -81,4 +81,12 @@ const createPartner = asyncHandler(async (req, res) => {
   res.status(201).json(createdPartner);
 });
 
-export { getPartners, getPartner, createPartner, updatePartner };
+// @desc Get all suppliers
+// @route GET /api/partners/suppliers
+// @access Public
+const getSuppliers = asyncHandler(async (req, res) => {
+  const suppliers = await Partner.find({ type: "dobavljač" });
+  res.json(suppliers);
+});
+
+export { getPartners, getPartner, createPartner, updatePartner, getSuppliers };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Row, Col, Form, Image, Button } from "react-bootstrap";
+import { Row, Col, Form, Image, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { listArticleDetails, updateArticle } from "../actions/articleActions";
 import Message from "../components/Message";
@@ -48,11 +48,11 @@ const ArticleScreen = ({ match }) => {
       {error && <Message variant="danger">{error}</Message>}
       {loading && <Loader />}
       {success && <Message variant="success">Artikal Izmijenjen</Message>}
-      <Row>
-        <Col lg={6} md={6}>
+      <Row lg={2}>
+        <Col md={5}>
           <Image src={article.image} alt={article.name} fluid />
         </Col>
-        <Col lg={6} md={6}>
+        <Col md={7}>
           <Form onSubmit={submitHandler}>
             <Form.Group controlId="name" className="mb-3">
               <Form.Label>Ime artikla</Form.Label>
@@ -112,7 +112,7 @@ const ArticleScreen = ({ match }) => {
             </Form.Group>
 
             <Button type="submit" variant="primary">
-              Update
+              Izmijeni
             </Button>
           </Form>
         </Col>

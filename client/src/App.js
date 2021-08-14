@@ -27,6 +27,7 @@ import ArticleListScreen from "./screens/ArticleListScreen";
 import ArticleScreen from "./screens/ArticleScreen";
 import ArticleCreateScreen from "./screens/ArticleCreateScreen";
 import CentralScreen from "./screens/CentralScreen";
+import CentralReceiptCreateScreen from "./screens/CentralReceiptCreateScreen";
 
 const App = () => {
   return (
@@ -47,6 +48,11 @@ const App = () => {
               component={PartnerCreateScreen}
             />
             <Route path="/central" component={CentralScreen} exact />
+            <Route
+              path="/central/receipt"
+              component={CentralReceiptCreateScreen}
+              exact
+            />
 
             <Route path="/shipping" component={ShippingScreen} />
             <Route path="/order/:id" component={OrderScreen} />

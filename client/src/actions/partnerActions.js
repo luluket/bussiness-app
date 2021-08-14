@@ -12,6 +12,9 @@ import {
   PARTNER_UPDATE_REQUEST,
   PARTNER_UPDATE_SUCCESS,
   PARTNER_UPDATE_FAIL,
+  SUPPLIER_LIST_REQUEST,
+  SUPPLIER_LIST_SUCCESS,
+  SUPPLIER_LIST_FAIL,
 } from "../constants/partnerConstants";
 
 export const listPartners = () => async (dispatch) => {
@@ -76,6 +79,22 @@ export const createPartner = (partner) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: PARTNER_CREATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const listSuppliers = () => async (dispatch) => {
+  try {
+    dispatch({ type: SUPPLIER_LIST_REQUEST });
+    const { data } = await axios.get("/api/partners/suppliers");
+    dispatch({ type: SUPPLIER_LIST_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: SUPPLIER_LIST_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
