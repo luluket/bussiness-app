@@ -1,25 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Row,
-  Form,
-  Col,
-  Button,
-  Card,
-  ListGroup,
-  Table,
-} from "react-bootstrap";
+import { Row, Form, Col, Button, Table } from "react-bootstrap";
 import { listSuppliers } from "../actions/partnerActions";
 import { listArticles } from "../actions/articleActions";
+import { createReceipt } from "../actions/centralReceiptActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 
 const CentralReceiptCreateScreen = () => {
-  let count = 1;
   const dispatch = useDispatch();
-  const [name, setName] = useState("");
+
+  const [partner, setPartner] = useState("");
   const [document, setDocument] = useState();
-  const [receiptArticles, setReceiptArticles] = useState([
+  const [receivedArticles, setReceivedArticles] = useState([
     { article: "", name: "", quantity: 0, purchasePrice: 0 },
   ]);
   const [rows, setRows] = useState([]);
@@ -30,21 +23,19 @@ const CentralReceiptCreateScreen = () => {
   const articleList = useSelector((state) => state.articleList);
   const { loading: loadingArticles, articles } = articleList;
 
+  const centralReceiptCreate = useSelector(
+    (state) => state.centralReceiptCreate
+  );
+  const { error: errorCreate, success: successCreate } = centralReceiptCreate;
+
   useEffect(() => {
     dispatch(listSuppliers());
     dispatch(listArticles());
   }, [dispatch]);
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-  };
-
   const addRow = () => {
     setRows([...rows, "row"]);
   };
-  const removeRow = (index) => {};
-
-  const handleReceipt = () => {};
 
   const handleArticle = (index) => (event) => {
     // split id and name from value into 2 variables
@@ -52,52 +43,62 @@ const CentralReceiptCreateScreen = () => {
     const name = event.target.value.substring(
       event.target.value.indexOf(" ") + 1
     );
-    if (receiptArticles[index]) {
-      receiptArticles[index].article = article;
-      receiptArticles[index].name = name;
+    if (receivedArticles[index]) {
+      receivedArticles[index].article = article;
+      receivedArticles[index].name = name;
     } else {
-      receiptArticles.push({
+      receivedArticles.push({
         article: article,
         name: name,
         quantity: 0,
         purchasePrice: 0,
       });
     }
-    console.log(receiptArticles);
   };
 
   const handleQuantity = (index) => (event) => {
-    if (receiptArticles[index]) {
-      receiptArticles[index].quantity = event.target.value;
+    if (receivedArticles[index]) {
+      receivedArticles[index].quantity = event.target.value;
     } else {
-      receiptArticles.push({
+      receivedArticles.push({
         article: "",
         name: "",
         quantity: event.target.value,
         purchasePrice: 0,
       });
     }
-    console.log(receiptArticles);
   };
 
   const handlePurchasePrice = (index) => (event) => {
-    if (receiptArticles[index]) {
-      receiptArticles[index].purchasePrice = event.target.value;
+    if (receivedArticles[index]) {
+      receivedArticles[index].purchasePrice = event.target.value;
     } else {
-      receiptArticles.push({
+      receivedArticles.push({
         article: "",
         name: "",
         quantity: 0,
         purchasePrice: event.target.value,
       });
     }
-    console.log(receiptArticles);
+  };
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    dispatch(
+      createReceipt({
+        partner,
+        document,
+        receivedArticles,
+      })
+    );
   };
 
   return (
     <>
       <h1>PRIMKA - CENTRALNO SKLADIŠTE</h1>
-      {loading ? (
+      {successCreate && <Message variant="success">Uspješan unos</Message>}
+      {errorCreate && <Message variant="danger">{errorCreate}</Message>}
+      {loadingArticles ? (
         <Loader />
       ) : error ? (
         <Message variant="danger">{error}</Message>
@@ -110,8 +111,9 @@ const CentralReceiptCreateScreen = () => {
                 <Form.Control
                   as="select"
                   type="text"
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => setPartner(e.target.value)}
                 >
+                  <option>Izaberite dobavljača</option>
                   {suppliers.map((supplier) => {
                     return (
                       <option value={supplier._id}>
@@ -124,7 +126,7 @@ const CentralReceiptCreateScreen = () => {
             </Col>
             <Col md={6}>
               <Form.Group controlId="document">
-                <Form.Label>Dokument</Form.Label>
+                <Form.Label>Broj dokumenta</Form.Label>
                 <Form.Control
                   type="number"
                   placeholder="Unesite broj dokumenta"
@@ -185,11 +187,7 @@ const CentralReceiptCreateScreen = () => {
                       ></Form.Control>
                     </td>
                     <td>
-                      <Button
-                        type="button"
-                        variant="light"
-                        onClick={() => removeRow(index)}
-                      >
+                      <Button type="button" variant="light">
                         <i className="fas fa-trash"></i>
                       </Button>
                     </td>
@@ -198,19 +196,15 @@ const CentralReceiptCreateScreen = () => {
               </tbody>
             </Table>
           )}
-          <div className="d-flex justify-content-between">
+          <div className="d-flex justify-content-between mb-3">
             <Button
-              type="btn"
+              type="button"
               onClick={addRow}
               disabled={articles.length <= rows.length}
             >
               Dodaj artikal
             </Button>
-            <Button
-              type="btn"
-              disabled={rows.length === 0}
-              onClick={handleReceipt}
-            >
+            <Button type="submit" disabled={rows.length === 0}>
               UNESI
             </Button>
           </div>

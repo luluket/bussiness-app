@@ -48,6 +48,11 @@ import {
 
 import { lagerListReducer } from "./reducers/lagerReducers.js";
 
+import {
+  centralReceiptCreateReducer,
+  centralReceiptListReducer,
+} from "./reducers/centralReceiptReducers.js";
+
 const reducer = combineReducers({
   productList: productListReducer,
   productDetails: productDetailsReducer,
@@ -81,6 +86,8 @@ const reducer = combineReducers({
   partnerUpdate: partnerUpdateReducer,
   supplierList: supplierListReducer,
   lagerList: lagerListReducer,
+  centralReceiptList: centralReceiptListReducer,
+  centralReceiptCreate: centralReceiptCreateReducer,
 });
 const cartItemsFromStorage = localStorage.getItem("cartItems")
   ? JSON.parse(localStorage.getItem("cartItems"))

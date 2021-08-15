@@ -9,6 +9,8 @@ const centralReceiptSchema = mongoose.Schema(
     document: {
       type: Number,
       required: true,
+      unique: true,
+      min: 1,
     },
     receivedArticles: [
       {
@@ -18,8 +20,8 @@ const centralReceiptSchema = mongoose.Schema(
           ref: "Article",
         },
         name: { type: String, required: true },
-        quantity: { type: Number, required: true },
-        purchasePrice: { type: Number, required: true },
+        quantity: { type: Number, required: true, min: 1 },
+        purchasePrice: { type: Number, required: true, min: 1 },
       },
     ],
   },

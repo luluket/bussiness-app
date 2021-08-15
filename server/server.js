@@ -12,6 +12,7 @@ import uploadRoutes from "./routes/uploadRoutes.js";
 import articleRoutes from "./routes/articleRoutes.js";
 import partnerRoutes from "./routes/partnerRoutes.js";
 import lagerRoutes from "./routes/lagerRoutes.js";
+import centralReceiptRoutes from "./routes/centralReceiptRoutes.js";
 
 dotenv.config();
 
@@ -32,6 +33,7 @@ app.use("/api/upload", uploadRoutes);
 app.use("/api/articles", articleRoutes);
 app.use("/api/partners", partnerRoutes);
 app.use("/api/lager", lagerRoutes);
+app.use("/api/central/receipts", centralReceiptRoutes);
 
 app.get("/api/config/paypal", (req, res) =>
   res.send(process.env.PAYPAL_CLIENT_ID)
