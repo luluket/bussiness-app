@@ -4,6 +4,7 @@ import { Collapse, ListGroup, Nav } from "react-bootstrap";
 import { Drawer } from "react-bootstrap-drawer";
 import { useDispatch } from "react-redux";
 import { listLager } from "../actions/lagerActions";
+import { listCentralReceipts } from "../actions/centralReceiptActions";
 
 const Sidebar = (props) => {
   const dispatch = useDispatch();
@@ -28,7 +29,7 @@ const Sidebar = (props) => {
               </ListGroup.Item>
               <ListGroup.Item>
                 <Nav.Item>
-                  <Nav.Link onClick={() => dispatch(listLager())}>
+                  <Nav.Link onClick={() => dispatch(listCentralReceipts())}>
                     Primka - Kalkulacija
                   </Nav.Link>
                 </Nav.Item>

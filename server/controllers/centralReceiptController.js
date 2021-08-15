@@ -5,7 +5,7 @@ import CentralReceipt from "../models/CentralReceipt.js";
 // @route GET /api/central/receipts
 // @access Public
 const getReceipts = asyncHandler(async (req, res) => {
-  const receipts = CentralReceipt.find({});
+  const receipts = await CentralReceipt.find({});
   res.json(receipts);
 });
 

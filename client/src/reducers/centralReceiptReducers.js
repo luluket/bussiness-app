@@ -5,6 +5,7 @@ import {
   CENTRAL_RECEIPT_CREATE_REQUEST,
   CENTRAL_RECEIPT_CREATE_SUCCESS,
   CENTRAL_RECEIPT_CREATE_FAIL,
+  CENTRAL_RECEIPT_LIST_RESET,
 } from "../constants/centralReceiptConstants";
 
 export const centralReceiptListReducer = (state = { receipts: [] }, action) => {
@@ -16,6 +17,8 @@ export const centralReceiptListReducer = (state = { receipts: [] }, action) => {
         loading: false,
         receipts: action.payload,
       };
+    case CENTRAL_RECEIPT_LIST_RESET:
+      return { receipts: [] };
     default:
       return state;
   }

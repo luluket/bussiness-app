@@ -6,8 +6,11 @@ import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { getPartnerDetails, updatePartner } from "../actions/partnerActions";
 import { USER_UPDATE_PROFILE_RESET } from "../constants/userConstants";
+import { listCentralReceipts } from "../actions/centralReceiptActions";
 
 const PartnerScreen = ({ location, history, match }) => {
+  const dispatch = useDispatch();
+
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
@@ -21,17 +24,23 @@ const PartnerScreen = ({ location, history, match }) => {
   const [telephone, setTelephone] = useState(0);
   const [message, setMessage] = useState("");
 
-  const dispatch = useDispatch();
-
   const partnerDetails = useSelector((state) => state.partnerDetails);
   const { loading, error, partner } = partnerDetails;
 
   const partnerUpdate = useSelector((state) => state.partnerUpdate);
   const { success } = partnerUpdate;
 
+  const centralReceiptsList = useSelector((state) => state.centralReceiptList);
+  const { receipts } = centralReceiptsList;
+
+  const partnerReceipts = receipts.filter(
+    (receipt) => receipt.partner === partner._id
+  );
+
   useEffect(() => {
     if (!partner || !partner.name) {
       dispatch(getPartnerDetails(match.params.id));
+      dispatch(listCentralReceipts());
     } else {
       setName(partner.name);
       setSurname(partner.surname);
@@ -49,6 +58,10 @@ const PartnerScreen = ({ location, history, match }) => {
       history.push("/partners");
     }
   }, [dispatch, history, , partner, success]);
+
+  const handleRowClick = (id) => {
+    history.push(`/central/receipt/${id}`);
+  };
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -209,8 +222,47 @@ const PartnerScreen = ({ location, history, match }) => {
         </Form>
       </Col>
       <Col md={8}>
-        <h2>Primke</h2>
-        <Table striped bordered hover responsive className="table-sm"></Table>
+        {partner.type === "dobavljač" ? (
+          <>
+            <h2>Primke</h2>
+            {partnerReceipts ? (
+              <Table striped bordered hover responsive className="table-sm">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>DOKUMENT</th>
+                    <th>DATUM</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {partnerReceipts.map((receipt) => (
+                    <tr
+                      key={receipt._id}
+                      onClick={() => handleRowClick(receipt._id)}
+                    >
+                      <td>{receipt._id}</td>
+                      <td>{receipt.document}</td>
+                      <td>{receipt.createdAt.substring(0, 10)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            ) : (
+              <h2>Nema zaprimljene robe</h2>
+            )}
+          </>
+        ) : (
+          <>
+            <h2>Narudžbe</h2>
+            <Table
+              striped
+              bordered
+              hover
+              responsive
+              className="table-sm"
+            ></Table>
+          </>
+        )}
       </Col>
     </Row>
   );
