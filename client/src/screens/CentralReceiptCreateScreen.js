@@ -19,11 +19,9 @@ const CentralReceiptCreateScreen = () => {
   const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [document, setDocument] = useState();
-  // const [items, setItems] = useState([]);
-  const [quantity, setQuantity] = useState(0);
-  const [purchasePrice, setPurchasePrice] = useState(0);
-  const [counter, setCounter] = useState(0);
-
+  const [receiptArticles, setReceiptArticles] = useState([
+    { article: "", name: "", quantity: 0, purchasePrice: 0 },
+  ]);
   const [rows, setRows] = useState([]);
 
   const supplierList = useSelector((state) => state.supplierList);
@@ -42,15 +40,63 @@ const CentralReceiptCreateScreen = () => {
   };
 
   const addRow = () => {
-    setRows([...rows, counter]);
-    setCounter(counter + 1);
+    setRows([...rows, "row"]);
   };
   const removeRow = (index) => {};
+
+  const handleReceipt = () => {};
+
+  const handleArticle = (index) => (event) => {
+    // split id and name from value into 2 variables
+    const article = event.target.value.split(" ")[0];
+    const name = event.target.value.substring(
+      event.target.value.indexOf(" ") + 1
+    );
+    if (receiptArticles[index]) {
+      receiptArticles[index].article = article;
+      receiptArticles[index].name = name;
+    } else {
+      receiptArticles.push({
+        article: article,
+        name: name,
+        quantity: 0,
+        purchasePrice: 0,
+      });
+    }
+    console.log(receiptArticles);
+  };
+
+  const handleQuantity = (index) => (event) => {
+    if (receiptArticles[index]) {
+      receiptArticles[index].quantity = event.target.value;
+    } else {
+      receiptArticles.push({
+        article: "",
+        name: "",
+        quantity: event.target.value,
+        purchasePrice: 0,
+      });
+    }
+    console.log(receiptArticles);
+  };
+
+  const handlePurchasePrice = (index) => (event) => {
+    if (receiptArticles[index]) {
+      receiptArticles[index].purchasePrice = event.target.value;
+    } else {
+      receiptArticles.push({
+        article: "",
+        name: "",
+        quantity: 0,
+        purchasePrice: event.target.value,
+      });
+    }
+    console.log(receiptArticles);
+  };
 
   return (
     <>
       <h1>PRIMKA - CENTRALNO SKLADIŠTE</h1>
-
       {loading ? (
         <Loader />
       ) : error ? (
@@ -95,36 +141,47 @@ const CentralReceiptCreateScreen = () => {
                   <th>RB</th>
                   <th>ARTIKAL</th>
                   <th>KOLIČINA</th>
-                  <th>PNC</th>
+                  <th>NABAVNA CIJENA</th>
                   <th>IZBRIŠI</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map((row, index) => (
                   <tr key={index}>
-                    <td>{index}</td>
+                    <td>{index + 1}</td>
                     <td>
-                      <Form.Control as="select" type="text">
-                        <option>Izaberite artikal</option>
-                        {articles.map((article) => {
-                          return (
-                            <option value={article._id}>
-                              {article.name} ({article._id})
-                            </option>
-                          );
-                        })}
-                      </Form.Control>
+                      <Form.Group controlId="article">
+                        <Form.Control
+                          as="select"
+                          type="text"
+                          onChange={handleArticle(index)}
+                        >
+                          <option>Izaberite artikal</option>
+                          {articles.map((article) => {
+                            return (
+                              <option
+                                id={article.name}
+                                value={`${article._id} ${article.name}`}
+                              >
+                                {article.name} ({article._id})
+                              </option>
+                            );
+                          })}
+                        </Form.Control>
+                      </Form.Group>
                     </td>
                     <td>
                       <Form.Control
                         type="number"
                         placeholder="Unesite količinu"
+                        onChange={handleQuantity(index)}
                       ></Form.Control>
                     </td>
                     <td>
                       <Form.Control
                         type="number"
                         placeholder="Unesite nabavnu cijenu"
+                        onChange={handlePurchasePrice(index)}
                       ></Form.Control>
                     </td>
                     <td>
@@ -141,13 +198,22 @@ const CentralReceiptCreateScreen = () => {
               </tbody>
             </Table>
           )}
-          <Button
-            type="btn"
-            onClick={addRow}
-            disabled={articles.length <= rows.length}
-          >
-            Dodaj artikal
-          </Button>
+          <div className="d-flex justify-content-between">
+            <Button
+              type="btn"
+              onClick={addRow}
+              disabled={articles.length <= rows.length}
+            >
+              Dodaj artikal
+            </Button>
+            <Button
+              type="btn"
+              disabled={rows.length === 0}
+              onClick={handleReceipt}
+            >
+              UNESI
+            </Button>
+          </div>
         </Form>
       )}
     </>

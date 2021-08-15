@@ -14,6 +14,7 @@ const partnerSchema = mongoose.Schema(
     oib: {
       type: Number,
       required: true,
+      length: 11,
     },
     type: {
       type: String,
