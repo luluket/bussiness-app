@@ -8,6 +8,7 @@ import { useHistory } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import { LAGER_LIST_RESET } from "../constants/lagerConstants";
 import { CENTRAL_RECEIPT_LIST_RESET } from "../constants/centralReceiptConstants";
+import { getPartnerDetails } from "../actions/partnerActions";
 
 const CentralScreen = (props) => {
   const dispatch = useDispatch();
@@ -44,60 +45,6 @@ const CentralScreen = (props) => {
   };
 
   return (
-    // <>
-    //   {loading ? (
-    //     <Loader />
-    //   ) : error ? (
-    //     <Message variant="danger">{error}</Message>
-    //   ) : (
-    //     <>
-    //       <Row className="align-items-center">
-    //         <Col lg={8}>
-    //           <h1>Centralno skladište - Lager Lista</h1>
-    //         </Col>
-    //         <Col lg={4}>
-    //           <Button
-    //             type="button"
-    //             className="mb-3"
-    //             onClick={handleButtonClick}
-    //           >
-    //             <i className="fas fa-plus"></i> Primka - Kalkulacija
-    //           </Button>
-    //         </Col>
-    //       </Row>
-
-    //       <Table striped bordered hover responsive>
-    //         <thead>
-    //           <tr>
-    //             <th>ID artikla</th>
-    //             <th>Naziv artikla</th>
-    //             <th>Jedinica mjere</th>
-    //             <th>Količina</th>
-    //             <th>PNC</th>
-    //             <th>cijena</th>
-    //           </tr>
-    //         </thead>
-    //         <tbody>
-    //           {lager.map((article) => {
-    //             return (
-    //               <tr
-    //                 key={article._id}
-    //                 // onClick={() => handleRowClick(article._id)}
-    //               >
-    //                 <td>{article._id}</td>
-    //                 <td>{article.articleName}</td>
-    //                 <td>{article.articleUnit}</td>
-    //                 <td>{article.quantity}</td>
-    //                 <td>{article.averagePurchasePrice}</td>
-    //                 <td>{article.sellingPrice}</td>
-    //               </tr>
-    //             );
-    //           })}
-    //         </tbody>
-    //       </Table>
-    //     </>
-    //   )}
-    // </>
     <Row className="flex-xl-nowrap">
       <Col as={Sidebar} xs={12} md={3} lg={3} />
       <Col xs={12} md={9} lg={9}>
@@ -146,6 +93,7 @@ const CentralScreen = (props) => {
             <Table striped bordered hover responsive>
               <thead>
                 <tr>
+                  <th>ZAKLJUČEN</th>
                   <th>ID</th>
                   <th>DOKUMENT</th>
                   <th>DATUM</th>
@@ -153,18 +101,22 @@ const CentralScreen = (props) => {
                 </tr>
               </thead>
               <tbody>
-                {lager.map((article) => {
+                {receipts.map((receipt) => {
                   return (
                     <tr
-                      key={article._id}
-                      // onClick={() => handleRowClick(article._id)}
+                      key={receipt._id}
+                      // onClick={() => handleRowClick(receipt._id)}
                     >
-                      <td>{article._id}</td>
-                      <td>{article.articleName}</td>
-                      <td>{article.articleUnit}</td>
-                      <td>{article.quantity}</td>
-                      <td>{article.averagePurchasePrice}</td>
-                      <td>{article.sellingPrice}</td>
+                      <td>
+                        <i
+                          className="fas fa-check"
+                          style={{ color: "green" }}
+                        ></i>
+                      </td>
+                      <td>{receipt._id}</td>
+                      <td>{receipt.document}</td>
+                      <td>{receipt.createdAt.substring(0, 10)}</td>
+                      <td>{receipt.partner}</td>
                     </tr>
                   );
                 })}

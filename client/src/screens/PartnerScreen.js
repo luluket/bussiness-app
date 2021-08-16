@@ -86,7 +86,9 @@ const PartnerScreen = ({ location, history, match }) => {
   return (
     <Row>
       <Col md={4}>
-        <h2>Partner Profile</h2>
+        <h2>
+          {partner.name} {partner.surname}
+        </h2>
         {message && <Message variant="danger">{message}</Message>}
         {error && <Message variant="danger">{error}</Message>}
         {/* {success && <Message variant="success">Profile Updated</Message>} */}

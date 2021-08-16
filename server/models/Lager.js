@@ -22,6 +22,10 @@ const lagerSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
+  accumulatedPurchasePrice: {
+    type: Number,
+    required: true,
+  },
   articleUnit: {
     type: mongoose.Schema.Types.String,
     required: true,

@@ -24,14 +24,22 @@ const createReceipt = asyncHandler(async (req, res) => {
     createdReceipt.receivedArticles.forEach(async (article) => {
       var exists = await Lager.findOne({ articleId: article.article });
       if (exists) {
+        // update lager article - quantity and prices
+        exists.quantity += article.quantity;
+        exists.accumulatedPurchasePrice += article.purchasePrice;
+        exists.averagePurchasePrice =
+          exists.accumulatedPurchasePrice / exists.quantity;
+        exists.sellingPrice = exists.averagePurchasePrice * 2.5;
+        await exists.save();
       } else {
         var item = new Lager({
           articleId: article.article,
           articleName: article.name,
           quantity: article.quantity,
-          articleUnit: "komad",
+          accumulatedPurchasePrice: article.purchasePrice,
+          articleUnit: article.unit,
           averagePurchasePrice: article.purchasePrice / article.quantity,
-          sellingPrice: 10,
+          sellingPrice: (article.purchasePrice / article.quantity) * 2.5,
         });
         await item.save();
       }

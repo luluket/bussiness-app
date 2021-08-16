@@ -32,7 +32,10 @@ export const createReceipt = (receipt) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: CENTRAL_RECEIPT_CREATE_FAIL,
-      payload: "Netočan unos",
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
     });
   }
 };
