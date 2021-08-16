@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Row, Col, Table } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { getPartnerDetails, updatePartner } from "../actions/partnerActions";
-import { USER_UPDATE_PROFILE_RESET } from "../constants/userConstants";
 import { listCentralReceipts } from "../actions/centralReceiptActions";
+import { PARTNER_UPDATE_RESET } from "../constants/partnerConstants";
 
-const PartnerScreen = ({ location, history, match }) => {
+const PartnerScreen = ({ history, match }) => {
   const dispatch = useDispatch();
 
   const [name, setName] = useState("");
@@ -55,9 +54,15 @@ const PartnerScreen = ({ location, history, match }) => {
       setTelephone(partner.telephone);
     }
     if (success) {
+      dispatch(getPartnerDetails(match.params.id));
+      dispatch({ type: PARTNER_UPDATE_RESET });
       history.push("/partners");
     }
-  }, [dispatch, history, , partner, success]);
+  }, [dispatch, match, history, , partner, success]);
+
+  useEffect(() => {
+    dispatch(getPartnerDetails(match.params.id));
+  }, [match]);
 
   const handleRowClick = (id) => {
     history.push(`/central/receipt/${id}`);
@@ -86,13 +91,13 @@ const PartnerScreen = ({ location, history, match }) => {
   return (
     <Row>
       <Col md={4}>
-        <h2>
-          {partner.name} {partner.surname}
-        </h2>
         {message && <Message variant="danger">{message}</Message>}
         {error && <Message variant="danger">{error}</Message>}
         {/* {success && <Message variant="success">Profile Updated</Message>} */}
         {loading && <Loader />}
+        <h2>
+          {partner.name} {partner.surname}
+        </h2>
         <Form onSubmit={submitHandler}>
           <Row className="mb-3">
             <Col lg={6} md={6} sm={12}>
@@ -100,7 +105,7 @@ const PartnerScreen = ({ location, history, match }) => {
                 <Form.Label>Ime</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder={name}
+                  value={name}
                   onChange={(e) => setName(e.target.value)}
                 ></Form.Control>
               </Form.Group>
@@ -111,7 +116,7 @@ const PartnerScreen = ({ location, history, match }) => {
                 <Form.Label>Prezime</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder={surname}
+                  value={surname}
                   onChange={(e) => setSurname(e.target.value)}
                 ></Form.Control>
               </Form.Group>
@@ -121,7 +126,7 @@ const PartnerScreen = ({ location, history, match }) => {
             <Form.Label>OIB</Form.Label>
             <Form.Control
               type="number"
-              placeholder={oib}
+              value={oib}
               onChange={(e) => setOib(e.target.value)}
               style={{ width: "15rem" }}
             ></Form.Control>
@@ -146,7 +151,7 @@ const PartnerScreen = ({ location, history, match }) => {
             <Form.Label>Email</Form.Label>
             <Form.Control
               type="email"
-              placeholder={email}
+              value={email}
               onChange={(e) => setEmail(e.target.value)}
               style={{ width: "15rem" }}
             ></Form.Control>
@@ -158,7 +163,7 @@ const PartnerScreen = ({ location, history, match }) => {
                 <Form.Label>Ulica</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder={street}
+                  value={street}
                   onChange={(e) => setStreet(e.target.value)}
                 ></Form.Control>
               </Form.Group>
@@ -168,7 +173,7 @@ const PartnerScreen = ({ location, history, match }) => {
                 <Form.Label>Kućni broj</Form.Label>
                 <Form.Control
                   type="number"
-                  placeholder={houseNumber}
+                  value={houseNumber}
                   onChange={(e) => setHouseNumber(e.target.value)}
                 ></Form.Control>
               </Form.Group>
@@ -181,7 +186,7 @@ const PartnerScreen = ({ location, history, match }) => {
                 <Form.Label>Poštanski broj</Form.Label>
                 <Form.Control
                   type="number"
-                  placeholder={zip}
+                  value={zip}
                   onChange={(e) => setZip(e.target.value)}
                 ></Form.Control>
               </Form.Group>
@@ -191,7 +196,7 @@ const PartnerScreen = ({ location, history, match }) => {
                 <Form.Label>Grad</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder={city}
+                  value={city}
                   onChange={(e) => setCity(e.target.value)}
                 ></Form.Control>
               </Form.Group>
@@ -201,7 +206,7 @@ const PartnerScreen = ({ location, history, match }) => {
                 <Form.Label>Država</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder={country}
+                  value={country}
                   onChange={(e) => setCountry(e.target.value)}
                 ></Form.Control>
               </Form.Group>
@@ -212,7 +217,7 @@ const PartnerScreen = ({ location, history, match }) => {
             <Form.Label>Telefon</Form.Label>
             <Form.Control
               type="text"
-              placeholder={telephone}
+              value={telephone}
               onChange={(e) => setTelephone(e.target.value)}
               style={{ width: "15rem" }}
             ></Form.Control>

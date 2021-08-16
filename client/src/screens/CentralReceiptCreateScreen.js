@@ -18,10 +18,18 @@ const CentralReceiptCreateScreen = () => {
   const [rows, setRows] = useState([]);
 
   const supplierList = useSelector((state) => state.supplierList);
-  const { loading, error, suppliers } = supplierList;
+  const {
+    loading: loadingSuppliers,
+    error: errorSuppliers,
+    suppliers,
+  } = supplierList;
 
   const articleList = useSelector((state) => state.articleList);
-  const { loading: loadingArticles, articles } = articleList;
+  const {
+    loading: loadingArticles,
+    error: errorArticles,
+    articles,
+  } = articleList;
 
   const centralReceiptCreate = useSelector(
     (state) => state.centralReceiptCreate
@@ -100,10 +108,10 @@ const CentralReceiptCreateScreen = () => {
       <h1>PRIMKA - CENTRALNO SKLADIŠTE</h1>
       {successCreate && <Message variant="success">Uspješan unos</Message>}
       {errorCreate && <Message variant="danger">{errorCreate}</Message>}
-      {loadingArticles ? (
+      {loadingSuppliers ? (
         <Loader />
-      ) : error ? (
-        <Message variant="danger">{error}</Message>
+      ) : errorSuppliers ? (
+        <Message variant="danger">{errorSuppliers}</Message>
       ) : (
         <Form onSubmit={submitHandler}>
           <Row className="mb-3">

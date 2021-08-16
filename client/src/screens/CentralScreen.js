@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { listLager } from "../actions/lagerActions";
 import { Table, Button, Row, Col } from "react-bootstrap";
@@ -8,14 +8,19 @@ import { useHistory } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import { LAGER_LIST_RESET } from "../constants/lagerConstants";
 import { CENTRAL_RECEIPT_LIST_RESET } from "../constants/centralReceiptConstants";
-import { getPartnerDetails } from "../actions/partnerActions";
 
-const CentralScreen = (props) => {
+const CentralScreen = () => {
   const dispatch = useDispatch();
+
   const history = useHistory();
 
   const lagerList = useSelector((state) => state.lagerList);
-  const { loading: loadingLager, error: errorLager, lager } = lagerList;
+  const {
+    loading: loadingLager,
+    success: successLager,
+    error: errorLager,
+    lager,
+  } = lagerList;
 
   const centralReceiptList = useSelector((state) => state.centralReceiptList);
   const {
@@ -54,7 +59,7 @@ const CentralScreen = (props) => {
         {lager.length != 0 && (
           <>
             <h2>LAGER LISTA</h2>
-            <Table striped bordered hover responsive>
+            <Table striped bordered responsive>
               <thead>
                 <tr>
                   <th>ID artikla</th>
@@ -105,7 +110,9 @@ const CentralScreen = (props) => {
                   return (
                     <tr
                       key={receipt._id}
-                      // onClick={() => handleRowClick(receipt._id)}
+                      onClick={() =>
+                        history.push(`/central/receipt/${receipt._id}`)
+                      }
                     >
                       <td>
                         <i
@@ -114,7 +121,7 @@ const CentralScreen = (props) => {
                         ></i>
                       </td>
                       <td>{receipt._id}</td>
-                      <td>{receipt.document}</td>
+                      <td>{receipt.document}-ulazni račun</td>
                       <td>{receipt.createdAt.substring(0, 10)}</td>
                       <td>{receipt.partner}</td>
                     </tr>
@@ -122,6 +129,12 @@ const CentralScreen = (props) => {
                 })}
               </tbody>
             </Table>
+            <Button
+              type="button"
+              onClick={() => history.push("/central/receipt")}
+            >
+              Nova primka
+            </Button>
           </>
         )}
       </Col>

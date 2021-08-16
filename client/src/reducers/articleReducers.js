@@ -11,6 +11,7 @@ import {
   ARTICLE_CREATE_REQUEST,
   ARTICLE_CREATE_SUCCESS,
   ARTICLE_CREATE_FAIL,
+  ARTICLE_UPDATE_RESET,
 } from "../constants/articleConstants";
 
 export const articleListReducer = (state = { articles: [] }, action) => {
@@ -63,6 +64,8 @@ export const articleUpdateReducer = (state = { article: {} }, action) => {
       return { loading: false, success: true, article: action.payload };
     case ARTICLE_UPDATE_FAIL:
       return { loading: false, error: action.payload };
+    case ARTICLE_UPDATE_RESET:
+      return { article: {} };
     default:
       return state;
   }

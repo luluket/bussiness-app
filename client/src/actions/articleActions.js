@@ -34,7 +34,6 @@ export const listArticleDetails = (id) => async (dispatch) => {
   try {
     dispatch({ type: ARTICLE_DETAILS_REQUEST });
     const { data } = await axios.get(`/api/articles/${id}`);
-    console.log("action..." + data);
     dispatch({ type: ARTICLE_DETAILS_SUCCESS, payload: data });
   } catch (error) {
     dispatch({

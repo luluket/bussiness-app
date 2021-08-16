@@ -4,8 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { listArticleDetails, updateArticle } from "../actions/articleActions";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
+import { ARTICLE_UPDATE_RESET } from "../constants/articleConstants";
 
-const ArticleScreen = ({ match }) => {
+const ArticleScreen = ({ history, match }) => {
   const [name, setName] = useState("");
   const [type, setType] = useState("");
   const [pdv, setPdv] = useState("");
@@ -21,14 +22,24 @@ const ArticleScreen = ({ match }) => {
   const { success } = articleUpdate;
 
   useEffect(() => {
+    if (!article || !article.name) {
+      dispatch(listArticleDetails(match.params.id));
+    }
     setName(article.name);
     setType(article.type);
     setPdv(article.pdv);
     setDescription(article.description);
     setUnit(article.unit);
+    if (success) {
+      dispatch(listArticleDetails(match.params.id));
+      dispatch({ type: ARTICLE_UPDATE_RESET });
+      history.push("/articles");
+    }
+  }, [dispatch, match, history, article, success]);
 
+  useEffect(() => {
     dispatch(listArticleDetails(match.params.id));
-  }, [dispatch, loading]);
+  }, [match]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -47,7 +58,6 @@ const ArticleScreen = ({ match }) => {
     <>
       {error && <Message variant="danger">{error}</Message>}
       {loading && <Loader />}
-      {success && <Message variant="success">Artikal Izmijenjen</Message>}
       <Row lg={2}>
         <Col md={5}>
           <Image src={article.image} alt={article.name} fluid />
@@ -57,8 +67,7 @@ const ArticleScreen = ({ match }) => {
             <Form.Group controlId="name" className="mb-3">
               <Form.Label>Ime artikla</Form.Label>
               <Form.Control
-                type="name"
-                placeholder="Unesite ime artikla"
+                type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               ></Form.Control>
