@@ -188,7 +188,7 @@ const CentralReceiptCreateScreen = () => {
                     </td>
                     <td>
                       <Form.Control
-                        type="number"
+                        type="decimal"
                         placeholder="Unesite nabavnu cijenu"
                         onChange={handlePurchasePrice(index)}
                       ></Form.Control>

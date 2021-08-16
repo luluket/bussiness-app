@@ -8,6 +8,7 @@ import { useHistory } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import { LAGER_LIST_RESET } from "../constants/lagerConstants";
 import { CENTRAL_RECEIPT_LIST_RESET } from "../constants/centralReceiptConstants";
+import { listCentralReceipts } from "../actions/centralReceiptActions";
 
 const CentralScreen = () => {
   const dispatch = useDispatch();
@@ -29,14 +30,6 @@ const CentralScreen = () => {
     receipts,
   } = centralReceiptList;
 
-  //   const handleRowClick = (id) => {
-  //     history.push(`/article/${id}`);
-  //   };
-
-  // useEffect(() => {
-  //   dispatch(listLager());
-  // }, [dispatch]);
-
   useEffect(() => {
     dispatch({ type: LAGER_LIST_RESET });
   }, [loadingReceipts]);
@@ -49,9 +42,28 @@ const CentralScreen = () => {
     history.push("/lager/create");
   };
 
+  const props = [
+    {
+      name: "Lager",
+      function: listLager(),
+    },
+    {
+      name: "Primka - Kalkulacija",
+      function: listCentralReceipts(),
+    },
+    {
+      name: "Međuskladišnica - Ulaz",
+      function: listLager(),
+    },
+    {
+      name: "Međuskladišnica - Izlaz",
+      function: listLager(),
+    },
+  ];
+
   return (
     <Row className="flex-xl-nowrap">
-      <Col as={Sidebar} xs={12} md={3} lg={3} />
+      <Col as={Sidebar} props={props} />
       <Col xs={12} md={9} lg={9}>
         <h1>CENTRALNO SKLADIŠTE</h1>
         {loadingLager && <Loader />}
@@ -73,10 +85,7 @@ const CentralScreen = () => {
               <tbody>
                 {lager.map((article) => {
                   return (
-                    <tr
-                      key={article._id}
-                      // onClick={() => handleRowClick(article._id)}
-                    >
+                    <tr key={article._id}>
                       <td>{article._id}</td>
                       <td>{article.articleName}</td>
                       <td>{article.articleUnit}</td>

@@ -26,10 +26,13 @@ const createReceipt = asyncHandler(async (req, res) => {
       if (exists) {
         // update lager article - quantity and prices
         exists.quantity += article.quantity;
-        exists.accumulatedPurchasePrice += article.purchasePrice;
-        exists.averagePurchasePrice =
-          exists.accumulatedPurchasePrice / exists.quantity;
-        exists.sellingPrice = exists.averagePurchasePrice * 2.5;
+        exists.accumulatedPurchasePrice = (
+          exists.accumulatedPurchasePrice + article.purchasePrice
+        ).toFixed(2);
+        exists.averagePurchasePrice = (
+          exists.accumulatedPurchasePrice / exists.quantity
+        ).toFixed(2);
+        exists.sellingPrice = (exists.averagePurchasePrice * 2.5).toFixed(2);
         await exists.save();
       } else {
         var item = new Lager({
@@ -38,8 +41,13 @@ const createReceipt = asyncHandler(async (req, res) => {
           quantity: article.quantity,
           accumulatedPurchasePrice: article.purchasePrice,
           articleUnit: article.unit,
-          averagePurchasePrice: article.purchasePrice / article.quantity,
-          sellingPrice: (article.purchasePrice / article.quantity) * 2.5,
+          averagePurchasePrice: (
+            article.purchasePrice / article.quantity
+          ).toFixed(2),
+          sellingPrice: (
+            (article.purchasePrice / article.quantity) *
+            2.5
+          ).toFixed(2),
         });
         await item.save();
       }

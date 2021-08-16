@@ -7,6 +7,8 @@
     cijena
 */
 import mongoose from "mongoose";
+import Double from "@mongoosejs/double";
+
 const lagerSchema = mongoose.Schema({
   articleId: {
     type: mongoose.Schema.Types.ObjectId,
