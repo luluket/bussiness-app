@@ -17,15 +17,15 @@ const getExports = asyncHandler(async (req, res) => {
 // @access Public
 const createExport = asyncHandler(async (req, res) => {
   const exportArticles = new CentralExport({
-    warehouse: req.body.warehouse,
+    warehouse: "skladište materijala",
     document: req.body.document,
     exportedArticles: req.body.exportedArticles,
   });
-  // const importArticles = new MaterialImport({
-  //   warehouse: req.body.warehouse,
-  //   document: req.body.document,
-  //   importedArticles: req.body.exportedArticles,
-  // });
+  const importArticles = new MaterialImport({
+    warehouse: "centralno skladište",
+    document: req.body.document,
+    importedArticles: req.body.exportedArticles,
+  });
   const createdExport = await exportArticles.save();
   // const createdImport = await importArticles.save();
   if (createdExport) {

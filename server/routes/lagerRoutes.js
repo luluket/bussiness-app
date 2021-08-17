@@ -1,6 +1,7 @@
 import express from "express";
-import { getLager } from "../controllers/lagerController.js";
+import { getLager, getLagerMaterials } from "../controllers/lagerController.js";
 const router = express.Router();
 
 router.route("/").get(getLager);
+router.route("/materials").get(getLagerMaterials);
 export default router;

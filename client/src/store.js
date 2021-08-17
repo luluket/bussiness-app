@@ -53,6 +53,8 @@ import {
   centralReceiptListReducer,
 } from "./reducers/centralReceiptReducers.js";
 
+import { centralExportListReducer } from "./reducers/centralExportReducers.js";
+
 const reducer = combineReducers({
   productList: productListReducer,
   productDetails: productDetailsReducer,
@@ -88,6 +90,7 @@ const reducer = combineReducers({
   lagerList: lagerListReducer,
   centralReceiptList: centralReceiptListReducer,
   centralReceiptCreate: centralReceiptCreateReducer,
+  centralExportList: centralExportListReducer,
 });
 const cartItemsFromStorage = localStorage.getItem("cartItems")
   ? JSON.parse(localStorage.getItem("cartItems"))

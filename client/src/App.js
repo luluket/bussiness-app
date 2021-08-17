@@ -29,6 +29,7 @@ import ArticleCreateScreen from "./screens/ArticleCreateScreen";
 import CentralScreen from "./screens/CentralScreen";
 import CentralReceiptCreateScreen from "./screens/CentralReceiptCreateScreen";
 import CentralReceiptScreen from "./screens/CentralReceiptScreen";
+import CentralExportCreateScreen from "./screens/CentralExportCreateScreen";
 
 const App = () => {
   return (
@@ -57,6 +58,11 @@ const App = () => {
             <Route
               path="/central/receipt"
               component={CentralReceiptCreateScreen}
+              exact
+            />
+            <Route
+              path="/central/export"
+              component={CentralExportCreateScreen}
               exact
             />
 

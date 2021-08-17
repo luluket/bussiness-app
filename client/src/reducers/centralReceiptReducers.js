@@ -17,6 +17,11 @@ export const centralReceiptListReducer = (state = { receipts: [] }, action) => {
         loading: false,
         receipts: action.payload,
       };
+    case CENTRAL_RECEIPT_LIST_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
     case CENTRAL_RECEIPT_LIST_RESET:
       return { receipts: [] };
     default:

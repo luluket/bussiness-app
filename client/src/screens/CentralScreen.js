@@ -9,6 +9,8 @@ import Sidebar from "../components/Sidebar";
 import { LAGER_LIST_RESET } from "../constants/lagerConstants";
 import { CENTRAL_RECEIPT_LIST_RESET } from "../constants/centralReceiptConstants";
 import { listCentralReceipts } from "../actions/centralReceiptActions";
+import { listCentralExports } from "../actions/centralExportActions";
+import { CENTRAL_EXPORT_LIST_RESET } from "../constants/centralExportConstants";
 
 const CentralScreen = () => {
   const dispatch = useDispatch();
@@ -30,13 +32,27 @@ const CentralScreen = () => {
     receipts,
   } = centralReceiptList;
 
+  const centralExportList = useSelector((state) => state.centralExportList);
+  const {
+    loading: loadingExports,
+    error: errorExports,
+    exports,
+  } = centralExportList;
+
   useEffect(() => {
     dispatch({ type: LAGER_LIST_RESET });
+    dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
   }, [loadingReceipts]);
 
   useEffect(() => {
     dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
+    dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
   }, [loadingLager]);
+
+  useEffect(() => {
+    dispatch({ type: LAGER_LIST_RESET });
+    dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
+  }, [loadingExports]);
 
   const handleButtonClick = () => {
     history.push("/lager/create");
@@ -57,7 +73,7 @@ const CentralScreen = () => {
     },
     {
       name: "Međuskladišnica - Izlaz",
-      function: listLager(),
+      function: listCentralExports(),
     },
   ];
 
@@ -108,9 +124,9 @@ const CentralScreen = () => {
               <thead>
                 <tr>
                   <th>ZAKLJUČEN</th>
-                  <th>ID</th>
                   <th>DOKUMENT</th>
                   <th>DATUM</th>
+                  <th>VRIJEME</th>
                   <th>DOBAVLJAČ</th>
                 </tr>
               </thead>
@@ -129,9 +145,9 @@ const CentralScreen = () => {
                           style={{ color: "green" }}
                         ></i>
                       </td>
-                      <td>{receipt._id}</td>
                       <td>{receipt.document}-ulazni račun</td>
                       <td>{receipt.createdAt.substring(0, 10)}</td>
+                      <td>{receipt.createdAt.substring(11, 19)}</td>
                       <td>{receipt.partner}</td>
                     </tr>
                   );
@@ -143,6 +159,53 @@ const CentralScreen = () => {
               onClick={() => history.push("/central/receipt")}
             >
               Nova primka
+            </Button>
+          </>
+        )}
+        {loadingExports && <Loader />}
+        {errorExports && <Message variant="danger">{errorExports}</Message>}
+        {exports.length != 0 && (
+          <>
+            <h2>MEĐUSKALDIŠNICA - IZLAZ</h2>
+            <Table striped bordered hover responsive>
+              <thead>
+                <tr>
+                  <th>ZAKLJUČEN</th>
+                  <th>DOKUMENT</th>
+                  <th>DATUM</th>
+                  <th>VRIJEME</th>
+                  <th>SKLADIŠTE</th>
+                </tr>
+              </thead>
+              <tbody>
+                {exports.map((item) => {
+                  return (
+                    <tr
+                      key={item._id}
+                      // onClick={() =>
+                      //   history.push(`/central/item/${item._id}`)
+                      // }
+                    >
+                      <td>
+                        <i
+                          className="fas fa-check"
+                          style={{ color: "green" }}
+                        ></i>
+                      </td>
+                      <td>{item.document}-izlazni račun</td>
+                      <td>{item.createdAt.substring(0, 10)}</td>
+                      <td>{item.createdAt.substring(11, 19)}</td>
+                      <td>{item.warehouse}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+            <Button
+              type="button"
+              onClick={() => history.push("/central/export")}
+            >
+              Nova otprema
             </Button>
           </>
         )}
