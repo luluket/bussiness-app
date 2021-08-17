@@ -7,7 +7,6 @@
     cijena
 */
 import mongoose from "mongoose";
-import Double from "@mongoosejs/double";
 
 const lagerSchema = mongoose.Schema({
   articleId: {
@@ -21,6 +20,10 @@ const lagerSchema = mongoose.Schema({
     ref: "Article",
   },
   quantity: {
+    type: Number,
+    required: true,
+  },
+  accumulatedQuantity: {
     type: Number,
     required: true,
   },
