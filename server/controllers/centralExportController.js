@@ -20,13 +20,15 @@ const getExports = asyncHandler(async (req, res) => {
 // @access Public
 const createExport = asyncHandler(async (req, res) => {
   const exportArticles = new CentralExport({
-    warehouse: "skladište materijala",
+    departureWarehouse: req.body.departureWarehouse,
+    destinationWarehouse: req.body.destinationWarehouse,
     document: req.body.document,
     exportedArticles: req.body.exportedArticles,
   });
 
   const importArticles = new MaterialImport({
-    warehouse: "centralno skladište",
+    departureWarehouse: req.body.departureWarehouse,
+    destinationWarehouse: req.body.destinationWarehouse,
     document: req.body.document,
     importedArticles: req.body.exportedArticles,
   });
@@ -50,8 +52,8 @@ const createExport = asyncHandler(async (req, res) => {
       }
 
       //substract exported quantity in central lager
-      const lagerItem = await Lager.findOne({ article: item.article });
-      lagerItem.quantity = lagerItem.quantity - item.quantity;
+      var lagerItem = await Lager.findOne({ article: item.article });
+      lagerItem.quantity -= item.quantity;
       await lagerItem.save();
     });
   }

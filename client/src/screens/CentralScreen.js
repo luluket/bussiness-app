@@ -17,6 +17,10 @@ const CentralScreen = () => {
 
   const history = useHistory();
 
+  const [showLagerNote, setShowLagerNote] = useState(false);
+  const [showReceiptNote, setShowReceiptNote] = useState(false);
+  const [showExportNote, setShowExportNote] = useState(false);
+
   const lagerList = useSelector((state) => state.lagerList);
   const {
     loading: loadingLager,
@@ -42,11 +46,15 @@ const CentralScreen = () => {
   useEffect(() => {
     dispatch({ type: LAGER_LIST_RESET });
     dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
+    setShowLagerNote(false);
+    setShowReceiptNote(true);
   }, [loadingReceipts]);
 
   useEffect(() => {
     dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
     dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
+    setShowLagerNote(true);
+    setShowReceiptNote(false);
   }, [loadingLager]);
 
   useEffect(() => {
@@ -84,7 +92,7 @@ const CentralScreen = () => {
         <h1>CENTRALNO SKLADIŠTE</h1>
         {loadingLager && <Loader />}
         {errorLager && <Message variant="danger">{errorLager}</Message>}
-        {lager.length != 0 && (
+        {lager.length != 0 ? (
           <>
             <h2>LAGER LISTA</h2>
             <Table striped bordered responsive>
@@ -114,10 +122,12 @@ const CentralScreen = () => {
               </tbody>
             </Table>
           </>
+        ) : (
+          showLagerNote && <h2>Lager lista je prazna</h2>
         )}
         {loadingReceipts && <Loader />}
         {errorReceipts && <Message variant="danger">{errorReceipts}</Message>}
-        {receipts.length != 0 && (
+        {receipts.length != 0 ? (
           <>
             <h2>PRIMKE</h2>
             <Table striped bordered hover responsive>
@@ -163,6 +173,18 @@ const CentralScreen = () => {
               Nova primka
             </Button>
           </>
+        ) : (
+          showReceiptNote && (
+            <>
+              <h2>Lista primki je prazna</h2>
+              <Button
+                type="button"
+                onClick={() => history.push("/central/receipt")}
+              >
+                Nova primka
+              </Button>
+            </>
+          )
         )}
         {loadingExports && <Loader />}
         {errorExports && <Message variant="danger">{errorExports}</Message>}

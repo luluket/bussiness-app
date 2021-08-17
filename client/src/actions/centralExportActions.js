@@ -23,19 +23,19 @@ export const listCentralExports = () => async (dispatch) => {
     });
   }
 };
-// export const createReceipt = (receipt) => async (dispatch) => {
-//   try {
-//     console.log(receipt);
-//     dispatch({ type: CENTRAL_RECEIPT_CREATE_REQUEST });
-//     const { data } = await axios.post("/api/central/receipts", receipt);
-//     dispatch({ type: CENTRAL_RECEIPT_CREATE_SUCCESS, payload: data });
-//   } catch (error) {
-//     dispatch({
-//       type: CENTRAL_RECEIPT_CREATE_FAIL,
-//       payload:
-//         error.response && error.response.data.message
-//           ? error.response.data.message
-//           : error.message,
-//     });
-//   }
-// };
+
+export const createExport = (exports) => async (dispatch) => {
+  try {
+    dispatch({ type: CENTRAL_EXPORT_CREATE_REQUEST });
+    const { data } = await axios.post("/api/central/exports", exports);
+    dispatch({ type: CENTRAL_EXPORT_CREATE_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: CENTRAL_EXPORT_CREATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};

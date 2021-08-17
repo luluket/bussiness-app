@@ -46,7 +46,10 @@ import {
   supplierListReducer,
 } from "./reducers/partnerReducers.js";
 
-import { lagerListReducer } from "./reducers/lagerReducers.js";
+import {
+  lagerListReducer,
+  lagerListMaterialReducer,
+} from "./reducers/lagerReducers.js";
 
 import {
   centralReceiptCreateReducer,
@@ -88,6 +91,7 @@ const reducer = combineReducers({
   partnerUpdate: partnerUpdateReducer,
   supplierList: supplierListReducer,
   lagerList: lagerListReducer,
+  lagerListMaterial: lagerListMaterialReducer,
   centralReceiptList: centralReceiptListReducer,
   centralReceiptCreate: centralReceiptCreateReducer,
   centralExportList: centralExportListReducer,

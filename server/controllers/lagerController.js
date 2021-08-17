@@ -6,7 +6,7 @@ import Article from "../models/Article.js";
 //@route GET /api/lager
 //@access Public
 export const getLager = asyncHandler(async (req, res) => {
-  const lager = await Lager.find({}).populate("article", "name unit");
+  const lager = await Lager.find({}).populate("article", "name type unit");
   res.json(lager);
 });
 
@@ -14,9 +14,9 @@ export const getLager = asyncHandler(async (req, res) => {
 //@route GET /api/lager/materials
 //@access Public
 export const getLagerMaterials = asyncHandler(async (req, res) => {
-  const lager = await Lager.find({}).populate("articleId", "type");
+  const lager = await Lager.find({}).populate("article", "type name");
   const filteredLager = lager.filter(
-    (item) => item.articleId.type === "materijal"
+    (item) => item.article.type === "materijal"
   );
   res.json(filteredLager);
 });

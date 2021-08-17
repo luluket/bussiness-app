@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const centralExportSchema = mongoose.Schema(
   {
-    warehouse: {
+    destinationWarehouse: {
       type: String,
       required: true,
     },

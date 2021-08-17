@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const materialImportSchema = mongoose.Schema(
   {
-    warehouse: {
+    departureWarehouse: {
       type: String,
       required: true,
     },
