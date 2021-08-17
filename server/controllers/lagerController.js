@@ -6,7 +6,7 @@ import Article from "../models/Article.js";
 //@route GET /api/lager
 //@access Public
 export const getLager = asyncHandler(async (req, res) => {
-  const lager = await Lager.find({});
+  const lager = await Lager.find({}).populate("article", "name unit");
   res.json(lager);
 });
 

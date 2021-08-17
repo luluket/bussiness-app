@@ -13,7 +13,7 @@ const CentralReceiptCreateScreen = () => {
   const [partner, setPartner] = useState("");
   const [document, setDocument] = useState();
   const [receivedArticles, setReceivedArticles] = useState([
-    { article: "", name: "", quantity: 0, unit: "", purchasePrice: 0 },
+    { article: "", quantity: 0, purchasePrice: 0 },
   ]);
   const [rows, setRows] = useState([]);
 
@@ -50,17 +50,13 @@ const CentralReceiptCreateScreen = () => {
       (item) => item._id === event.target.value
     );
 
-    const { _id, name, unit } = receivedArticle;
+    const { _id } = receivedArticle;
     if (receivedArticles[index]) {
       receivedArticles[index].article = _id;
-      receivedArticles[index].name = name;
-      receivedArticles[index].unit = unit;
     } else {
       receivedArticles.push({
         article: _id,
-        name: name,
         quantity: 0,
-        unit: unit,
         purchasePrice: 0,
       });
     }
@@ -72,7 +68,6 @@ const CentralReceiptCreateScreen = () => {
     } else {
       receivedArticles.push({
         article: "",
-        name: "",
         quantity: event.target.value,
         purchasePrice: 0,
       });
@@ -85,7 +80,6 @@ const CentralReceiptCreateScreen = () => {
     } else {
       receivedArticles.push({
         article: "",
-        name: "",
         quantity: 0,
         purchasePrice: event.target.value,
       });
@@ -171,7 +165,7 @@ const CentralReceiptCreateScreen = () => {
                           <option>Izaberite artikal</option>
                           {articles.map((article) => {
                             return (
-                              <option id={article.name} value={article._id}>
+                              <option value={article._id}>
                                 {article.name} ({article._id})
                               </option>
                             );

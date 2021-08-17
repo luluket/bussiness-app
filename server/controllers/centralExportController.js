@@ -8,7 +8,10 @@ import Lager from "../models/Lager.js";
 // @route GET /api/central/exports
 // @access Public
 const getExports = asyncHandler(async (req, res) => {
-  const exports = await CentralExport.find({});
+  const exports = await CentralExport.find({}).populate(
+    "exportedArticles.article",
+    "name unit"
+  );
   res.json(exports);
 });
 
@@ -21,32 +24,34 @@ const createExport = asyncHandler(async (req, res) => {
     document: req.body.document,
     exportedArticles: req.body.exportedArticles,
   });
+
   const importArticles = new MaterialImport({
     warehouse: "centralno skladište",
     document: req.body.document,
     importedArticles: req.body.exportedArticles,
   });
+
   const createdExport = await exportArticles.save();
-  // const createdImport = await importArticles.save();
+  await importArticles.save();
+
   if (createdExport) {
-    createdExport.exportedArticles.forEach(async (article) => {
-      var exists = await MaterialLager.findOne({ articleId: article.article });
+    createdExport.exportedArticles.forEach(async (item) => {
+      var exists = await MaterialLager.findOne({ article: item.article });
       if (exists) {
         // update lager article - quantity
-        exists.quantity += article.quantity;
+        exists.quantity += item.quantity;
         await exists.save();
       } else {
-        var item = new MaterialLager({
-          articleId: article.article,
-          articleName: article.name,
-          quantity: article.quantity,
-          articleUnit: article.unit,
+        var itemMaterial = new MaterialLager({
+          article: item.article,
+          quantity: item.quantity,
         });
-        await item.save();
+        await itemMaterial.save();
       }
+
       //substract exported quantity in central lager
-      const lagerItem = await Lager.findOne({ articleId: article.article });
-      lagerItem.quantity = lagerItem.quantity - article.quantity;
+      const lagerItem = await Lager.findOne({ article: item.article });
+      lagerItem.quantity = lagerItem.quantity - item.quantity;
       await lagerItem.save();
     });
   }

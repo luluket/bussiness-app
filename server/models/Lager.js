@@ -9,13 +9,8 @@
 import mongoose from "mongoose";
 
 const lagerSchema = mongoose.Schema({
-  articleId: {
+  article: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: "Article",
-  },
-  articleName: {
-    type: mongoose.Schema.Types.String,
     required: true,
     ref: "Article",
   },
@@ -30,11 +25,6 @@ const lagerSchema = mongoose.Schema({
   accumulatedPurchasePrice: {
     type: Number,
     required: true,
-  },
-  articleUnit: {
-    type: mongoose.Schema.Types.String,
-    required: true,
-    ref: "Article",
   },
   averagePurchasePrice: {
     type: Number,

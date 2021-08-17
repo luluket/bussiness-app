@@ -99,15 +99,15 @@ const CentralScreen = () => {
                 </tr>
               </thead>
               <tbody>
-                {lager.map((article) => {
+                {lager.map((item) => {
                   return (
-                    <tr key={article._id}>
-                      <td>{article._id}</td>
-                      <td>{article.articleName}</td>
-                      <td>{article.articleUnit}</td>
-                      <td>{article.quantity}</td>
-                      <td>{article.averagePurchasePrice}</td>
-                      <td>{article.sellingPrice}</td>
+                    <tr key={item._id}>
+                      <td>{item._id}</td>
+                      <td>{item.article.name}</td>
+                      <td>{item.article.unit}</td>
+                      <td>{item.quantity}</td>
+                      <td>{item.averagePurchasePrice}</td>
+                      <td>{item.sellingPrice}</td>
                     </tr>
                   );
                 })}
@@ -148,7 +148,9 @@ const CentralScreen = () => {
                       <td>{receipt.document}-ulazni račun</td>
                       <td>{receipt.createdAt.substring(0, 10)}</td>
                       <td>{receipt.createdAt.substring(11, 19)}</td>
-                      <td>{receipt.partner}</td>
+                      <td>
+                        {receipt.partner.name} {receipt.partner.surname}
+                      </td>
                     </tr>
                   );
                 })}

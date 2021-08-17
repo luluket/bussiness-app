@@ -18,9 +18,7 @@ const centralExportSchema = mongoose.Schema(
           required: true,
           ref: "Article",
         },
-        name: { type: String, required: true },
         quantity: { type: Number, required: true },
-        unit: { type: String, required: true },
       },
     ],
   },
@@ -29,4 +27,5 @@ const centralExportSchema = mongoose.Schema(
   }
 );
 const CentralExport = mongoose.model("CentralExport", centralExportSchema);
+
 export default CentralExport;

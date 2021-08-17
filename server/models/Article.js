@@ -26,10 +26,6 @@ const articleSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    // countInStock: {
-    //   type: Number,
-    //   required: true,
-    // },
   },
   {
     timestamps: true,

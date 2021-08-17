@@ -19,9 +19,7 @@ const centralReceiptSchema = mongoose.Schema(
           required: true,
           ref: "Article",
         },
-        name: { type: String, required: true },
         quantity: { type: Number, required: true, min: 1 },
-        unit: { type: String, required: true },
         purchasePrice: {
           type: Number,
           required: true,

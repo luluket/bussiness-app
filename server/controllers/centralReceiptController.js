@@ -6,7 +6,9 @@ import Lager from "../models/Lager.js";
 // @route GET /api/central/receipts
 // @access Public
 const getReceipts = asyncHandler(async (req, res) => {
-  const receipts = await CentralReceipt.find({});
+  const receipts = await CentralReceipt.find({})
+    .populate("article", "name unit")
+    .populate("partner", "name surname");
   res.json(receipts);
 });
 
@@ -21,14 +23,14 @@ const createReceipt = asyncHandler(async (req, res) => {
   });
   const createdReceipt = await receipt.save();
   if (createdReceipt) {
-    createdReceipt.receivedArticles.forEach(async (article) => {
-      var exists = await Lager.findOne({ articleId: article.article });
+    createdReceipt.receivedArticles.forEach(async (item) => {
+      var exists = await Lager.findOne({ article: item.article });
       if (exists) {
         // update lager article - quantity and prices
-        exists.quantity += article.quantity;
-        exists.accumulatedQuantity += article.quantity;
+        exists.quantity += item.quantity;
+        exists.accumulatedQuantity += item.quantity;
         exists.accumulatedPurchasePrice = (
-          exists.accumulatedPurchasePrice + article.purchasePrice
+          exists.accumulatedPurchasePrice + item.purchasePrice
         ).toFixed(2);
         exists.averagePurchasePrice = (
           exists.accumulatedPurchasePrice / exists.accumulatedQuantity
@@ -36,22 +38,15 @@ const createReceipt = asyncHandler(async (req, res) => {
         exists.sellingPrice = (exists.averagePurchasePrice * 2.5).toFixed(2);
         await exists.save();
       } else {
-        var item = new Lager({
-          articleId: article.article,
-          articleName: article.name,
-          quantity: article.quantity,
-          accumulatedQuantity: article.quantity,
-          accumulatedPurchasePrice: article.purchasePrice,
-          articleUnit: article.unit,
-          averagePurchasePrice: (
-            article.purchasePrice / article.quantity
-          ).toFixed(2),
-          sellingPrice: (
-            (article.purchasePrice / article.quantity) *
-            2.5
-          ).toFixed(2),
+        var lagerItem = new Lager({
+          article: item.article,
+          quantity: item.quantity,
+          accumulatedQuantity: item.quantity,
+          accumulatedPurchasePrice: item.purchasePrice,
+          averagePurchasePrice: (item.purchasePrice / item.quantity).toFixed(2),
+          sellingPrice: ((item.purchasePrice / item.quantity) * 2.5).toFixed(2),
         });
-        await item.save();
+        await lagerItem.save();
       }
     });
   }

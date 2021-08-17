@@ -4,6 +4,9 @@ import MaterialLager from "../models/MaterialLager.js";
 //@route GET /api/material/Lager
 //@access Public
 export const getMaterialLager = asyncHandler(async (req, res) => {
-  const materialLager = await MaterialLager.find({});
+  const materialLager = await MaterialLager.find({}).populate(
+    "article",
+    "name unit"
+  );
   res.json(materialLager);
 });
