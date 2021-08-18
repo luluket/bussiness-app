@@ -30,6 +30,7 @@ import CentralScreen from "./screens/CentralScreen";
 import CentralReceiptCreateScreen from "./screens/CentralReceiptCreateScreen";
 import CentralReceiptScreen from "./screens/CentralReceiptScreen";
 import CentralExportCreateScreen from "./screens/CentralExportCreateScreen";
+import ManufactureScreen from "./screens/ManufactureScreen";
 
 const App = () => {
   return (
@@ -65,6 +66,7 @@ const App = () => {
               component={CentralExportCreateScreen}
               exact
             />
+            <Route path="/manufacture" component={ManufactureScreen} exact />
 
             <Route path="/shipping" component={ShippingScreen} />
             <Route path="/order/:id" component={OrderScreen} />

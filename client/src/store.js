@@ -61,6 +61,9 @@ import {
   centralExportCreateReducer,
 } from "./reducers/centralExportReducers.js";
 
+import { materialLagerListReducer } from "./reducers/materialLagerReducers.js";
+import { materialImportListReducer } from "./reducers/materialImportReducers.js";
+
 const reducer = combineReducers({
   productList: productListReducer,
   productDetails: productDetailsReducer,
@@ -99,6 +102,8 @@ const reducer = combineReducers({
   centralReceiptCreate: centralReceiptCreateReducer,
   centralExportList: centralExportListReducer,
   centralExportCreate: centralExportCreateReducer,
+  materialLagerList: materialLagerListReducer,
+  materialImportList: materialImportListReducer,
 });
 const cartItemsFromStorage = localStorage.getItem("cartItems")
   ? JSON.parse(localStorage.getItem("cartItems"))

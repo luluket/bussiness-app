@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { listLager } from "../actions/lagerActions";
+import { listMaterialLager } from "../actions/materialLagerActions";
 import { Table, Button, Row, Col } from "react-bootstrap";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
@@ -9,10 +9,10 @@ import Sidebar from "../components/Sidebar";
 import { LAGER_LIST_RESET } from "../constants/lagerConstants";
 import { CENTRAL_RECEIPT_LIST_RESET } from "../constants/centralReceiptConstants";
 import { listCentralReceipts } from "../actions/centralReceiptActions";
-import { listCentralExports } from "../actions/centralExportActions";
+import { listMaterialImports } from "../actions/materialImportActions";
 import { CENTRAL_EXPORT_LIST_RESET } from "../constants/centralExportConstants";
 
-const CentralScreen = () => {
+const ManufactureScreen = () => {
   const dispatch = useDispatch();
 
   const history = useHistory();
@@ -21,7 +21,7 @@ const CentralScreen = () => {
   const [showReceiptNote, setShowReceiptNote] = useState(false);
   const [showExportNote, setShowExportNote] = useState(false);
 
-  const lagerList = useSelector((state) => state.lagerList);
+  const lagerList = useSelector((state) => state.materialLagerList);
   const {
     loading: loadingLager,
     success: successLager,
@@ -36,12 +36,12 @@ const CentralScreen = () => {
     receipts,
   } = centralReceiptList;
 
-  const centralExportList = useSelector((state) => state.centralExportList);
+  const materialImportList = useSelector((state) => state.materialImportList);
   const {
-    loading: loadingExports,
-    error: errorExports,
-    exports,
-  } = centralExportList;
+    loading: loadingImports,
+    error: errorImports,
+    imports,
+  } = materialImportList;
 
   useEffect(() => {
     dispatch({ type: LAGER_LIST_RESET });
@@ -65,7 +65,7 @@ const CentralScreen = () => {
     setShowLagerNote(false);
     setShowReceiptNote(false);
     setShowExportNote(true);
-  }, [loadingExports]);
+  }, [loadingImports]);
 
   const handleButtonClick = () => {
     history.push("/lager/create");
@@ -73,24 +73,37 @@ const CentralScreen = () => {
 
   const props = [
     {
-      name: "Lager",
-      subitems: [],
-      function: listLager(),
+      name: "Skladište materijala",
+      subitems: [
+        { name: "Lager", function: listMaterialLager() },
+        { name: "Međuskladišnica-ulaz", function: listMaterialImports() },
+        { name: "Međuskladišnica-izlaz", function: listMaterialLager() },
+      ],
+      function: listMaterialLager(),
     },
     {
-      name: "Primka - kalkulacija",
-      subitems: [],
-      function: listCentralReceipts(),
+      name: "Skladište gotovih proizvoda",
+      subitems: [
+        { name: "Lager", function: listMaterialLager() },
+        { name: "Međuskladišnica-ulaz", function: listMaterialLager() },
+        { name: "Međuskladišnica-izlaz", function: listMaterialLager() },
+      ],
+      function: listMaterialLager(),
     },
     {
-      name: "Međuskladišnica - ulaz",
+      name: "Normativi",
       subitems: [],
-      function: listLager(),
+      function: listMaterialLager(),
     },
     {
-      name: "Međuskladišnica - izlaz",
+      name: "Radni nalozi",
       subitems: [],
-      function: listCentralExports(),
+      function: listMaterialLager(),
+    },
+    {
+      name: "Utrošak materijala",
+      subitems: [],
+      function: listMaterialLager(),
     },
   ];
 
@@ -98,7 +111,7 @@ const CentralScreen = () => {
     <Row className="flex-xl-nowrap">
       <Col as={Sidebar} props={props} />
       <Col xs={12} md={9} lg={9}>
-        <h1 className="text-center">CENTRALNO SKLADIŠTE</h1>
+        <h1 className="text-center">PROIZVODNI POGON</h1>
         {loadingLager && <Loader />}
         {errorLager && <Message variant="danger">{errorLager}</Message>}
         {lager.length != 0 ? (
@@ -111,8 +124,6 @@ const CentralScreen = () => {
                   <th>Naziv artikla</th>
                   <th>Jedinica mjere</th>
                   <th>Količina</th>
-                  <th>PNC</th>
-                  <th>cijena</th>
                 </tr>
               </thead>
               <tbody>
@@ -123,8 +134,6 @@ const CentralScreen = () => {
                       <td>{item.article.name}</td>
                       <td>{item.article.unit}</td>
                       <td>{item.quantity}</td>
-                      <td>{item.averagePurchasePrice}</td>
-                      <td>{item.sellingPrice}</td>
                     </tr>
                   );
                 })}
@@ -195,11 +204,11 @@ const CentralScreen = () => {
             </>
           )
         )}
-        {loadingExports && <Loader />}
-        {errorExports && <Message variant="danger">{errorExports}</Message>}
-        {exports.length != 0 ? (
+        {loadingImports && <Loader />}
+        {errorImports && <Message variant="danger">{errorImports}</Message>}
+        {imports.length != 0 ? (
           <>
-            <h2>MEĐUSKLADIŠNICA - IZLAZ</h2>
+            <h2>MEĐUSKLADIŠNICA - ULAZ</h2>
             <Table striped bordered hover responsive>
               <thead>
                 <tr>
@@ -211,7 +220,7 @@ const CentralScreen = () => {
                 </tr>
               </thead>
               <tbody>
-                {exports.map((item) => {
+                {imports.map((item) => {
                   return (
                     <tr
                       key={item._id}
@@ -225,21 +234,15 @@ const CentralScreen = () => {
                           style={{ color: "green" }}
                         ></i>
                       </td>
-                      <td>{item.document}-izlazni račun</td>
+                      <td>{item.document}-ulazni račun</td>
                       <td>{item.createdAt.substring(0, 10)}</td>
                       <td>{item.createdAt.substring(11, 19)}</td>
-                      <td>{item.destinationWarehouse}</td>
+                      <td>{item.departureWarehouse}</td>
                     </tr>
                   );
                 })}
               </tbody>
             </Table>
-            <Button
-              type="button"
-              onClick={() => history.push("/central/export")}
-            >
-              Nova otprema
-            </Button>
           </>
         ) : (
           showExportNote && (
@@ -259,4 +262,4 @@ const CentralScreen = () => {
   );
 };
 
-export default CentralScreen;
+export default ManufactureScreen;

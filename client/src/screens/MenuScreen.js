@@ -10,35 +10,15 @@ import material from "../../src/skladistematerijala.jpg";
 import products from "../../src/skladisteproizvoda.jpg";
 import materialcost from "../../src/utrosakmaterijala.jpg";
 import materialrequired from "../../src/trebovanje.jpg";
+import manufacture from "../../src/manufacture.jpg";
 const MenuScreen = () => {
   return (
     <Container>
-      <Row className="d-flex">
+      <Row>
         <MenuItem title="artikli" image={artikli} link="/articles" />
-        <MenuItem title="normativi" image={normativ} link="/normativs" />
-        <MenuItem title="radni nalozi" image={radninalog} link="/workorders" />
-        <MenuItem title="centralno skladište" image={central} link="/central" />
-        <MenuItem
-          title="skladište materijala"
-          image={material}
-          link="/material"
-        />
-        <MenuItem
-          title="skladište gotovih proizvoda"
-          image={products}
-          link="/builtproducts"
-        />
+        <MenuItem title="veleprodaja" image={central} link="/central" />
+        <MenuItem title="proizvodnja" image={manufacture} link="/manufacture" />
         <MenuItem title="partneri" image={partners} link="/partners" />
-        <MenuItem
-          title="utrošak materijala"
-          image={materialcost}
-          link="/materialcost"
-        />
-        <MenuItem
-          title="trebovanje"
-          image={materialrequired}
-          link="/materialrequired"
-        />
       </Row>
     </Container>
   );
