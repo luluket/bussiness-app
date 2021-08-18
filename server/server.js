@@ -16,6 +16,7 @@ import centralReceiptRoutes from "./routes/centralReceiptRoutes.js";
 import centralExportRoutes from "./routes/centralExportRoutes.js";
 import materialLagerRoutes from "./routes/materialLagerRoutes.js";
 import materialImportRoutes from "./routes/materialImportRoutes.js";
+import rateOfYieldRoutes from "./routes/rateOfYieldRoutes.js";
 
 dotenv.config();
 
@@ -40,6 +41,7 @@ app.use("/api/central/receipts", centralReceiptRoutes);
 app.use("/api/central/exports", centralExportRoutes);
 app.use("/api/material/lager", materialLagerRoutes);
 app.use("/api/material/imports", materialImportRoutes);
+app.use("/api/rates", rateOfYieldRoutes);
 
 app.get("/api/config/paypal", (req, res) =>
   res.send(process.env.PAYPAL_CLIENT_ID)

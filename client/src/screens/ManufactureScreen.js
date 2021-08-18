@@ -11,6 +11,7 @@ import { CENTRAL_RECEIPT_LIST_RESET } from "../constants/centralReceiptConstants
 import { listCentralReceipts } from "../actions/centralReceiptActions";
 import { listMaterialImports } from "../actions/materialImportActions";
 import { CENTRAL_EXPORT_LIST_RESET } from "../constants/centralExportConstants";
+import { listRates } from "../actions/rateOfYieldActions";
 
 const ManufactureScreen = () => {
   const dispatch = useDispatch();
@@ -28,6 +29,9 @@ const ManufactureScreen = () => {
     error: errorLager,
     lager,
   } = lagerList;
+
+  const rateList = useSelector((state) => state.rateList);
+  const { loading: loadingRates, error: errorRates, rates } = rateList;
 
   const centralReceiptList = useSelector((state) => state.centralReceiptList);
   const {
@@ -93,7 +97,7 @@ const ManufactureScreen = () => {
     {
       name: "Normativi",
       subitems: [],
-      function: listMaterialLager(),
+      function: listRates(),
     },
     {
       name: "Radni nalozi",
@@ -256,6 +260,16 @@ const ManufactureScreen = () => {
               </Button>
             </>
           )
+        )}
+        {rates.length === 0 && (
+          <>
+            <Button
+              type="button"
+              onClick={() => history.push("/manufacture/rate")}
+            >
+              Novi normativ
+            </Button>
+          </>
         )}
       </Col>
     </Row>

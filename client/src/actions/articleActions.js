@@ -12,6 +12,9 @@ import {
   ARTICLE_CREATE_REQUEST,
   ARTICLE_CREATE_SUCCESS,
   ARTICLE_CREATE_FAIL,
+  PRODUCT_LIST_REQUEST,
+  PRODUCT_LIST_SUCCESS,
+  PRODUCT_LIST_FAIL,
 } from "../constants/articleConstants";
 
 export const listArticles = () => async (dispatch) => {
@@ -70,6 +73,22 @@ export const updateArticle = (article) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: ARTICLE_UPDATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const listProducts = () => async (dispatch) => {
+  try {
+    dispatch({ type: PRODUCT_LIST_REQUEST });
+    const { data } = await axios.get("/api/articles/products");
+    dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_LIST_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

@@ -56,4 +56,13 @@ const updateArticle = asyncHandler(async (req, res) => {
     throw new Error("Article not found");
   }
 });
-export { getArticles, getArticle, createArticle, updateArticle };
+
+// @desc Fetch all articles type product
+// @route GET /api/articles/products
+// @access Public
+const getProducts = asyncHandler(async (req, res) => {
+  const articles = await Article.find({ type: "proizvod" });
+  res.json(articles);
+});
+
+export { getArticles, getArticle, createArticle, updateArticle, getProducts };
