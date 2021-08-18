@@ -6,8 +6,9 @@ import { listArticles } from "../actions/articleActions";
 import { createReceipt } from "../actions/centralReceiptActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import { CENTRAL_RECEIPT_CREATE_RESET } from "../constants/centralReceiptConstants";
 
-const CentralReceiptCreateScreen = () => {
+const CentralReceiptCreateScreen = ({ history }) => {
   const dispatch = useDispatch();
 
   const [partner, setPartner] = useState("");
@@ -25,11 +26,7 @@ const CentralReceiptCreateScreen = () => {
   } = supplierList;
 
   const articleList = useSelector((state) => state.articleList);
-  const {
-    loading: loadingArticles,
-    error: errorArticles,
-    articles,
-  } = articleList;
+  const { articles } = articleList;
 
   const centralReceiptCreate = useSelector(
     (state) => state.centralReceiptCreate
@@ -39,7 +36,11 @@ const CentralReceiptCreateScreen = () => {
   useEffect(() => {
     dispatch(listSuppliers());
     dispatch(listArticles());
-  }, [dispatch]);
+    if (successCreate) {
+      dispatch({ type: CENTRAL_RECEIPT_CREATE_RESET });
+      history.push("/central");
+    }
+  }, [dispatch, successCreate]);
 
   const addRow = () => {
     setRows([...rows, "row"]);
@@ -100,7 +101,6 @@ const CentralReceiptCreateScreen = () => {
   return (
     <>
       <h1>PRIMKA - CENTRALNO SKLADIŠTE</h1>
-      {successCreate && <Message variant="success">Uspješan unos</Message>}
       {errorCreate && <Message variant="danger">{errorCreate}</Message>}
       {loadingSuppliers ? (
         <Loader />

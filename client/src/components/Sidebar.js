@@ -7,7 +7,6 @@ import { listLager } from "../actions/lagerActions";
 import { listCentralReceipts } from "../actions/centralReceiptActions";
 
 const Sidebar = ({ props }) => {
-  console.log(props);
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
 

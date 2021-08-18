@@ -6,6 +6,7 @@ import {
   CENTRAL_RECEIPT_CREATE_SUCCESS,
   CENTRAL_RECEIPT_CREATE_FAIL,
   CENTRAL_RECEIPT_LIST_RESET,
+  CENTRAL_RECEIPT_CREATE_RESET,
 } from "../constants/centralReceiptConstants";
 
 export const centralReceiptListReducer = (state = { receipts: [] }, action) => {
@@ -40,6 +41,8 @@ export const centralReceiptCreateReducer = (
       return { loading: false, success: true, receipt: action.payload };
     case CENTRAL_RECEIPT_CREATE_FAIL:
       return { loading: false, error: action.payload };
+    case CENTRAL_RECEIPT_CREATE_RESET:
+      return { receipt: {} };
     default:
       return state;
   }

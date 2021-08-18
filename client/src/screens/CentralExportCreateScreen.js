@@ -6,8 +6,9 @@ import { createExport } from "../actions/centralExportActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { listLagerMaterials } from "../actions/lagerActions";
+import { CENTRAL_EXPORT_CREATE_RESET } from "../constants/centralExportConstants";
 
-const CentralExportCreateScreen = () => {
+const CentralExportCreateScreen = ({ history }) => {
   const dispatch = useDispatch();
 
   const [departureWarehouse, setDepartureWarehouse] = useState(
@@ -23,14 +24,16 @@ const CentralExportCreateScreen = () => {
   const lagerListMaterial = useSelector((state) => state.lagerListMaterial);
   const { lager } = lagerListMaterial;
 
-  const centralExportCreate = useSelector(
-    (state) => state.centralReceiptCreate
-  );
+  const centralExportCreate = useSelector((state) => state.centralExportCreate);
   const { error: errorCreate, success: successCreate } = centralExportCreate;
 
   useEffect(() => {
     dispatch(listLagerMaterials());
-  }, [dispatch]);
+    if (successCreate) {
+      dispatch({ type: CENTRAL_EXPORT_CREATE_RESET });
+      history.push("/central");
+    }
+  }, [dispatch, successCreate]);
 
   const addRow = () => {
     setRows([...rows, "row"]);
@@ -77,7 +80,7 @@ const CentralExportCreateScreen = () => {
   return (
     <>
       <h1>MEĐUSKLADIŠNICA IZLAZ - CENTRALNO SKLADIŠTE</h1>
-      {successCreate && <Message variant="success">Uspješan unos</Message>}
+      {/* {successCreate && <Message variant="success">Uspješan unos</Message>} */}
       {errorCreate && <Message variant="danger">{errorCreate}</Message>}
 
       <Form onSubmit={submitHandler}>

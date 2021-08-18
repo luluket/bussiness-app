@@ -58,7 +58,7 @@ const PartnerScreen = ({ history, match }) => {
       dispatch({ type: PARTNER_UPDATE_RESET });
       history.push("/partners");
     }
-  }, [dispatch, match, history, , partner, success]);
+  }, [dispatch, match, history, partner, success]);
 
   useEffect(() => {
     dispatch(getPartnerDetails(match.params.id));

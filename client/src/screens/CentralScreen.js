@@ -47,19 +47,24 @@ const CentralScreen = () => {
     dispatch({ type: LAGER_LIST_RESET });
     dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
     setShowLagerNote(false);
+    setShowExportNote(false);
     setShowReceiptNote(true);
   }, [loadingReceipts]);
 
   useEffect(() => {
     dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
     dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
-    setShowLagerNote(true);
     setShowReceiptNote(false);
+    setShowExportNote(false);
+    setShowLagerNote(true);
   }, [loadingLager]);
 
   useEffect(() => {
     dispatch({ type: LAGER_LIST_RESET });
     dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
+    setShowLagerNote(false);
+    setShowReceiptNote(false);
+    setShowExportNote(true);
   }, [loadingExports]);
 
   const handleButtonClick = () => {
@@ -188,7 +193,7 @@ const CentralScreen = () => {
         )}
         {loadingExports && <Loader />}
         {errorExports && <Message variant="danger">{errorExports}</Message>}
-        {exports.length != 0 && (
+        {exports.length != 0 ? (
           <>
             <h2>MEĐUSKALDIŠNICA - IZLAZ</h2>
             <Table striped bordered hover responsive>
@@ -219,7 +224,7 @@ const CentralScreen = () => {
                       <td>{item.document}-izlazni račun</td>
                       <td>{item.createdAt.substring(0, 10)}</td>
                       <td>{item.createdAt.substring(11, 19)}</td>
-                      <td>{item.warehouse}</td>
+                      <td>{item.destinationWarehouse}</td>
                     </tr>
                   );
                 })}
@@ -232,6 +237,18 @@ const CentralScreen = () => {
               Nova otprema
             </Button>
           </>
+        ) : (
+          showExportNote && (
+            <>
+              <h2>Nema otpremljenih artikala</h2>
+              <Button
+                type="button"
+                onClick={() => history.push("/central/export")}
+              >
+                Nova otprema
+              </Button>
+            </>
+          )
         )}
       </Col>
     </Row>

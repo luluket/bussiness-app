@@ -19,6 +19,16 @@ const getExports = asyncHandler(async (req, res) => {
 // @route POST /api/central/exports
 // @access Public
 const createExport = asyncHandler(async (req, res) => {
+  //validate quantity between exported articles and lager quantities
+  req.body.exportedArticles.forEach(async (item) => {
+    const lagerItem = await Lager.findOne({ article: item.article });
+    console.log(lagerItem.quantity, item.quantity);
+    if (lagerItem.quantity < item.quantity) {
+      res.status(400).json({
+        message: `Količina artikla ${item.article.name} za otpremu ne odgovara stanju na lageru`,
+      });
+    }
+  });
   const exportArticles = new CentralExport({
     departureWarehouse: req.body.departureWarehouse,
     destinationWarehouse: req.body.destinationWarehouse,
