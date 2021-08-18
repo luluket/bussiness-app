@@ -7,28 +7,25 @@ import Message from "../components/Message";
 import { useHistory } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import { LAGER_LIST_RESET } from "../constants/lagerConstants";
-import { CENTRAL_RECEIPT_LIST_RESET } from "../constants/centralReceiptConstants";
-import { listCentralReceipts } from "../actions/centralReceiptActions";
 import { listMaterialImports } from "../actions/materialImportActions";
 import { CENTRAL_EXPORT_LIST_RESET } from "../constants/centralExportConstants";
 import { listRates } from "../actions/rateOfYieldActions";
+import { MATERIAL_LAGER_LIST_RESET } from "../constants/materialLagerConstants";
+import { RATE_LIST_RESET } from "../constants/rateOfYieldConstants";
+import { MATERIAL_IMPORT_LIST_RESET } from "../constants/materialImportConstants";
 
 const ManufactureScreen = () => {
   const dispatch = useDispatch();
 
   const history = useHistory();
 
-  const [showLagerNote, setShowLagerNote] = useState(false);
-  const [showReceiptNote, setShowReceiptNote] = useState(false);
-  const [showExportNote, setShowExportNote] = useState(false);
-
-  const lagerList = useSelector((state) => state.materialLagerList);
+  const materialLagerList = useSelector((state) => state.materialLagerList);
   const {
     loading: loadingLager,
     success: successLager,
     error: errorLager,
     lager,
-  } = lagerList;
+  } = materialLagerList;
 
   const rateList = useSelector((state) => state.rateList);
   const { loading: loadingRates, error: errorRates, rates } = rateList;
@@ -48,32 +45,19 @@ const ManufactureScreen = () => {
   } = materialImportList;
 
   useEffect(() => {
-    dispatch({ type: LAGER_LIST_RESET });
-    dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
-    setShowLagerNote(false);
-    setShowExportNote(false);
-    setShowReceiptNote(true);
-  }, [loadingReceipts]);
-
-  useEffect(() => {
-    dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
-    dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
-    setShowReceiptNote(false);
-    setShowExportNote(false);
-    setShowLagerNote(true);
+    dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
+    dispatch({ type: RATE_LIST_RESET });
   }, [loadingLager]);
 
   useEffect(() => {
-    dispatch({ type: LAGER_LIST_RESET });
-    dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
-    setShowLagerNote(false);
-    setShowReceiptNote(false);
-    setShowExportNote(true);
+    dispatch({ type: MATERIAL_LAGER_LIST_RESET });
+    dispatch({ type: RATE_LIST_RESET });
   }, [loadingImports]);
 
-  const handleButtonClick = () => {
-    history.push("/lager/create");
-  };
+  useEffect(() => {
+    dispatch({ type: MATERIAL_LAGER_LIST_RESET });
+    dispatch({ type: MATERIAL_LAGER_LIST_RESET });
+  }, [loadingRates]);
 
   const props = [
     {
@@ -118,7 +102,7 @@ const ManufactureScreen = () => {
         <h1 className="text-center">PROIZVODNI POGON</h1>
         {loadingLager && <Loader />}
         {errorLager && <Message variant="danger">{errorLager}</Message>}
-        {lager.length != 0 ? (
+        {lager.length != 0 && (
           <>
             <h2>LAGER LISTA</h2>
             <Table striped bordered responsive>
@@ -144,12 +128,10 @@ const ManufactureScreen = () => {
               </tbody>
             </Table>
           </>
-        ) : (
-          showLagerNote && <h2>Lager lista je prazna</h2>
         )}
         {loadingReceipts && <Loader />}
         {errorReceipts && <Message variant="danger">{errorReceipts}</Message>}
-        {receipts.length != 0 ? (
+        {receipts.length != 0 && (
           <>
             <h2>PRIMKE</h2>
             <Table striped bordered hover responsive>
@@ -195,22 +177,10 @@ const ManufactureScreen = () => {
               Nova primka
             </Button>
           </>
-        ) : (
-          showReceiptNote && (
-            <>
-              <h2>Lista primki je prazna</h2>
-              <Button
-                type="button"
-                onClick={() => history.push("/central/receipt")}
-              >
-                Nova primka
-              </Button>
-            </>
-          )
         )}
         {loadingImports && <Loader />}
         {errorImports && <Message variant="danger">{errorImports}</Message>}
-        {imports.length != 0 ? (
+        {imports.length != 0 && (
           <>
             <h2>MEĐUSKLADIŠNICA - ULAZ</h2>
             <Table striped bordered hover responsive>
@@ -248,21 +218,35 @@ const ManufactureScreen = () => {
               </tbody>
             </Table>
           </>
-        ) : (
-          showExportNote && (
-            <>
-              <h2>Nema otpremljenih artikala</h2>
-              <Button
-                type="button"
-                onClick={() => history.push("/central/export")}
-              >
-                Nova otprema
-              </Button>
-            </>
-          )
         )}
-        {rates.length === 0 && (
+        {loadingRates && <Loader />}
+        {errorRates && <Message variant="danger">{errorRates}</Message>}
+        {rates.length != 0 && (
           <>
+            <h2>NORMATIVI</h2>
+            <Table striped bordered hover responsive>
+              <thead>
+                <tr>
+                  <th>ID ARTIKLA</th>
+                  <th>ARTIKL</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rates.map((item) => {
+                  return (
+                    <tr
+                      key={item._id}
+                      // onClick={() =>
+                      //   history.push(`/central/item/${item._id}`)
+                      // }
+                    >
+                      <td>{item.product._id}</td>
+                      <td>{item.product.name}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
             <Button
               type="button"
               onClick={() => history.push("/manufacture/rate")}

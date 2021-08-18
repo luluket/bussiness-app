@@ -31,7 +31,7 @@ const RateOfYieldCreateScreen = ({ history }) => {
     dispatch(listProducts());
     if (successCreate) {
       dispatch({ type: RATE_CREATE_RESET });
-      history.push("/central");
+      history.push("/manufacture");
     }
   }, [dispatch, successCreate]);
 

@@ -2,6 +2,7 @@ import {
   RATE_LIST_REQUEST,
   RATE_LIST_SUCCESS,
   RATE_LIST_FAIL,
+  RATE_LIST_RESET,
   RATE_CREATE_RESET,
   RATE_CREATE_FAIL,
   RATE_CREATE_SUCCESS,
@@ -16,6 +17,10 @@ export const rateListReducer = (state = { rates: [] }, action) => {
       return {
         loading: false,
         rates: action.payload,
+      };
+    case RATE_LIST_RESET:
+      return {
+        rates: [],
       };
     case RATE_LIST_FAIL:
       return { loading: false, error: action.payload };

@@ -100,7 +100,7 @@ const App = () => {
               path="/admin/product/:id/edit"
               component={ProductEditScreen}
             />
-            <Route path="/" component={HomeScreen} exact />
+            <Route path="/" component={MenuScreen} exact />
             <Route path="/page/:pageNumber" component={HomeScreen} exact />
             <Route
               path="/search/:keyword/page/:pageNumber"

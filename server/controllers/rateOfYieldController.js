@@ -5,7 +5,7 @@ import RateOfYield from "../models/RateOfYield.js";
 // @route GET /api/rates
 // @access Public
 const getRates = asyncHandler(async (req, res) => {
-  const rates = await RateOfYield.find({});
+  const rates = await RateOfYield.find({}).populate("product", "name");
   res.json(rates);
 });
 
