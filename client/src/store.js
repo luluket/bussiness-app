@@ -70,6 +70,12 @@ import {
   rateCreateReducer,
 } from "./reducers/rateOfYieldReducers.js";
 
+import {
+  requisitionListReducer,
+  requisitionCreateReducer,
+  requisitionUnfullfilledListReducer,
+} from "./reducers/requisitionReducers.js";
+
 const reducer = combineReducers({
   // productList: productListReducer,
   productDetails: productDetailsReducer,
@@ -114,6 +120,9 @@ const reducer = combineReducers({
   rateList: rateListReducer,
   rateCreate: rateCreateReducer,
   productList: productListReducer,
+  requisitionList: requisitionListReducer,
+  requisitionUnfullfilledList: requisitionUnfullfilledListReducer,
+  requisitionCreate: requisitionCreateReducer,
 });
 const cartItemsFromStorage = localStorage.getItem("cartItems")
   ? JSON.parse(localStorage.getItem("cartItems"))

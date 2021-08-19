@@ -11,6 +11,14 @@ import { CENTRAL_RECEIPT_LIST_RESET } from "../constants/centralReceiptConstants
 import { listCentralReceipts } from "../actions/centralReceiptActions";
 import { listCentralExports } from "../actions/centralExportActions";
 import { CENTRAL_EXPORT_LIST_RESET } from "../constants/centralExportConstants";
+import {
+  listRequisitions,
+  listUnfullfilledRequisitions,
+} from "../actions/requisitionActions";
+import {
+  REQUISITION_UNFULLFILLED_LIST_REQUEST,
+  REQUISITION_UNFULLFILLED_LIST_RESET,
+} from "../constants/requisitionConstants";
 
 const CentralScreen = () => {
   const dispatch = useDispatch();
@@ -43,6 +51,26 @@ const CentralScreen = () => {
     exports,
   } = centralExportList;
 
+  const requisitionUnfullfilledList = useSelector(
+    (state) => state.requisitionUnfullfilledList
+  );
+  const {
+    loading: loadingUnfullfilledRequisitions,
+    error: errorUnfullfilledRequisitions,
+    requisitions: requisitionsUnfullfilled,
+  } = requisitionUnfullfilledList;
+
+  const requisitionList = useSelector((state) => state.requisitionList);
+  const {
+    loading: loadingRequisitions,
+    error: errorRequisitions,
+    requisitions,
+  } = requisitionList;
+
+  useEffect(() => {
+    dispatch(listUnfullfilledRequisitions());
+  }, [dispatch]);
+
   useEffect(() => {
     dispatch({ type: LAGER_LIST_RESET });
     dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
@@ -66,6 +94,16 @@ const CentralScreen = () => {
     setShowReceiptNote(false);
     setShowExportNote(true);
   }, [loadingExports]);
+
+  useEffect(() => {
+    dispatch({ type: LAGER_LIST_RESET });
+    dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
+    dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
+    dispatch({ type: REQUISITION_UNFULLFILLED_LIST_RESET });
+    setShowLagerNote(false);
+    setShowReceiptNote(false);
+    setShowExportNote(false);
+  }, [loadingRequisitions]);
 
   const handleButtonClick = () => {
     history.push("/lager/create");
@@ -92,12 +130,24 @@ const CentralScreen = () => {
       subitems: [],
       function: listCentralExports(),
     },
+    {
+      name: "Trebovanje",
+      subitems: [],
+      function: listRequisitions(),
+    },
   ];
 
   return (
     <Row className="flex-xl-nowrap">
       <Col as={Sidebar} props={props} />
       <Col xs={12} md={9} lg={9}>
+        {requisitionsUnfullfilled.length != 0 && (
+          <Message variant="danger">
+            <div onClick={() => dispatch(listRequisitions())}>
+              Neodgovoreni zahtjevi za otpremom materijala. Klikni za prikaz
+            </div>
+          </Message>
+        )}
         <h1 className="text-center">CENTRALNO SKLADIŠTE</h1>
         {loadingLager && <Loader />}
         {errorLager && <Message variant="danger">{errorLager}</Message>}
@@ -254,6 +304,11 @@ const CentralScreen = () => {
             </>
           )
         )}
+        {loadingRequisitions && <Loader />}
+        {errorRequisitions && (
+          <Message variant="danger">{errorRequisitions}</Message>
+        )}
+        {requisitions.length != 0 && <h1>ej</h1>}
       </Col>
     </Row>
   );

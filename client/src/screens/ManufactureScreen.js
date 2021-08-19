@@ -13,6 +13,7 @@ import { listRates } from "../actions/rateOfYieldActions";
 import { MATERIAL_LAGER_LIST_RESET } from "../constants/materialLagerConstants";
 import { RATE_LIST_RESET } from "../constants/rateOfYieldConstants";
 import { MATERIAL_IMPORT_LIST_RESET } from "../constants/materialImportConstants";
+import { listRequisitions } from "../actions/requisitionActions";
 
 const ManufactureScreen = () => {
   const dispatch = useDispatch();
@@ -77,6 +78,11 @@ const ManufactureScreen = () => {
         { name: "Međuskladišnica-izlaz", function: listMaterialLager() },
       ],
       function: listMaterialLager(),
+    },
+    {
+      name: "Trebovanje",
+      subitems: [],
+      function: listRequisitions(),
     },
     {
       name: "Normativi",
