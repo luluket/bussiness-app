@@ -1,6 +1,5 @@
 import asyncHandler from "express-async-handler";
 import Lager from "../models/Lager.js";
-import Article from "../models/Article.js";
 
 //@desc Get Lager List
 //@route GET /api/lager
@@ -19,4 +18,12 @@ export const getLagerMaterials = asyncHandler(async (req, res) => {
     (item) => item.article.type === "materijal"
   );
   res.json(filteredLager);
+});
+
+//@desc Get article quantity
+//@route GET /api/lager/:id/quantity
+//@access Public
+export const getArticleQuantity = asyncHandler(async (req, res) => {
+  const article = await Lager.findOne({ article: req.params.id }, "quantity");
+  res.json(article.quantity);
 });

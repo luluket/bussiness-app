@@ -5,7 +5,10 @@ import { listArticles } from "../actions/articleActions";
 import { createExport } from "../actions/centralExportActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import { listLagerMaterials } from "../actions/lagerActions";
+import {
+  listLagerMaterials,
+  articleLagerQuantity,
+} from "../actions/lagerActions";
 import { CENTRAL_EXPORT_CREATE_RESET } from "../constants/centralExportConstants";
 
 const CentralExportCreateScreen = ({ history }) => {
@@ -15,7 +18,7 @@ const CentralExportCreateScreen = ({ history }) => {
     "Centralno skladište"
   );
   const [destinationWarehouse, setDestinationWarehouse] = useState("");
-  const [document, setDocument] = useState();
+  const [documentNumber, setDocumentNumber] = useState();
   const [exportedArticles, setExportedArticles] = useState([
     { article: "", quantity: 0 },
   ]);
@@ -26,6 +29,10 @@ const CentralExportCreateScreen = ({ history }) => {
 
   const centralExportCreate = useSelector((state) => state.centralExportCreate);
   const { error: errorCreate, success: successCreate } = centralExportCreate;
+
+  const articleQuantity = useSelector(
+    (state) => state.lagerArticleQuantity.quantity
+  );
 
   useEffect(() => {
     dispatch(listLagerMaterials());
@@ -40,6 +47,8 @@ const CentralExportCreateScreen = ({ history }) => {
   };
 
   const handleArticle = (index) => (event) => {
+    dispatch(articleLagerQuantity(event.target.value)); // fetch article quantity as soon as name is set in form
+
     const exportedArticle = lager.find(
       (item) => item.article._id === event.target.value
     );
@@ -55,6 +64,7 @@ const CentralExportCreateScreen = ({ history }) => {
   };
 
   const handleQuantity = (index) => (event) => {
+    document.getElementById(`quantity-${index}`).style.color = "black";
     if (exportedArticles[index]) {
       exportedArticles[index].quantity = event.target.value;
     } else {
@@ -63,18 +73,38 @@ const CentralExportCreateScreen = ({ history }) => {
         quantity: event.target.value,
       });
     }
+    //if article name has been set in form, validate export quantity with lager quantity
+    if (exportedArticles[index].article) {
+      console.log("usa");
+      dispatch(articleLagerQuantity(exportedArticles[index].article._id));
+      if (exportedArticles[index].quantity > articleQuantity) {
+        document.getElementById(`quantity-${index}`).style.color = "red";
+      }
+    }
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(
-      createExport({
-        departureWarehouse,
-        destinationWarehouse,
-        document,
-        exportedArticles,
-      })
-    );
+    // if exported quantities are inside lager quantities, submit form
+    var overexported = false;
+    exportedArticles.map((item) => {
+      dispatch(articleLagerQuantity(item.article));
+      if (item.quantity > articleQuantity) {
+        overexported = true;
+      }
+    });
+    if (overexported) {
+      document.getElementById("quantityHeader").style.border = "red solid";
+    } else {
+      dispatch(
+        createExport({
+          departureWarehouse,
+          destinationWarehouse,
+          document: documentNumber,
+          exportedArticles,
+        })
+      );
+    }
   };
 
   return (
@@ -113,12 +143,12 @@ const CentralExportCreateScreen = ({ history }) => {
           </Col>
         </Row>
 
-        <Form.Group as={Col} md={6} controlId="document" className="mb-3">
+        <Form.Group as={Col} md={6} controlId="documentNumber" className="mb-3">
           <Form.Label>Broj dokumenta</Form.Label>
           <Form.Control
             type="number"
             placeholder="Unesite broj dokumenta"
-            onChange={(e) => setDocument(e.target.value)}
+            onChange={(e) => setDocumentNumber(e.target.value)}
           ></Form.Control>
         </Form.Group>
 
@@ -128,7 +158,7 @@ const CentralExportCreateScreen = ({ history }) => {
               <tr>
                 <th>RB</th>
                 <th>ARTIKAL</th>
-                <th>KOLIČINA</th>
+                <th id="quantityHeader">KOLIČINA</th>
                 <th>IZBRIŠI</th>
               </tr>
             </thead>
@@ -158,11 +188,16 @@ const CentralExportCreateScreen = ({ history }) => {
                     </Form.Group>
                   </td>
                   <td>
-                    <Form.Control
-                      type="number"
-                      placeholder="Unesite količinu"
-                      onChange={handleQuantity(index)}
-                    ></Form.Control>
+                    <Form.Group
+                      controlId={`quantity-${index}`}
+                      className="quantity"
+                    >
+                      <Form.Control
+                        type="number"
+                        placeholder="Unesite količinu"
+                        onChange={handleQuantity(index)}
+                      ></Form.Control>
+                    </Form.Group>
                   </td>
 
                   <td>

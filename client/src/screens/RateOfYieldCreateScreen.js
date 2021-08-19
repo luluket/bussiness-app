@@ -56,6 +56,7 @@ const RateOfYieldCreateScreen = ({ history }) => {
   };
 
   const handleFactor = (index) => (event) => {
+    document.getElementById(`factor-${index}`).style.color = "black";
     if (components[index]) {
       components[index].factor = event.target.value;
     } else {
@@ -64,17 +65,27 @@ const RateOfYieldCreateScreen = ({ history }) => {
         factor: event.target.value,
       });
     }
+    if (components[index].factor > 1) {
+      document.getElementById(`factor-${index}`).style.color = "red";
+    }
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log(product, components);
-    dispatch(
-      createRate({
-        product,
-        components,
-      })
-    );
+    var sumFactors = 0;
+    components.forEach((component) => {
+      sumFactors += parseFloat(component.factor);
+    });
+    if (sumFactors === 1) {
+      dispatch(
+        createRate({
+          product,
+          components,
+        })
+      );
+    } else {
+      document.getElementById("factorHeader").style.border = "red solid";
+    }
   };
 
   return (
@@ -108,7 +119,7 @@ const RateOfYieldCreateScreen = ({ history }) => {
                 <tr>
                   <th>RB</th>
                   <th>ARTIKL</th>
-                  <th>FAKTOR</th>
+                  <th id="factorHeader">FAKTOR(Σ=1)</th>
                   <th>IZBRIŠI</th>
                 </tr>
               </thead>
@@ -138,11 +149,14 @@ const RateOfYieldCreateScreen = ({ history }) => {
                       </Form.Group>
                     </td>
                     <td>
-                      <Form.Control
-                        type="number"
-                        placeholder="Unesite postotak"
-                        onChange={handleFactor(index)}
-                      ></Form.Control>
+                      <Form.Group controlId={`factor-${index}`}>
+                        <Form.Control
+                          type="decimal"
+                          placeholder="Unesite postotak"
+                          onChange={handleFactor(index)}
+                          autoComplete="off"
+                        ></Form.Control>
+                      </Form.Group>
                     </td>
 
                     <td>
