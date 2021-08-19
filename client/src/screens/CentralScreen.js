@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { listLager } from "../actions/lagerActions";
-import { Table, Button, Row, Col } from "react-bootstrap";
+import { Table, Button, Row, Col, ListGroup } from "react-bootstrap";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { useHistory } from "react-router-dom";
@@ -308,7 +308,72 @@ const CentralScreen = () => {
         {errorRequisitions && (
           <Message variant="danger">{errorRequisitions}</Message>
         )}
-        {requisitions.length != 0 && <h1>ej</h1>}
+        {requisitions.length != 0 && (
+          <>
+            <h2>TREBOVANJE </h2>
+            <Table striped bordered hover responsive>
+              <thead>
+                <tr>
+                  <th>ZAHTIJEVANO</th>
+                  <th>ISPORUČENO</th>
+                  <th>ARTIKLI</th>
+                  <th>DATUM</th>
+                  <th>VRIJEME</th>
+                  <th>SKLADIŠTE</th>
+                </tr>
+              </thead>
+              <tbody>
+                {requisitions.map((item) => {
+                  return (
+                    <tr
+                      key={item._id}
+                      // onClick={() =>
+                      //   history.push(`/central/item/${item._id}`)
+                      // }
+                    >
+                      <td>
+                        {item.isSent ? (
+                          <i
+                            className="fas fa-check"
+                            style={{ color: "green" }}
+                          ></i>
+                        ) : (
+                          <i
+                            className="fas fa-times"
+                            style={{ color: "red" }}
+                          ></i>
+                        )}
+                      </td>
+                      <td>
+                        {item.isFullfilled ? (
+                          <i
+                            className="fas fa-check"
+                            style={{ color: "green" }}
+                          ></i>
+                        ) : (
+                          <i
+                            className="fas fa-times"
+                            style={{ color: "red" }}
+                          ></i>
+                        )}
+                      </td>
+                      <td>
+                        {item.requestedArticles.map((o) => (
+                          <ListGroup.Item>
+                            {o.article.name} - {o.quantity}
+                          </ListGroup.Item>
+                        ))}
+                      </td>
+                      <td>{item.createdAt.substring(0, 10)}</td>
+                      <td>{item.createdAt.substring(11, 19)}</td>
+                      <td>Skladište materijala</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+          </>
+        )}
       </Col>
     </Row>
   );

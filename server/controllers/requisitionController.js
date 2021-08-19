@@ -5,7 +5,10 @@ import Requisition from "../models/Requisition.js";
 // @route GET /api/requisitions
 // @access Public
 const getRequisitions = asyncHandler(async (req, res) => {
-  const requisitions = await Requisition.find({});
+  const requisitions = await Requisition.find({}).populate(
+    "requestedArticles.article",
+    "name"
+  );
   res.json(requisitions);
 });
 
@@ -22,8 +25,7 @@ const getUnfullfilledRequisitions = asyncHandler(async (req, res) => {
 // @access Public
 const createRequisition = asyncHandler(async (req, res) => {
   const requisition = new Requisition({
-    article: req.body.article,
-    quantity: req.body.quantity,
+    requestedArticles: req.body.requestedArticles,
     isSent: true,
     isFullfilled: false,
   });

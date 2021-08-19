@@ -2,15 +2,19 @@ import mongoose from "mongoose";
 
 const requisitionSchema = mongoose.Schema(
   {
-    article: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "Article",
-    },
-    quantity: {
-      type: Number,
-      required: true,
-    },
+    requestedArticles: [
+      {
+        article: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          ref: "Article",
+        },
+        quantity: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
     isSent: {
       type: Boolean,
       required: true,
