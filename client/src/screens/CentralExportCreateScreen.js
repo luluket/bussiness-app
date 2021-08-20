@@ -10,6 +10,10 @@ import {
   articleLagerQuantity,
 } from "../actions/lagerActions";
 import { CENTRAL_EXPORT_CREATE_RESET } from "../constants/centralExportConstants";
+import {
+  fullfillRequisition,
+  listUnfullfilledRequisitions,
+} from "../actions/requisitionActions";
 
 const CentralExportCreateScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -19,10 +23,12 @@ const CentralExportCreateScreen = ({ history }) => {
   );
   const [destinationWarehouse, setDestinationWarehouse] = useState("");
   const [documentNumber, setDocumentNumber] = useState();
+  const [requisition, setRequisition] = useState({});
+  const [lagerQuantities, setLagerQuantities] = useState([]);
   const [exportedArticles, setExportedArticles] = useState([
     { article: "", quantity: 0 },
   ]);
-  const [rows, setRows] = useState([]);
+  const [rows, setRows] = useState("");
 
   const lagerListMaterial = useSelector((state) => state.lagerListMaterial);
   const { lager } = lagerListMaterial;
@@ -30,17 +36,52 @@ const CentralExportCreateScreen = ({ history }) => {
   const centralExportCreate = useSelector((state) => state.centralExportCreate);
   const { error: errorCreate, success: successCreate } = centralExportCreate;
 
-  const articleQuantity = useSelector(
+  const requisitionUnfullfilledList = useSelector(
+    (state) => state.requisitionUnfullfilledList
+  );
+  const {
+    loading: loadingUnfullfilledRequisitions,
+    error: errorUnfullfilledRequisitions,
+    requisitions: requisitionsUnfullfilled,
+  } = requisitionUnfullfilledList;
+
+  const lagerArticleQuantity = useSelector(
+    (state) => state.lagerArticleQuantity
+  );
+  const {
+    loading: loadingQuantity,
+    success: successQuantity,
+    quantity: articleQuantity,
+  } = lagerArticleQuantity;
+
+  const requisitionArticleQuantity = useSelector(
     (state) => state.lagerArticleQuantity.quantity
   );
 
   useEffect(() => {
     dispatch(listLagerMaterials());
+    dispatch(listUnfullfilledRequisitions());
     if (successCreate) {
       dispatch({ type: CENTRAL_EXPORT_CREATE_RESET });
       history.push("/central");
     }
   }, [dispatch, successCreate]);
+
+  // upon requisition selection, fetch requested articles quantities from central lager list
+  useEffect(() => {
+    setLagerQuantities([]);
+    if (Object.keys(requisition).length != 0) {
+      requisition.requestedArticles.forEach((item) => {
+        console.log("called");
+        dispatch(articleLagerQuantity(item.article._id));
+      });
+    }
+  }, [requisition]);
+
+  // update quantities array upon selecting requisition
+  useEffect(() => {
+    setLagerQuantities([...lagerQuantities, requisitionArticleQuantity]);
+  }, [requisitionArticleQuantity]);
 
   const addRow = () => {
     setRows([...rows, "row"]);
@@ -75,7 +116,6 @@ const CentralExportCreateScreen = ({ history }) => {
     }
     //if article name has been set in form, validate export quantity with lager quantity
     if (exportedArticles[index].article) {
-      console.log("usa");
       dispatch(articleLagerQuantity(exportedArticles[index].article._id));
       if (exportedArticles[index].quantity > articleQuantity) {
         document.getElementById(`quantity-${index}`).style.color = "red";
@@ -83,40 +123,79 @@ const CentralExportCreateScreen = ({ history }) => {
     }
   };
 
+  const handleRequisition = (event) => {
+    if (event.target.value === "") {
+      setRequisition({});
+      setLagerQuantities([]);
+    } else {
+      setRequisition(
+        requisitionsUnfullfilled.find(
+          (requisition) => requisition._id === event.target.value
+        )
+      );
+    }
+  };
+
   const submitHandler = (e) => {
     e.preventDefault();
-    // if exported quantities are inside lager quantities, submit form
-    var overexported = false;
-    exportedArticles.map((item) => {
-      dispatch(articleLagerQuantity(item.article));
-      if (item.quantity > articleQuantity) {
-        overexported = true;
+    console.log(lagerQuantities);
+    // send requisition or manually exported articles
+    if (Object.keys(requisition).length > 0) {
+      var shortage = false;
+      requisition.requestedArticles.forEach((item, index) => {
+        if (item.quantity > lagerQuantities[index + 1]) {
+          shortage = true;
+          console.log(item.quantity, lagerQuantities[index]);
+        }
+      });
+      if (shortage) {
+        document.getElementById("quantityRequisition").style.border =
+          "red solid";
+      } else {
+        dispatch(
+          createExport({
+            departureWarehouse,
+            destinationWarehouse,
+            document: documentNumber,
+            exportedArticles: requisition.requestedArticles,
+          })
+        );
+        dispatch(fullfillRequisition(requisition._id));
       }
-    });
-    if (overexported) {
-      document.getElementById("quantityHeader").style.border = "red solid";
     } else {
-      dispatch(
-        createExport({
-          departureWarehouse,
-          destinationWarehouse,
-          document: documentNumber,
-          exportedArticles,
-        })
-      );
+      // if exported quantities are inside lager quantities, submit form
+      var overexported = false;
+      exportedArticles.map((item) => {
+        dispatch(articleLagerQuantity(item.article));
+        if (item.quantity > articleQuantity) {
+          overexported = true;
+        }
+      });
+
+      if (overexported) {
+        document.getElementById("quantityHeader").style.border = "red solid";
+      } else {
+        dispatch(
+          createExport({
+            departureWarehouse,
+            destinationWarehouse,
+            document: documentNumber,
+            exportedArticles,
+          })
+        );
+      }
     }
   };
 
   return (
     <>
       <h1>MEĐUSKLADIŠNICA IZLAZ - CENTRALNO SKLADIŠTE</h1>
-      {/* {successCreate && <Message variant="success">Uspješan unos</Message>} */}
       {errorCreate && <Message variant="danger">{errorCreate}</Message>}
 
       <Form onSubmit={submitHandler}>
         <Row className="mb-3">
           <Col md={6}>
-            <Form.Group controlId="sourceWarehouse">
+            <Form.Group controlId="departureWarehouse">
               <Form.Label>Polazno skladište</Form.Label>
               <Form.Control
                 type="text"
@@ -152,6 +231,45 @@ const CentralExportCreateScreen = ({ history }) => {
           ></Form.Control>
         </Form.Group>
 
+        <Form.Group as={Col} md={6} controlId="requisition" className="mb-3">
+          <Form.Label>Dokument trebovanje</Form.Label>
+          <Form.Control as="select" type="text" onChange={handleRequisition}>
+            <option value="">Izaberite trebovanje</option>
+            {requisitionsUnfullfilled.map((requisition) => (
+              <option value={requisition._id}>{requisition._id}</option>
+            ))}
+          </Form.Control>
+        </Form.Group>
+
+        {Object.keys(requisition).length != 0 && (
+          <Table size="sm" bordered responsive>
+            <thead>
+              <tr>
+                <th>RB</th>
+                <th>ARTIKAL</th>
+                <th id="quantityRequisition">KOLIČINA</th>
+                <th>RASPOLOŽIVO</th>
+              </tr>
+            </thead>
+            <tbody>
+              {requisition.requestedArticles.map((item, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{item.article.name}</td>
+                  {item.quantity > lagerQuantities[index + 1] ? (
+                    <td style={{ color: "red", fontWeight: "bold" }}>
+                      {item.quantity}
+                    </td>
+                  ) : (
+                    <td>{item.quantity}</td>
+                  )}
+                  <td>{lagerQuantities[index + 1]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
+
         {rows.length > 0 && (
           <Table bordered responsive>
             <thead>
@@ -164,7 +282,7 @@ const CentralExportCreateScreen = ({ history }) => {
             </thead>
             <tbody>
               {rows.map((row, index) => (
-                <tr key={index}>
+                <tr key={index} id={index}>
                   <td>{index + 1}</td>
                   <td>
                     <Form.Group controlId="article">
@@ -180,7 +298,8 @@ const CentralExportCreateScreen = ({ history }) => {
                               id={item.article._id}
                               value={item.article._id}
                             >
-                              {item.article.name} ({item.article._id})
+                              {item.article._id} | {item.article.name} |{" "}
+                              {item.quantity}
                             </option>
                           );
                         })}
@@ -218,7 +337,12 @@ const CentralExportCreateScreen = ({ history }) => {
           >
             Dodaj artikal
           </Button>
-          <Button type="submit" disabled={rows.length === 0}>
+          <Button
+            type="submit"
+            disabled={
+              rows.length === 0 && Object.keys(requisition).length === 0
+            }
+          >
             UNESI
           </Button>
         </div>

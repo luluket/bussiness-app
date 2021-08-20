@@ -11,6 +11,9 @@ import {
   REQUISITION_UNFULLFILLED_LIST_REQUEST,
   REQUISITION_UNFULLFILLED_LIST_SUCCESS,
   REQUISITION_UNFULLFILLED_LIST_FAIL,
+  REQUISITION_FULLFILL_REQUEST,
+  REQUISITION_FULLFILL_SUCCESS,
+  REQUISITION_FULLFILL_FAIL,
 } from "../constants/requisitionConstants";
 
 export const listRequisitions = () => async (dispatch) => {
@@ -53,6 +56,22 @@ export const createRequisition = (requisition) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: REQUISITION_CREATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const fullfillRequisition = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: REQUISITION_FULLFILL_REQUEST });
+    const { data } = await axios.put(`/api/requisitions/${id}/fullfill`);
+    dispatch({ type: REQUISITION_FULLFILL_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: REQUISITION_FULLFILL_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

@@ -11,6 +11,9 @@ import {
   REQUISITION_UNFULLFILLED_LIST_SUCCESS,
   REQUISITION_UNFULLFILLED_LIST_FAIL,
   REQUISITION_UNFULLFILLED_LIST_RESET,
+  REQUISITION_FULLFILL_REQUEST,
+  REQUISITION_FULLFILL_SUCCESS,
+  REQUISITION_FULLFILL_FAIL,
 } from "../constants/requisitionConstants";
 
 export const requisitionListReducer = (
@@ -74,6 +77,19 @@ export const requisitionCreateReducer = (
       return { loading: false, error: action.payload };
     case REQUISITION_CREATE_RESET:
       return { requisition: {} };
+    default:
+      return state;
+  }
+};
+
+export const requisitionFullfillReducer = (state = {}, action) => {
+  switch (action.type) {
+    case REQUISITION_FULLFILL_REQUEST:
+      return { loading: true };
+    case REQUISITION_FULLFILL_SUCCESS:
+      return { loading: false, success: true };
+    case REQUISITION_FULLFILL_FAIL:
+      return { loading: false, error: action.payload };
     default:
       return state;
   }

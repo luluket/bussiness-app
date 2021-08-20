@@ -55,6 +55,7 @@ export const lagerArticleQuantityReducer = (
     case LAGER_ARTICLE_QUANTITY_SUCCESS:
       return {
         loading: false,
+        success: true,
         quantity: action.payload,
       };
     case LAGER_ARTICLE_QUANTITY_FAIL:

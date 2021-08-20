@@ -144,7 +144,7 @@ const CentralScreen = () => {
         {requisitionsUnfullfilled.length != 0 && (
           <Message variant="danger">
             <div onClick={() => dispatch(listRequisitions())}>
-              Neodgovoreni zahtjevi za otpremom materijala. Klikni za prikaz
+              Zahtjevi za otpremom materijala. Klikni za prikaz
             </div>
           </Message>
         )}
@@ -311,12 +311,13 @@ const CentralScreen = () => {
         {requisitions.length != 0 && (
           <>
             <h2>TREBOVANJE </h2>
-            <Table striped bordered hover responsive>
+            <Table striped bordered hover responsive size="sm">
               <thead>
                 <tr>
                   <th>ZAHTIJEVANO</th>
                   <th>ISPORUČENO</th>
                   <th>ARTIKLI</th>
+                  <th>KOLIČINA</th>
                   <th>DATUM</th>
                   <th>VRIJEME</th>
                   <th>SKLADIŠTE</th>
@@ -359,9 +360,12 @@ const CentralScreen = () => {
                       </td>
                       <td>
                         {item.requestedArticles.map((o) => (
-                          <ListGroup.Item>
-                            {o.article.name} - {o.quantity}
-                          </ListGroup.Item>
+                          <div>{`${o.article.name}\n`}</div>
+                        ))}
+                      </td>
+                      <td>
+                        {item.requestedArticles.map((o) => (
+                          <div>{`${o.quantity}\n`}</div>
                         ))}
                       </td>
                       <td>{item.createdAt.substring(0, 10)}</td>

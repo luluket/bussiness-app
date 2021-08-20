@@ -16,12 +16,15 @@ const getRequisitions = asyncHandler(async (req, res) => {
 // @route GET /api/requisitions/unfullfilled
 // @access Public
 const getUnfullfilledRequisitions = asyncHandler(async (req, res) => {
-  const requisitions = await Requisition.find({ isFullfilled: false });
+  const requisitions = await Requisition.find({ isFullfilled: false }).populate(
+    "requestedArticles.article",
+    "name"
+  );
   res.json(requisitions);
 });
 
 // @desc Create central export
-// @route POST /api/central/exports
+// @route POST /api/requisitions
 // @access Public
 const createRequisition = asyncHandler(async (req, res) => {
   const requisition = new Requisition({
@@ -33,4 +36,24 @@ const createRequisition = asyncHandler(async (req, res) => {
   res.json(created);
 });
 
-export { getRequisitions, createRequisition, getUnfullfilledRequisitions };
+// @desc Create central export
+// @route PUT /api/requisitions/:id/fullfill
+// @access Public
+const fullfillRequisition = asyncHandler(async (req, res) => {
+  const requisition = await Requisition.findById(req.params.id);
+  if (requisition) {
+    requisition.isFullfilled = true;
+    const fullfilledRequisition = await requisition.save();
+    res.json(fullfilledRequisition);
+  } else {
+    res.status(404);
+    throw new Error("requisition not found");
+  }
+});
+
+export {
+  getRequisitions,
+  createRequisition,
+  getUnfullfilledRequisitions,
+  fullfillRequisition,
+};

@@ -15,6 +15,8 @@ import CentralReceipt from "./models/CentralReceipt.js";
 import CentralExport from "./models/CentralExport.js";
 import MaterialLager from "./models/MaterialLager.js";
 import MaterialImport from "./models/MaterialImport.js";
+import Requisition from "./models/Requisition.js";
+import RateOfYield from "./models/RateOfYield.js";
 import connectDB from "./config/db.js";
 
 dotenv.config();
@@ -33,6 +35,8 @@ const importData = async () => {
     await CentralExport.deleteMany();
     await MaterialLager.deleteMany();
     await MaterialImport.deleteMany();
+    await Requisition.deleteMany();
+    await RateOfYield.deleteMany();
 
     const createdUsers = await User.insertMany(users);
     const adminUser = createdUsers.find(({ role }) => role === "admin");

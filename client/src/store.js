@@ -74,6 +74,7 @@ import {
   requisitionListReducer,
   requisitionCreateReducer,
   requisitionUnfullfilledListReducer,
+  requisitionFullfillReducer,
 } from "./reducers/requisitionReducers.js";
 
 const reducer = combineReducers({
@@ -123,6 +124,7 @@ const reducer = combineReducers({
   requisitionList: requisitionListReducer,
   requisitionUnfullfilledList: requisitionUnfullfilledListReducer,
   requisitionCreate: requisitionCreateReducer,
+  requisitionFullFill: requisitionFullfillReducer,
 });
 const cartItemsFromStorage = localStorage.getItem("cartItems")
   ? JSON.parse(localStorage.getItem("cartItems"))
