@@ -15,6 +15,11 @@ const requisitionSchema = mongoose.Schema(
         },
       },
     ],
+    document: {
+      type: Number,
+      required: true,
+      unique: true,
+    },
     isSent: {
       type: Boolean,
       required: true,

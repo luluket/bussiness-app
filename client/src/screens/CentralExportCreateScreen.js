@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Form, Col, Button, Table } from "react-bootstrap";
-import { listArticles } from "../actions/articleActions";
 import { createExport } from "../actions/centralExportActions";
-import Loader from "../components/Loader";
 import Message from "../components/Message";
 import {
   listLagerMaterials,
@@ -72,10 +70,10 @@ const CentralExportCreateScreen = ({ history }) => {
     setLagerQuantities([]);
     if (Object.keys(requisition).length != 0) {
       requisition.requestedArticles.forEach((item) => {
-        console.log("called");
         dispatch(articleLagerQuantity(item.article._id));
       });
     }
+    setDocumentNumber(requisition.document);
   }, [requisition]);
 
   // update quantities array upon selecting requisition
@@ -127,6 +125,7 @@ const CentralExportCreateScreen = ({ history }) => {
     if (event.target.value === "") {
       setRequisition({});
       setLagerQuantities([]);
+      setDocumentNumber(0);
     } else {
       setRequisition(
         requisitionsUnfullfilled.find(
@@ -226,6 +225,7 @@ const CentralExportCreateScreen = ({ history }) => {
           <Form.Label>Broj dokumenta</Form.Label>
           <Form.Control
             type="number"
+            value={documentNumber}
             placeholder="Unesite broj dokumenta"
             onChange={(e) => setDocumentNumber(e.target.value)}
           ></Form.Control>

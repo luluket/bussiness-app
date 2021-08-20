@@ -51,7 +51,7 @@ export const listUnfullfilledRequisitions = () => async (dispatch) => {
 export const createRequisition = (requisition) => async (dispatch) => {
   try {
     dispatch({ type: REQUISITION_CREATE_REQUEST });
-    const { data } = await axios.post("/api/requisition", requisition);
+    const { data } = await axios.post("/api/requisitions", requisition);
     dispatch({ type: REQUISITION_CREATE_SUCCESS, payload: data });
   } catch (error) {
     dispatch({

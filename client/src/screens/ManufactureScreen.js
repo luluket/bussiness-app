@@ -45,6 +45,13 @@ const ManufactureScreen = () => {
     imports,
   } = materialImportList;
 
+  const requisitionList = useSelector((state) => state.requisitionList);
+  const {
+    loading: loadingRequisitions,
+    error: errorRequisitions,
+    requisitions,
+  } = requisitionList;
+
   useEffect(() => {
     dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
     dispatch({ type: RATE_LIST_RESET });
@@ -57,8 +64,14 @@ const ManufactureScreen = () => {
 
   useEffect(() => {
     dispatch({ type: MATERIAL_LAGER_LIST_RESET });
-    dispatch({ type: MATERIAL_LAGER_LIST_RESET });
+    dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
   }, [loadingRates]);
+
+  useEffect(() => {
+    dispatch({ type: MATERIAL_LAGER_LIST_RESET });
+    dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
+    dispatch({ type: RATE_LIST_RESET });
+  }, [loadingRequisitions]);
 
   const props = [
     {
@@ -258,6 +271,86 @@ const ManufactureScreen = () => {
               onClick={() => history.push("/manufacture/rate")}
             >
               Novi normativ
+            </Button>
+          </>
+        )}
+        {loadingRequisitions && <Loader />}
+        {errorRequisitions && (
+          <Message variant="danger">{errorRequisitions}</Message>
+        )}
+        {requisitions.length != 0 && (
+          <>
+            <h2>TREBOVANJE</h2>
+            <Table striped bordered hover responsive size="sm">
+              <thead>
+                <tr>
+                  <th>ZAHTIJEVANO</th>
+                  <th>ZAPRIMLJENO</th>
+                  <th>ARTIKLI</th>
+                  <th>KOLIČINA</th>
+                  <th>DATUM</th>
+                  <th>VRIJEME</th>
+                  <th>SKLADIŠTE</th>
+                </tr>
+              </thead>
+              <tbody>
+                {requisitions.map((item) => {
+                  return (
+                    <tr
+                      key={item._id}
+                      // onClick={() =>
+                      //   history.push(`/central/item/${item._id}`)
+                      // }
+                    >
+                      <td>
+                        {item.isSent ? (
+                          <i
+                            className="fas fa-check"
+                            style={{ color: "green" }}
+                          ></i>
+                        ) : (
+                          <i
+                            className="fas fa-times"
+                            style={{ color: "red" }}
+                          ></i>
+                        )}
+                      </td>
+                      <td>
+                        {item.isFullfilled ? (
+                          <i
+                            className="fas fa-check"
+                            style={{ color: "green" }}
+                          ></i>
+                        ) : (
+                          <i
+                            className="fas fa-times"
+                            style={{ color: "red" }}
+                          ></i>
+                        )}
+                      </td>
+                      <td>
+                        {item.requestedArticles.map((o) => (
+                          <div>{`${o.article.name}\n`}</div>
+                        ))}
+                      </td>
+                      <td>
+                        {item.requestedArticles.map((o) => (
+                          <div>{`${o.quantity}\n`}</div>
+                        ))}
+                      </td>
+                      <td>{item.createdAt.substring(0, 10)}</td>
+                      <td>{item.createdAt.substring(11, 19)}</td>
+                      <td>Centralno skladište</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+            <Button
+              type="button"
+              onClick={() => history.push("/manufacture/requisition")}
+            >
+              Novo trebovanje
             </Button>
           </>
         )}

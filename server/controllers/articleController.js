@@ -65,4 +65,19 @@ const getProducts = asyncHandler(async (req, res) => {
   res.json(articles);
 });
 
-export { getArticles, getArticle, createArticle, updateArticle, getProducts };
+// @desc Fetch all articles type material
+// @route GET /api/articles/materials
+// @access Public
+const getMaterials = asyncHandler(async (req, res) => {
+  const articles = await Article.find({ type: "materijal" });
+  res.json(articles);
+});
+
+export {
+  getArticles,
+  getArticle,
+  createArticle,
+  updateArticle,
+  getProducts,
+  getMaterials,
+};

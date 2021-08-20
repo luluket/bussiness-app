@@ -16,6 +16,7 @@ import {
   listUnfullfilledRequisitions,
 } from "../actions/requisitionActions";
 import {
+  REQUISITION_LIST_RESET,
   REQUISITION_UNFULLFILLED_LIST_REQUEST,
   REQUISITION_UNFULLFILLED_LIST_RESET,
 } from "../constants/requisitionConstants";
@@ -72,16 +73,11 @@ const CentralScreen = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch({ type: LAGER_LIST_RESET });
-    dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
-    setShowLagerNote(false);
-    setShowExportNote(false);
-    setShowReceiptNote(true);
-  }, [loadingReceipts]);
-
-  useEffect(() => {
     dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
     dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
+    dispatch({ type: REQUISITION_LIST_RESET });
+    dispatch(listUnfullfilledRequisitions());
+
     setShowReceiptNote(false);
     setShowExportNote(false);
     setShowLagerNote(true);
@@ -89,7 +85,21 @@ const CentralScreen = () => {
 
   useEffect(() => {
     dispatch({ type: LAGER_LIST_RESET });
+    dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
+    dispatch({ type: REQUISITION_LIST_RESET });
+    dispatch(listUnfullfilledRequisitions());
+
+    setShowLagerNote(false);
+    setShowExportNote(false);
+    setShowReceiptNote(true);
+  }, [loadingReceipts]);
+
+  useEffect(() => {
+    dispatch({ type: LAGER_LIST_RESET });
     dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
+    dispatch({ type: REQUISITION_LIST_RESET });
+    dispatch(listUnfullfilledRequisitions());
+
     setShowLagerNote(false);
     setShowReceiptNote(false);
     setShowExportNote(true);
@@ -316,6 +326,7 @@ const CentralScreen = () => {
                 <tr>
                   <th>ZAHTIJEVANO</th>
                   <th>ISPORUČENO</th>
+                  <th>DOKUMENT</th>
                   <th>ARTIKLI</th>
                   <th>KOLIČINA</th>
                   <th>DATUM</th>
@@ -358,6 +369,7 @@ const CentralScreen = () => {
                           ></i>
                         )}
                       </td>
+                      <td>{item.document}</td>
                       <td>
                         {item.requestedArticles.map((o) => (
                           <div>{`${o.article.name}\n`}</div>

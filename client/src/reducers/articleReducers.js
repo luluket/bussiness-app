@@ -15,6 +15,9 @@ import {
   PRODUCT_LIST_REQUEST,
   PRODUCT_LIST_SUCCESS,
   PRODUCT_LIST_FAIL,
+  MATERIAL_LIST_REQUEST,
+  MATERIAL_LIST_SUCCESS,
+  MATERIAL_LIST_FAIL,
 } from "../constants/articleConstants";
 
 export const articleListReducer = (state = { articles: [] }, action) => {
@@ -84,6 +87,22 @@ export const productListReducer = (state = { products: [] }, action) => {
         products: action.payload,
       };
     case PRODUCT_LIST_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const materialListReducer = (state = { materials: [] }, action) => {
+  switch (action.type) {
+    case MATERIAL_LIST_REQUEST:
+      return { loading: true, materials: [] };
+    case MATERIAL_LIST_SUCCESS:
+      return {
+        loading: false,
+        materials: action.payload,
+      };
+    case MATERIAL_LIST_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

@@ -37,6 +37,7 @@ import {
   articleUpdateReducer,
   articleCreateReducer,
   productListReducer,
+  materialListReducer,
 } from "./reducers/articleReducers.js";
 
 import {
@@ -121,6 +122,7 @@ const reducer = combineReducers({
   rateList: rateListReducer,
   rateCreate: rateCreateReducer,
   productList: productListReducer,
+  materialList: materialListReducer,
   requisitionList: requisitionListReducer,
   requisitionUnfullfilledList: requisitionUnfullfilledListReducer,
   requisitionCreate: requisitionCreateReducer,
