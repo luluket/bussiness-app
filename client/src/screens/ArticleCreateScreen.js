@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FormContainer from "../components/FormContainer";
 import { Form, Button } from "react-bootstrap";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createArticle } from "../actions/articleActions";
+import { ARTICLE_CREATE_RESET } from "../constants/articleConstants";
 
-const ArticleCreateScreen = () => {
+const ArticleCreateScreen = ({ history }) => {
   const dispatch = useDispatch();
 
   const [name, setName] = useState("");
@@ -14,6 +15,16 @@ const ArticleCreateScreen = () => {
   const [pdv, setPdv] = useState("");
   const [description, setDescription] = useState("");
   const [unit, setUnit] = useState("");
+
+  const articleCreate = useSelector((state) => state.articleCreate);
+  const { success: successCreate, article } = articleCreate;
+
+  useEffect(() => {
+    if (successCreate) {
+      dispatch({ type: ARTICLE_CREATE_RESET });
+      history.push("/articles");
+    }
+  }, [successCreate]);
 
   const submitHandler = (e) => {
     e.preventDefault();

@@ -3,7 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Row, Form, Col, Button, Table } from "react-bootstrap";
 import { listSuppliers } from "../actions/partnerActions";
 import { listArticles } from "../actions/articleActions";
-import { createReceipt } from "../actions/centralReceiptActions";
+import {
+  createReceipt,
+  listCentralReceipts,
+} from "../actions/centralReceiptActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { CENTRAL_RECEIPT_CREATE_RESET } from "../constants/centralReceiptConstants";
@@ -38,6 +41,7 @@ const CentralReceiptCreateScreen = ({ history }) => {
     dispatch(listArticles());
     if (successCreate) {
       dispatch({ type: CENTRAL_RECEIPT_CREATE_RESET });
+      dispatch(listCentralReceipts());
       history.push("/central");
     }
   }, [dispatch, successCreate]);

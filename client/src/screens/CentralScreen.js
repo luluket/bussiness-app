@@ -105,6 +105,7 @@ const CentralScreen = () => {
       setShowLagerNote(false);
       setShowReceiptNote(false);
       setShowRequisitionNote(false);
+    } else {
     }
   }, [loadingExports]);
 
@@ -134,12 +135,12 @@ const CentralScreen = () => {
       function: listCentralReceipts(),
     },
     {
-      name: "Međuskladišnica - ulaz",
+      name: "Međuskladišnica ulaz",
       subitems: [],
       function: listLager(),
     },
     {
-      name: "Međuskladišnica - izlaz",
+      name: "Međuskladišnica izlaz",
       subitems: [],
       function: listCentralExports(),
     },

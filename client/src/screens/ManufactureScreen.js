@@ -102,8 +102,9 @@ const ManufactureScreen = () => {
       name: "Skladište materijala",
       subitems: [
         { name: "Lager", function: listMaterialLager() },
-        { name: "Međuskladišnica-ulaz", function: listMaterialImports() },
-        { name: "Međuskladišnica-izlaz", function: listMaterialLager() },
+        { name: "Međuskladišnica ulaz", function: listMaterialImports() },
+        { name: "Međuskladišnica izlaz", function: listMaterialLager() },
+        { name: "Utrošak materijala", function: listMaterialLager() },
       ],
       function: listMaterialLager(),
     },
@@ -111,8 +112,9 @@ const ManufactureScreen = () => {
       name: "Skladište gotovih proizvoda",
       subitems: [
         { name: "Lager", function: listMaterialLager() },
-        { name: "Međuskladišnica-ulaz", function: listMaterialLager() },
-        { name: "Međuskladišnica-izlaz", function: listMaterialLager() },
+        { name: "Međuskladišnica ulaz", function: listMaterialLager() },
+        { name: "Međuskladišnica izlaz", function: listMaterialLager() },
+        { name: "Radni nalog", function: listMaterialLager() },
       ],
       function: listMaterialLager(),
     },
@@ -125,16 +127,6 @@ const ManufactureScreen = () => {
       name: "Normativi",
       subitems: [],
       function: listRates(),
-    },
-    {
-      name: "Radni nalozi",
-      subitems: [],
-      function: listMaterialLager(),
-    },
-    {
-      name: "Utrošak materijala",
-      subitems: [],
-      function: listMaterialLager(),
     },
   ];
 

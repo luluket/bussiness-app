@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Form, Col, Button, Table } from "react-bootstrap";
-import { createExport } from "../actions/centralExportActions";
+import {
+  createExport,
+  listCentralExports,
+} from "../actions/centralExportActions";
 import Message from "../components/Message";
 import {
   listLagerMaterials,
@@ -61,6 +64,7 @@ const CentralExportCreateScreen = ({ history }) => {
     dispatch(listUnfullfilledRequisitions());
     if (successCreate) {
       dispatch({ type: CENTRAL_EXPORT_CREATE_RESET });
+      dispatch(listCentralExports());
       history.push("/central");
     }
   }, [dispatch, successCreate]);

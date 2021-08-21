@@ -9,6 +9,7 @@ import { useHistory } from "react-router-dom";
 const ArticleListScreen = () => {
   const dispatch = useDispatch();
   const history = useHistory();
+
   const articleList = useSelector((state) => state.articleList);
   const { loading, error, articles } = articleList;
 

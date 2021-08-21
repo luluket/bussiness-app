@@ -18,6 +18,7 @@ import {
   MATERIAL_LIST_REQUEST,
   MATERIAL_LIST_SUCCESS,
   MATERIAL_LIST_FAIL,
+  ARTICLE_CREATE_RESET,
 } from "../constants/articleConstants";
 
 export const articleListReducer = (state = { articles: [] }, action) => {
@@ -57,6 +58,8 @@ export const articleCreateReducer = (state = { article: {} }, action) => {
       return { loading: false, success: true, article: action.payload };
     case ARTICLE_CREATE_FAIL:
       return { loading: false, error: action.payload };
+    case ARTICLE_CREATE_RESET:
+      return { article: {} };
     default:
       return state;
   }
