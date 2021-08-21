@@ -4,7 +4,10 @@ import { Row, Form, Col, Button, Table } from "react-bootstrap";
 import Message from "../components/Message";
 import { REQUISITION_CREATE_RESET } from "../constants/requisitionConstants";
 import { listMaterials } from "../actions/articleActions";
-import { createRequisition } from "../actions/requisitionActions";
+import {
+  createRequisition,
+  listRequisitions,
+} from "../actions/requisitionActions";
 
 const RequisitionCreateScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -38,7 +41,8 @@ const RequisitionCreateScreen = ({ history }) => {
     dispatch(listMaterials());
     if (successCreate) {
       dispatch({ type: REQUISITION_CREATE_RESET });
-      history.push("/central");
+      dispatch(listRequisitions());
+      history.push("/manufacture");
     }
   }, [dispatch, successCreate]);
 

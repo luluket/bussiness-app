@@ -55,6 +55,10 @@ const workorderSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
+    manufacturePrice: {
+      type: Number,
+      required: true,
+    },
     lot: {
       type: Number,
       required: true,

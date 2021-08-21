@@ -9,6 +9,7 @@ import Message from "../components/Message";
 import {
   listLagerMaterials,
   articleLagerQuantity,
+  articleLagerQuantities,
 } from "../actions/lagerActions";
 import { CENTRAL_EXPORT_CREATE_RESET } from "../constants/centralExportConstants";
 import {
@@ -29,6 +30,7 @@ const CentralExportCreateScreen = ({ history }) => {
   const [exportedArticles, setExportedArticles] = useState([
     { article: "", quantity: 0 },
   ]);
+  const [ids, setIds] = useState([]);
   const [rows, setRows] = useState("");
 
   const lagerListMaterial = useSelector((state) => state.lagerListMaterial);
@@ -55,9 +57,14 @@ const CentralExportCreateScreen = ({ history }) => {
     quantity: articleQuantity,
   } = lagerArticleQuantity;
 
-  const requisitionArticleQuantity = useSelector(
-    (state) => state.lagerArticleQuantity.quantity
+  const lagerArticleQuantities = useSelector(
+    (state) => state.lagerArticleQuantities
   );
+  const {
+    loading: loadingQuantities,
+    success: successQuantities,
+    quantities: articleQuantities,
+  } = lagerArticleQuantities;
 
   useEffect(() => {
     dispatch(listLagerMaterials());
@@ -73,17 +80,17 @@ const CentralExportCreateScreen = ({ history }) => {
   useEffect(() => {
     setLagerQuantities([]);
     if (Object.keys(requisition).length != 0) {
-      requisition.requestedArticles.forEach((item) => {
-        dispatch(articleLagerQuantity(item.article._id));
+      requisition.requestedArticles.forEach((item, index) => {
+        setIds((ids) => [...ids, item.article._id]);
       });
     }
     setDocumentNumber(requisition.document);
   }, [requisition]);
 
-  // update quantities array upon selecting requisition
+  // array of article ids sent to lager to fetch quantites
   useEffect(() => {
-    setLagerQuantities([...lagerQuantities, requisitionArticleQuantity]);
-  }, [requisitionArticleQuantity]);
+    dispatch(articleLagerQuantities(ids));
+  }, [ids]);
 
   const addRow = () => {
     setRows([...rows, "row"]);
@@ -130,6 +137,7 @@ const CentralExportCreateScreen = ({ history }) => {
     if (event.target.value === "") {
       setRequisition({});
       setLagerQuantities([]);
+      setIds([]);
       setDocumentNumber(0);
     } else {
       setRequisition(
@@ -147,9 +155,9 @@ const CentralExportCreateScreen = ({ history }) => {
     if (Object.keys(requisition).length > 0) {
       var shortage = false;
       requisition.requestedArticles.forEach((item, index) => {
-        if (item.quantity > lagerQuantities[index + 1]) {
+        if (item.quantity > articleQuantities[index]) {
           shortage = true;
-          console.log(item.quantity, lagerQuantities[index]);
+          console.log(item.quantity, articleQuantities[index]);
         }
       });
       if (shortage) {
@@ -261,14 +269,15 @@ const CentralExportCreateScreen = ({ history }) => {
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>{item.article.name}</td>
-                  {item.quantity > lagerQuantities[index + 1] ? (
+                  {articleQuantities &&
+                  item.quantity > articleQuantities[index] ? (
                     <td style={{ color: "red", fontWeight: "bold" }}>
                       {item.quantity}
                     </td>
                   ) : (
                     <td>{item.quantity}</td>
                   )}
-                  <td>{lagerQuantities[index + 1]}</td>
+                  <td>{articleQuantities && articleQuantities[index]}</td>
                 </tr>
               ))}
             </tbody>

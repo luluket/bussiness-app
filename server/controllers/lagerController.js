@@ -27,3 +27,16 @@ export const getArticleQuantity = asyncHandler(async (req, res) => {
   const article = await Lager.findOne({ article: req.params.id }, "quantity");
   res.json(article.quantity);
 });
+
+//@desc Get article quantities
+//@route POST /api/lager/quantities
+//@access Public
+export const getArticleQuantities = asyncHandler(async (req, res) => {
+  console.log(req.params, req.body);
+  const article = await Lager.find()
+    .where("article")
+    .in(req.body)
+    .select("quantity -_id");
+  const quantities = article.map((item) => item.quantity);
+  res.json(quantities);
+});

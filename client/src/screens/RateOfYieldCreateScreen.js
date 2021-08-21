@@ -6,7 +6,7 @@ import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { RATE_CREATE_RESET } from "../constants/rateOfYieldConstants";
 import { listMaterials } from "../actions/articleActions";
-import { createRate } from "../actions/rateOfYieldActions";
+import { createRate, listRates } from "../actions/rateOfYieldActions";
 
 const RateOfYieldCreateScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -33,6 +33,7 @@ const RateOfYieldCreateScreen = ({ history }) => {
     dispatch(listProducts());
     if (successCreate) {
       dispatch({ type: RATE_CREATE_RESET });
+      dispatch(listRates());
       history.push("/manufacture");
     }
   }, [dispatch, successCreate]);
@@ -119,7 +120,7 @@ const RateOfYieldCreateScreen = ({ history }) => {
             {products.map((product) => {
               return (
                 <option value={product._id}>
-                  {product.name} ({product._id})
+                  {product._id} - {product.name}
                 </option>
               );
             })}
@@ -153,7 +154,7 @@ const RateOfYieldCreateScreen = ({ history }) => {
                           {materials.map((item) => {
                             return (
                               <option id={item._id} value={item._id}>
-                                {item.name} ({item._id})
+                                {item._id} - {item.name}
                               </option>
                             );
                           })}
