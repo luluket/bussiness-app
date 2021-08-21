@@ -5,14 +5,16 @@ import { listProducts } from "../actions/articleActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { RATE_CREATE_RESET } from "../constants/rateOfYieldConstants";
-import { listMaterialLager } from "../actions/materialLagerActions";
+import { listMaterials } from "../actions/articleActions";
 import { createRate } from "../actions/rateOfYieldActions";
 
 const RateOfYieldCreateScreen = ({ history }) => {
   const dispatch = useDispatch();
 
   const [product, setProduct] = useState("");
-  const [components, setComponents] = useState([{ material: "", factor: 0 }]);
+  const [components, setComponents] = useState([
+    { material: "", quantity: 0, factor: 0 },
+  ]);
   const [rows, setRows] = useState([]);
 
   //fetch every article type product
@@ -20,14 +22,14 @@ const RateOfYieldCreateScreen = ({ history }) => {
   const { products } = productList;
 
   // fetch every article from material warehouse
-  const materialLagerList = useSelector((state) => state.materialLagerList);
-  const { lager } = materialLagerList;
+  const materialList = useSelector((state) => state.materialList);
+  const { materials } = materialList;
 
   const rateCreate = useSelector((state) => state.rateCreate);
   const { error: errorCreate, success: successCreate } = rateCreate;
 
   useEffect(() => {
-    dispatch(listMaterialLager());
+    dispatch(listMaterials());
     dispatch(listProducts());
     if (successCreate) {
       dispatch({ type: RATE_CREATE_RESET });
@@ -41,15 +43,25 @@ const RateOfYieldCreateScreen = ({ history }) => {
 
   // handle array of components - material + percentage in product
   const handleMaterial = (index) => (event) => {
-    const component = lager.find(
-      (item) => item.article._id === event.target.value
-    );
-    const { article } = component;
+    const article = materials.find((item) => item._id === event.target.value);
     if (components[index]) {
       components[index].material = article;
     } else {
       components.push({
         material: article,
+        quantity: 0,
+        factor: 0,
+      });
+    }
+  };
+
+  const handleQuantity = (index) => (event) => {
+    if (components[index]) {
+      components[index].quantity = event.target.value;
+    } else {
+      components.push({
+        material: "",
+        quantity: event.target.value,
         factor: 0,
       });
     }
@@ -63,6 +75,7 @@ const RateOfYieldCreateScreen = ({ history }) => {
     } else {
       components.push({
         material: "",
+        quantity: 0,
         factor: event.target.value,
       });
     }
@@ -120,6 +133,7 @@ const RateOfYieldCreateScreen = ({ history }) => {
                 <tr>
                   <th>RB</th>
                   <th>ARTIKL</th>
+                  <th>KOLIČINA</th>
                   <th id="factorHeader">FAKTOR(Σ=1)</th>
                   <th>IZBRIŠI</th>
                 </tr>
@@ -136,17 +150,24 @@ const RateOfYieldCreateScreen = ({ history }) => {
                           onChange={handleMaterial(index)}
                         >
                           <option>Izaberite artikal</option>
-                          {lager.map((item) => {
+                          {materials.map((item) => {
                             return (
-                              <option
-                                id={item.article._id}
-                                value={item.article._id}
-                              >
-                                {item.article.name} ({item.article._id})
+                              <option id={item._id} value={item._id}>
+                                {item.name} ({item._id})
                               </option>
                             );
                           })}
                         </Form.Control>
+                      </Form.Group>
+                    </td>
+                    <td>
+                      <Form.Group controlId={`factor-${index}`}>
+                        <Form.Control
+                          type="number"
+                          placeholder="Unesite količinu"
+                          onChange={handleQuantity(index)}
+                          autoComplete="off"
+                        ></Form.Control>
                       </Form.Group>
                     </td>
                     <td>
@@ -175,7 +196,7 @@ const RateOfYieldCreateScreen = ({ history }) => {
           <Button
             type="button"
             onClick={addRow}
-            disabled={lager.length <= rows.length}
+            disabled={materials.length <= rows.length}
           >
             Dodaj artikal
           </Button>

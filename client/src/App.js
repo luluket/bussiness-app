@@ -33,6 +33,7 @@ import CentralExportCreateScreen from "./screens/CentralExportCreateScreen";
 import ManufactureScreen from "./screens/ManufactureScreen";
 import RateOfYieldCreateScreen from "./screens/RateOfYieldCreateScreen";
 import RequisitionCreateScreen from "./screens/RequisitionCreateScreen";
+import WorkorderCreateScreen from "./screens/WorkorderCreateScreen";
 
 const App = () => {
   return (
@@ -77,6 +78,11 @@ const App = () => {
             <Route
               path="/manufacture/requisition"
               component={RequisitionCreateScreen}
+              exact
+            />
+            <Route
+              path="/manufacture/workorder"
+              component={WorkorderCreateScreen}
               exact
             />
 

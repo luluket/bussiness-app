@@ -11,7 +11,11 @@ const rateOfYieldSchema = mongoose.Schema({
       material: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: "MaterialLager",
+        ref: "Article",
+      },
+      quantity: {
+        type: Number,
+        required: true,
       },
       factor: {
         type: Number,
