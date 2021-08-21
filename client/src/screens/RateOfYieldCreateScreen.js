@@ -56,6 +56,7 @@ const RateOfYieldCreateScreen = ({ history }) => {
   };
 
   const handleFactor = (index) => (event) => {
+    document.getElementById("factorHeader").style.border = "black";
     document.getElementById(`factor-${index}`).style.color = "black";
     if (components[index]) {
       components[index].factor = event.target.value;

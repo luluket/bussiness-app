@@ -26,6 +26,7 @@ const CentralScreen = () => {
 
   const history = useHistory();
 
+  // states to handle empty database tables
   const [showLagerNote, setShowLagerNote] = useState(false);
   const [showReceiptNote, setShowReceiptNote] = useState(false);
   const [showExportNote, setShowExportNote] = useState(false);
@@ -76,7 +77,7 @@ const CentralScreen = () => {
     dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
     dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
     dispatch({ type: REQUISITION_LIST_RESET });
-    dispatch(listUnfullfilledRequisitions());
+    // dispatch(listUnfullfilledRequisitions());
 
     setShowReceiptNote(false);
     setShowExportNote(false);
@@ -87,7 +88,7 @@ const CentralScreen = () => {
     dispatch({ type: LAGER_LIST_RESET });
     dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
     dispatch({ type: REQUISITION_LIST_RESET });
-    dispatch(listUnfullfilledRequisitions());
+    // dispatch(listUnfullfilledRequisitions());
 
     setShowLagerNote(false);
     setShowExportNote(false);
@@ -98,7 +99,7 @@ const CentralScreen = () => {
     dispatch({ type: LAGER_LIST_RESET });
     dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
     dispatch({ type: REQUISITION_LIST_RESET });
-    dispatch(listUnfullfilledRequisitions());
+    // dispatch(listUnfullfilledRequisitions());
 
     setShowLagerNote(false);
     setShowReceiptNote(false);

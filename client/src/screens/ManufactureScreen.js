@@ -6,19 +6,24 @@ import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { useHistory } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
-import { LAGER_LIST_RESET } from "../constants/lagerConstants";
 import { listMaterialImports } from "../actions/materialImportActions";
-import { CENTRAL_EXPORT_LIST_RESET } from "../constants/centralExportConstants";
 import { listRates } from "../actions/rateOfYieldActions";
 import { MATERIAL_LAGER_LIST_RESET } from "../constants/materialLagerConstants";
 import { RATE_LIST_RESET } from "../constants/rateOfYieldConstants";
 import { MATERIAL_IMPORT_LIST_RESET } from "../constants/materialImportConstants";
 import { listRequisitions } from "../actions/requisitionActions";
+import { REQUISITION_LIST_RESET } from "../constants/requisitionConstants";
 
 const ManufactureScreen = () => {
   const dispatch = useDispatch();
 
   const history = useHistory();
+
+  // states to handle empty database tables
+  const [showMaterialLagerNote, setShowMaterialLagerNote] = useState(false);
+  const [showMaterialImportNote, setShowMaterialImportNote] = useState(false);
+  const [showRequisitionNote, setShowRequisitionNote] = useState(false);
+  const [showRateNote, setShowRateNote] = useState(false);
 
   const materialLagerList = useSelector((state) => state.materialLagerList);
   const {
@@ -55,22 +60,45 @@ const ManufactureScreen = () => {
   useEffect(() => {
     dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
     dispatch({ type: RATE_LIST_RESET });
+    dispatch({ type: REQUISITION_LIST_RESET });
+
+    setShowMaterialLagerNote(true);
+    setShowMaterialImportNote(false);
+    setShowRequisitionNote(false);
+    setShowRateNote(false);
   }, [loadingLager]);
 
   useEffect(() => {
     dispatch({ type: MATERIAL_LAGER_LIST_RESET });
     dispatch({ type: RATE_LIST_RESET });
+    dispatch({ type: REQUISITION_LIST_RESET });
+
+    setShowMaterialImportNote(true);
+    setShowMaterialLagerNote(false);
+    setShowRequisitionNote(false);
+    setShowRateNote(false);
   }, [loadingImports]);
 
   useEffect(() => {
     dispatch({ type: MATERIAL_LAGER_LIST_RESET });
     dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
+    dispatch({ type: REQUISITION_LIST_RESET });
+
+    setShowRateNote(true);
+    setShowMaterialImportNote(false);
+    setShowMaterialLagerNote(false);
+    setShowRequisitionNote(false);
   }, [loadingRates]);
 
   useEffect(() => {
     dispatch({ type: MATERIAL_LAGER_LIST_RESET });
     dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
     dispatch({ type: RATE_LIST_RESET });
+
+    setShowRequisitionNote(true);
+    setShowMaterialImportNote(false);
+    setShowMaterialLagerNote(false);
+    setShowRateNote(false);
   }, [loadingRequisitions]);
 
   const props = [
@@ -121,7 +149,7 @@ const ManufactureScreen = () => {
         <h1 className="text-center">PROIZVODNI POGON</h1>
         {loadingLager && <Loader />}
         {errorLager && <Message variant="danger">{errorLager}</Message>}
-        {lager.length != 0 && (
+        {lager.length != 0 ? (
           <>
             <h2>LAGER LISTA</h2>
             <Table striped bordered responsive>
@@ -147,59 +175,12 @@ const ManufactureScreen = () => {
               </tbody>
             </Table>
           </>
-        )}
-        {loadingReceipts && <Loader />}
-        {errorReceipts && <Message variant="danger">{errorReceipts}</Message>}
-        {receipts.length != 0 && (
-          <>
-            <h2>PRIMKE</h2>
-            <Table striped bordered hover responsive>
-              <thead>
-                <tr>
-                  <th>ZAKLJUČEN</th>
-                  <th>DOKUMENT</th>
-                  <th>DATUM</th>
-                  <th>VRIJEME</th>
-                  <th>DOBAVLJAČ</th>
-                </tr>
-              </thead>
-              <tbody>
-                {receipts.map((receipt) => {
-                  return (
-                    <tr
-                      key={receipt._id}
-                      onClick={() =>
-                        history.push(`/central/receipt/${receipt._id}`)
-                      }
-                    >
-                      <td>
-                        <i
-                          className="fas fa-check"
-                          style={{ color: "green" }}
-                        ></i>
-                      </td>
-                      <td>{receipt.document}-ulazni račun</td>
-                      <td>{receipt.createdAt.substring(0, 10)}</td>
-                      <td>{receipt.createdAt.substring(11, 19)}</td>
-                      <td>
-                        {receipt.partner.name} {receipt.partner.surname}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </Table>
-            <Button
-              type="button"
-              onClick={() => history.push("/central/receipt")}
-            >
-              Nova primka
-            </Button>
-          </>
+        ) : (
+          showMaterialLagerNote && <h2>Lager lista je prazna</h2>
         )}
         {loadingImports && <Loader />}
         {errorImports && <Message variant="danger">{errorImports}</Message>}
-        {imports.length != 0 && (
+        {imports.length != 0 ? (
           <>
             <h2>MEĐUSKLADIŠNICA - ULAZ</h2>
             <Table striped bordered hover responsive>
@@ -237,10 +218,14 @@ const ManufactureScreen = () => {
               </tbody>
             </Table>
           </>
+        ) : (
+          showMaterialImportNote && (
+            <h2>Lista zaprimljenih artikala je prazna</h2>
+          )
         )}
         {loadingRates && <Loader />}
         {errorRates && <Message variant="danger">{errorRates}</Message>}
-        {rates.length != 0 && (
+        {rates.length != 0 ? (
           <>
             <h2>NORMATIVI</h2>
             <Table striped bordered hover responsive>
@@ -273,12 +258,24 @@ const ManufactureScreen = () => {
               Novi normativ
             </Button>
           </>
+        ) : (
+          showRateNote && (
+            <>
+              <h2>Nema kreiranog normativa</h2>
+              <Button
+                type="button"
+                onClick={() => history.push("/manufacture/rate")}
+              >
+                Novi normativ
+              </Button>
+            </>
+          )
         )}
         {loadingRequisitions && <Loader />}
         {errorRequisitions && (
           <Message variant="danger">{errorRequisitions}</Message>
         )}
-        {requisitions.length != 0 && (
+        {requisitions.length != 0 ? (
           <>
             <h2>TREBOVANJE</h2>
             <Table striped bordered hover responsive size="sm">
@@ -353,6 +350,18 @@ const ManufactureScreen = () => {
               Novo trebovanje
             </Button>
           </>
+        ) : (
+          showRequisitionNote && (
+            <>
+              <h2>Lista trebovanja je prazna</h2>
+              <Button
+                type="button"
+                onClick={() => history.push("/manufacture/requisition")}
+              >
+                Novo trebovanje
+              </Button>
+            </>
+          )
         )}
       </Col>
     </Row>

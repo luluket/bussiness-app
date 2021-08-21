@@ -103,6 +103,7 @@ const CentralExportCreateScreen = ({ history }) => {
   };
 
   const handleQuantity = (index) => (event) => {
+    document.getElementById("quantityHeader").style.border = "black";
     document.getElementById(`quantity-${index}`).style.color = "black";
     if (exportedArticles[index]) {
       exportedArticles[index].quantity = event.target.value;
