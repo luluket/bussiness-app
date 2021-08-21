@@ -30,14 +30,10 @@ const CentralScreen = () => {
   const [showLagerNote, setShowLagerNote] = useState(false);
   const [showReceiptNote, setShowReceiptNote] = useState(false);
   const [showExportNote, setShowExportNote] = useState(false);
+  const [showRequisitionNote, setShowRequisitionNote] = useState(false);
 
   const lagerList = useSelector((state) => state.lagerList);
-  const {
-    loading: loadingLager,
-    success: successLager,
-    error: errorLager,
-    lager,
-  } = lagerList;
+  const { loading: loadingLager, error: errorLager, lager } = lagerList;
 
   const centralReceiptList = useSelector((state) => state.centralReceiptList);
   const {
@@ -74,51 +70,57 @@ const CentralScreen = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
-    dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
-    dispatch({ type: REQUISITION_LIST_RESET });
-    // dispatch(listUnfullfilledRequisitions());
+    if (loadingLager) {
+      dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
+      dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
+      dispatch({ type: REQUISITION_LIST_RESET });
 
-    setShowReceiptNote(false);
-    setShowExportNote(false);
-    setShowLagerNote(true);
+      setShowLagerNote(true);
+      setShowReceiptNote(false);
+      setShowExportNote(false);
+      setShowRequisitionNote(false);
+    }
   }, [loadingLager]);
 
   useEffect(() => {
-    dispatch({ type: LAGER_LIST_RESET });
-    dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
-    dispatch({ type: REQUISITION_LIST_RESET });
-    // dispatch(listUnfullfilledRequisitions());
+    if (loadingReceipts) {
+      dispatch({ type: LAGER_LIST_RESET });
+      dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
+      dispatch({ type: REQUISITION_LIST_RESET });
 
-    setShowLagerNote(false);
-    setShowExportNote(false);
-    setShowReceiptNote(true);
+      setShowReceiptNote(true);
+      setShowLagerNote(false);
+      setShowExportNote(false);
+      setShowRequisitionNote(false);
+    }
   }, [loadingReceipts]);
 
   useEffect(() => {
-    dispatch({ type: LAGER_LIST_RESET });
-    dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
-    dispatch({ type: REQUISITION_LIST_RESET });
-    // dispatch(listUnfullfilledRequisitions());
+    if (loadingExports) {
+      dispatch({ type: LAGER_LIST_RESET });
+      dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
+      dispatch({ type: REQUISITION_LIST_RESET });
 
-    setShowLagerNote(false);
-    setShowReceiptNote(false);
-    setShowExportNote(true);
+      setShowExportNote(true);
+      setShowLagerNote(false);
+      setShowReceiptNote(false);
+      setShowRequisitionNote(false);
+    }
   }, [loadingExports]);
 
   useEffect(() => {
-    dispatch({ type: LAGER_LIST_RESET });
-    dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
-    dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
-    dispatch({ type: REQUISITION_UNFULLFILLED_LIST_RESET });
-    setShowLagerNote(false);
-    setShowReceiptNote(false);
-    setShowExportNote(false);
-  }, [loadingRequisitions]);
+    if (loadingRequisitions) {
+      dispatch({ type: LAGER_LIST_RESET });
+      dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
+      dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
+      dispatch({ type: REQUISITION_UNFULLFILLED_LIST_RESET });
 
-  const handleButtonClick = () => {
-    history.push("/lager/create");
-  };
+      setShowRequisitionNote(true);
+      setShowLagerNote(false);
+      setShowReceiptNote(false);
+      setShowExportNote(false);
+    }
+  }, [loadingRequisitions]);
 
   const props = [
     {
@@ -319,7 +321,7 @@ const CentralScreen = () => {
         {errorRequisitions && (
           <Message variant="danger">{errorRequisitions}</Message>
         )}
-        {requisitions.length != 0 && (
+        {requisitions.length != 0 ? (
           <>
             <h2>TREBOVANJE </h2>
             <Table striped bordered hover responsive size="sm">
@@ -390,6 +392,8 @@ const CentralScreen = () => {
               </tbody>
             </Table>
           </>
+        ) : (
+          showRequisitionNote && <h2>Nema zahtjeva za otpremom materijala</h2>
         )}
       </Col>
     </Row>

@@ -17,7 +17,13 @@ const Header = () => {
   };
   return (
     <header>
-      <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
+      <Navbar
+        bg="dark"
+        variant="dark"
+        expand="lg"
+        collapseOnSelect
+        style={{ fontSize: 20 }}
+      >
         <Container>
           <LinkContainer to="/">
             <Navbar.Brand href="/">Business Workflow Manager</Navbar.Brand>

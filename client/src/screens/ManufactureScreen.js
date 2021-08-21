@@ -26,22 +26,10 @@ const ManufactureScreen = () => {
   const [showRateNote, setShowRateNote] = useState(false);
 
   const materialLagerList = useSelector((state) => state.materialLagerList);
-  const {
-    loading: loadingLager,
-    success: successLager,
-    error: errorLager,
-    lager,
-  } = materialLagerList;
+  const { loading: loadingLager, error: errorLager, lager } = materialLagerList;
 
   const rateList = useSelector((state) => state.rateList);
   const { loading: loadingRates, error: errorRates, rates } = rateList;
-
-  const centralReceiptList = useSelector((state) => state.centralReceiptList);
-  const {
-    loading: loadingReceipts,
-    error: errorReceipts,
-    receipts,
-  } = centralReceiptList;
 
   const materialImportList = useSelector((state) => state.materialImportList);
   const {
@@ -58,47 +46,55 @@ const ManufactureScreen = () => {
   } = requisitionList;
 
   useEffect(() => {
-    dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
-    dispatch({ type: RATE_LIST_RESET });
-    dispatch({ type: REQUISITION_LIST_RESET });
+    if (loadingLager) {
+      dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
+      dispatch({ type: RATE_LIST_RESET });
+      dispatch({ type: REQUISITION_LIST_RESET });
 
-    setShowMaterialLagerNote(true);
-    setShowMaterialImportNote(false);
-    setShowRequisitionNote(false);
-    setShowRateNote(false);
+      setShowMaterialLagerNote(true);
+      setShowMaterialImportNote(false);
+      setShowRequisitionNote(false);
+      setShowRateNote(false);
+    }
   }, [loadingLager]);
 
   useEffect(() => {
-    dispatch({ type: MATERIAL_LAGER_LIST_RESET });
-    dispatch({ type: RATE_LIST_RESET });
-    dispatch({ type: REQUISITION_LIST_RESET });
+    if (loadingImports) {
+      dispatch({ type: MATERIAL_LAGER_LIST_RESET });
+      dispatch({ type: RATE_LIST_RESET });
+      dispatch({ type: REQUISITION_LIST_RESET });
 
-    setShowMaterialImportNote(true);
-    setShowMaterialLagerNote(false);
-    setShowRequisitionNote(false);
-    setShowRateNote(false);
+      setShowMaterialImportNote(true);
+      setShowMaterialLagerNote(false);
+      setShowRequisitionNote(false);
+      setShowRateNote(false);
+    }
   }, [loadingImports]);
 
   useEffect(() => {
-    dispatch({ type: MATERIAL_LAGER_LIST_RESET });
-    dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
-    dispatch({ type: REQUISITION_LIST_RESET });
+    if (loadingRates) {
+      dispatch({ type: MATERIAL_LAGER_LIST_RESET });
+      dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
+      dispatch({ type: REQUISITION_LIST_RESET });
 
-    setShowRateNote(true);
-    setShowMaterialImportNote(false);
-    setShowMaterialLagerNote(false);
-    setShowRequisitionNote(false);
+      setShowRateNote(true);
+      setShowMaterialImportNote(false);
+      setShowMaterialLagerNote(false);
+      setShowRequisitionNote(false);
+    }
   }, [loadingRates]);
 
   useEffect(() => {
-    dispatch({ type: MATERIAL_LAGER_LIST_RESET });
-    dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
-    dispatch({ type: RATE_LIST_RESET });
+    if (loadingRequisitions) {
+      dispatch({ type: MATERIAL_LAGER_LIST_RESET });
+      dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
+      dispatch({ type: RATE_LIST_RESET });
 
-    setShowRequisitionNote(true);
-    setShowMaterialImportNote(false);
-    setShowMaterialLagerNote(false);
-    setShowRateNote(false);
+      setShowRequisitionNote(true);
+      setShowMaterialImportNote(false);
+      setShowMaterialLagerNote(false);
+      setShowRateNote(false);
+    }
   }, [loadingRequisitions]);
 
   const props = [
