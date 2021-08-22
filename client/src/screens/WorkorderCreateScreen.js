@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Form, Row, Col, Button, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { listProducts } from "../actions/articleActions";
+import { articleMaterialLagerQuantities } from "../actions/materialLagerActions";
 import { listRates } from "../actions/rateOfYieldActions";
 
 const WorkorderCreateScreen = () => {
@@ -13,12 +14,17 @@ const WorkorderCreateScreen = () => {
   const [article, setArticle] = useState("");
   const [productQuantity, setProductQuantity] = useState("");
   const [rate, setRate] = useState({});
+  const [ids, setIds] = useState([]);
 
   const productList = useSelector((state) => state.productList);
   const { products } = productList;
 
   const rateList = useSelector((state) => state.rateList);
   const { rates } = rateList;
+
+  const materialQuantities = useSelector(
+    (state) => state.materialLagerQuantities.quantities
+  );
 
   useEffect(() => {
     dispatch(listProducts());
@@ -29,10 +35,25 @@ const WorkorderCreateScreen = () => {
   const handleRate = (event) => {
     if (event.target.value === "") {
       setRate({});
+      setIds([]);
     } else {
       setRate(rates.find((rate) => rate._id === event.target.value));
     }
   };
+
+  // upon rate selection, fetch components quantites from material warehouse
+  useEffect(() => {
+    if (Object.keys(rate).length !== 0) {
+      rate.components.forEach((item) => {
+        setIds((ids) => [...ids, item.material._id]);
+      });
+    }
+  }, [rate]);
+
+  useEffect(() => {
+    console.log(ids);
+    dispatch(articleMaterialLagerQuantities(ids));
+  }, [ids]);
 
   const submitHandler = (e) => {
     e.prevent.default();
@@ -152,10 +173,23 @@ const WorkorderCreateScreen = () => {
                     <tr key={index}>
                       <td>{rate.material._id}</td>
                       <td>{rate.material.name}</td>
-                      <td>
-                        {`${productQuantity}*${rate.quantity}`}=
-                        {productQuantity * rate.quantity}
-                      </td>
+
+                      {materialQuantities &&
+                      productQuantity * rate.quantity >
+                        materialQuantities[index] ? (
+                        <td>
+                          {`${productQuantity}*${rate.quantity}`}=
+                          <span style={{ color: "red", fontWeight: "bold" }}>
+                            {productQuantity * rate.quantity}
+                          </span>
+                        </td>
+                      ) : (
+                        <td>
+                          {`${productQuantity}*${rate.quantity}`}=
+                          {productQuantity * rate.quantity}
+                        </td>
+                      )}
+                      <td>{materialQuantities && materialQuantities[index]}</td>
                     </tr>
                   ))}
                 </tbody>

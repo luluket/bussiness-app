@@ -32,7 +32,6 @@ export const getArticleQuantity = asyncHandler(async (req, res) => {
 //@route POST /api/lager/quantities
 //@access Public
 export const getArticleQuantities = asyncHandler(async (req, res) => {
-  console.log(req.params, req.body);
   const article = await Lager.find()
     .where("article")
     .in(req.body)

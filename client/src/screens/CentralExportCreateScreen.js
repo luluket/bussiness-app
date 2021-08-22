@@ -80,7 +80,7 @@ const CentralExportCreateScreen = ({ history }) => {
   useEffect(() => {
     setLagerQuantities([]);
     if (Object.keys(requisition).length != 0) {
-      requisition.requestedArticles.forEach((item, index) => {
+      requisition.requestedArticles.forEach((item) => {
         setIds((ids) => [...ids, item.article._id]);
       });
     }

@@ -65,7 +65,10 @@ import {
   centralExportCreateReducer,
 } from "./reducers/centralExportReducers.js";
 
-import { materialLagerListReducer } from "./reducers/materialLagerReducers.js";
+import {
+  materialLagerListReducer,
+  materialLagerQuantitiesReducer,
+} from "./reducers/materialLagerReducers.js";
 import { materialImportListReducer } from "./reducers/materialImportReducers.js";
 import {
   rateListReducer,
@@ -120,6 +123,7 @@ const reducer = combineReducers({
   centralExportList: centralExportListReducer,
   centralExportCreate: centralExportCreateReducer,
   materialLagerList: materialLagerListReducer,
+  materialLagerQuantities: materialLagerQuantitiesReducer,
   materialImportList: materialImportListReducer,
   rateList: rateListReducer,
   rateCreate: rateCreateReducer,

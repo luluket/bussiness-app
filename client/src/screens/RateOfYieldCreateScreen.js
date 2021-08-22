@@ -162,7 +162,7 @@ const RateOfYieldCreateScreen = ({ history }) => {
                       </Form.Group>
                     </td>
                     <td>
-                      <Form.Group controlId={`factor-${index}`}>
+                      <Form.Group>
                         <Form.Control
                           type="number"
                           placeholder="Unesite količinu"
