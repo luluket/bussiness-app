@@ -51,7 +51,6 @@ const WorkorderCreateScreen = () => {
   }, [rate]);
 
   useEffect(() => {
-    console.log(ids);
     dispatch(articleMaterialLagerQuantities(ids));
   }, [ids]);
 
@@ -145,7 +144,7 @@ const WorkorderCreateScreen = () => {
             <Form.Group controlId="rate">
               <Form.Label>Normativ</Form.Label>
               <Form.Control as="select" type="text" onChange={handleRate}>
-                <option>Izaberite normativ</option>
+                <option value="">Izaberite normativ</option>
                 {rates.map((rate) => (
                   <option value={rate._id}>
                     {rate._id}-{rate.product.name}

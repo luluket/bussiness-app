@@ -16,25 +16,20 @@ export const getMaterialLager = asyncHandler(async (req, res) => {
 //@route POST /api/material/lager/quantities
 //@access Public
 export const getMaterialQuantities = asyncHandler(async (req, res) => {
-  const ids = req.body;
-  const quantities = [];
+  const ids = req.body; // array of article ids
   // find every article quantity in material warehouse, if it doesnt exists return 0
-  ids.map(async (id) => {
-    const quantity = await MaterialLager.findOne()
-      .where("article")
-      .equals(id)
-      .select("quantity -_id")
-      .then((value) => {
-        if (value) {
-          const { quantity } = value;
-          quantities.push(quantity);
-        } else {
-          quantities.push(0);
-        }
-        if (req.body.length === quantities.length) {
-          // callback break condition, when last request body item has been checked
-          res.json(quantities);
-        }
-      });
-  });
+  let quantities = await Promise.all(
+    ids.map(async (id) => {
+      const item = await MaterialLager.findOne()
+        .where("article")
+        .equals(id)
+        .select("quantity -_id");
+      if (item) {
+        return item.quantity;
+      } else {
+        return 0;
+      }
+    })
+  );
+  res.json(quantities);
 });

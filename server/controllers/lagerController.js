@@ -32,10 +32,20 @@ export const getArticleQuantity = asyncHandler(async (req, res) => {
 //@route POST /api/lager/quantities
 //@access Public
 export const getArticleQuantities = asyncHandler(async (req, res) => {
-  const article = await Lager.find()
-    .where("article")
-    .in(req.body)
-    .select("quantity -_id");
-  const quantities = article.map((item) => item.quantity);
+  const ids = req.body; // array of article ids
+  // find every article quantity in material warehouse, if it doesnt exists return 0
+  let quantities = await Promise.all(
+    ids.map(async (id) => {
+      const item = await Lager.findOne()
+        .where("article")
+        .equals(id)
+        .select("quantity -_id");
+      if (item) {
+        return item.quantity;
+      } else {
+        return 0;
+      }
+    })
+  );
   res.json(quantities);
 });
