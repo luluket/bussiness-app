@@ -6,6 +6,8 @@ import { articleMaterialLagerQuantities } from "../actions/materialLagerActions"
 import { articleLagerPurchasePrices } from "../actions/lagerActions";
 import { listRates } from "../actions/rateOfYieldActions";
 import { listWorkers } from "../actions/userActions";
+import { createWorkorder, listWorkorders } from "../actions/workorderActions";
+import { WORKORDER_CREATE_RESET } from "../constants/workorderConstants";
 
 const WorkorderCreateScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -17,9 +19,13 @@ const WorkorderCreateScreen = ({ history }) => {
   const [productQuantity, setProductQuantity] = useState("");
   const [rate, setRate] = useState({});
   const [ids, setIds] = useState([]);
-  const [workers, setWorkers] = useState([{ _id: "" }]);
+  const [workers, setWorkers] = useState([]);
   const [totalPurchasePrice, setTotalPurchasePrice] = useState(0);
   const [totalManufacturePrice, setTotalManufacturePrice] = useState(0);
+  const [lotNumber, setLotNumber] = useState(0);
+  const [description, setDescription] = useState("");
+  const [isInProgress, setIsInProgress] = useState(true);
+  const [isFinished, setIsFinished] = useState(false);
 
   const [rows, setRows] = useState("");
 
@@ -40,13 +46,21 @@ const WorkorderCreateScreen = ({ history }) => {
     (state) => state.lagerArticlePurchasePrices.purchasePrices
   );
 
+  const workorderCreate = useSelector((state) => state.workorderCreate);
+  const { success: successCreate } = workorderCreate;
+
   // purchase prices of material multiplied by manufacturing product quantity equals total product purchase price
 
   useEffect(() => {
     dispatch(listProducts());
     dispatch(listRates());
     dispatch(listWorkers());
-  }, [dispatch]);
+    if (successCreate) {
+      dispatch({ type: WORKORDER_CREATE_RESET });
+      dispatch(listWorkorders());
+      history.push("/manufacture");
+    }
+  }, [dispatch, successCreate]);
 
   useEffect(() => {
     if (
@@ -92,18 +106,20 @@ const WorkorderCreateScreen = ({ history }) => {
     dispatch(articleLagerPurchasePrices(ids));
   }, [ids]);
 
+  useEffect(() => {});
+
   const handleWorker = (index) => (event) => {
     const worker = workerList.workers.find(
       (worker) => worker._id === event.target.value
     );
-    const { _id } = worker;
     if (workers[index]) {
-      workers[index]._id = _id;
+      workers[index].user = worker;
     } else {
       workers.push({
-        _id: _id,
+        user: worker,
       });
     }
+    console.log(workers);
   };
 
   const addRow = () => {
@@ -111,7 +127,26 @@ const WorkorderCreateScreen = ({ history }) => {
   };
 
   const submitHandler = (e) => {
-    e.prevent.default();
+    e.preventDefault();
+    console.log(workers);
+    dispatch(
+      createWorkorder({
+        documentType,
+        documentNumber,
+        warehouse,
+        materialWarehouse,
+        article,
+        quantity: productQuantity,
+        description,
+        rateOfYield: rate,
+        lot: lotNumber,
+        totalPurchasePrice,
+        totalManufacturePrice,
+        workers,
+        isInProgress,
+        isFinished,
+      })
+    );
   };
   return (
     <>
@@ -196,6 +231,16 @@ const WorkorderCreateScreen = ({ history }) => {
           </Col>
         </Row>
         <Row className="mb-3">
+          <Form.Group controlId="description">
+            <Form.Label>Opis</Form.Label>
+            <Form.Control
+              as="textarea"
+              placeholder="Unesite opis ili bilješke"
+              onChange={(e) => setDescription(e.target.value)}
+            ></Form.Control>
+          </Form.Group>
+        </Row>
+        <Row className="mb-3">
           <Col md={6}>
             <Form.Group controlId="rate">
               <Form.Label>Normativ</Form.Label>
@@ -219,6 +264,16 @@ const WorkorderCreateScreen = ({ history }) => {
                   ))}
                 </Form.Control>
               )}
+            </Form.Group>
+          </Col>
+          <Col md={6}>
+            <Form.Group controlId="lotNumber">
+              <Form.Label>LOT broj</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="unesite lot broj"
+                onChange={(e) => setLotNumber(e.target.value)}
+              ></Form.Control>
             </Form.Group>
           </Col>
         </Row>
@@ -341,6 +396,7 @@ const WorkorderCreateScreen = ({ history }) => {
             </tbody>
           </Table>
         )}
+
         <div className="d-flex justify-content-between mb-3">
           {loadingWorkers ? (
             <span></span>
@@ -353,9 +409,8 @@ const WorkorderCreateScreen = ({ history }) => {
               Dodaj radnika
             </Button>
           )}
-
           <Button type="submit" disabled={rows.length === 0}>
-            UNESI
+            POŠALJI NA IZVRŠENJE
           </Button>
         </div>
       </Form>

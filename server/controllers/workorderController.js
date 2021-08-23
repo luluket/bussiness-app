@@ -22,36 +22,36 @@ const createWorkorder = asyncHandler(async (req, res) => {
     materialWarehouse: req.body.materialWarehouse,
     article: req.body.article,
     quantity: req.body.quantity,
-    rateOfYield: req.body.rateOfYield,
-    consumedArticles: req.body.consumedArticles,
-    workers: req.body.workers,
-    purchasePrice: req.body.purchasePrice,
-    manufacturePrice: req.body.manufacturePrice,
-    lot: req.body.lot,
     description: req.body.description,
+    rateOfYield: req.body.rateOfYield,
+    lot: req.body.lot,
+    workers: req.body.workers,
+    totalPurchasePrice: req.body.totalPurchasePrice,
+    totalManufacturePrice: req.body.totalManufacturePrice,
     isInProgress: req.body.isInProgress,
     isFinished: req.body.isFinished,
   });
   const workorderCreated = await workorder.save();
+  res.status(201).json(workorderCreated);
 
-  // product to be stored at warehouse
-  const product = new ProductLager({
-    article: req.body.article,
-    quantity: req.body.quantity,
-    purchasePrice: req.body.purchasePrice,
-    workorder: workorderCreated._id,
-  });
-  await product.save();
+  // // product to be stored at warehouse
+  // const product = new ProductLager({
+  //   article: req.body.article,
+  //   quantity: req.body.quantity,
+  //   purchasePrice: req.body.purchasePrice,
+  //   workorder: workorderCreated._id,
+  // });
+  // await product.save();
 
-  // change material lager quantity
-  if (workorderCreated) {
-    // loop through rate of yield article and substract quantities from material lager
-    workorderCreated.rateOfYield.components.forEach(async (item) => {
-      const material = await MaterialLager.findOne({ article: item.material });
-      material.quantity -= item.quantity;
-      await material.save();
-    });
-  }
-  res.status(201).json({ message: "3 documents created" });
+  // // change material lager quantity
+  // if (workorderCreated) {
+  //   // loop through rate of yield article and substract quantities from material lager
+  //   workorderCreated.rateOfYield.components.forEach(async (item) => {
+  //     const material = await MaterialLager.findOne({ article: item.material });
+  //     material.quantity -= item.quantity;
+  //     await material.save();
+  //   });
+  // }
+  // res.status(201).json({ message: "3 documents created" });
 });
 export { getWorkorders, createWorkorder };

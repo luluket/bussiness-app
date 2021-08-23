@@ -33,24 +33,18 @@ const workorderSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
+    description: {
+      type: String,
+    },
     rateOfYield: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "RateOfYield",
     },
-    consumedArticles: [
-      {
-        article: {
-          type: mongoose.Schema.Types.ObjectId,
-          required: true,
-          ref: "Article",
-        },
-        quantity: {
-          type: Number,
-          required: true,
-        },
-      },
-    ],
+    lot: {
+      type: Number,
+      required: true,
+    },
     workers: [
       {
         user: {
@@ -60,20 +54,13 @@ const workorderSchema = mongoose.Schema(
         },
       },
     ],
-    purchasePrice: {
+    totalPurchasePrice: {
       type: Number,
       required: true,
     },
-    manufacturePrice: {
+    totalManufacturePrice: {
       type: Number,
       required: true,
-    },
-    lot: {
-      type: Number,
-      required: true,
-    },
-    description: {
-      type: String,
     },
     isInProgress: {
       type: Boolean,

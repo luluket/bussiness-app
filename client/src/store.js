@@ -84,6 +84,11 @@ import {
   requisitionFullfillReducer,
 } from "./reducers/requisitionReducers.js";
 
+import {
+  workorderListReducer,
+  workorderCreateReducer,
+} from "./reducers/workorderReducers.js";
+
 const reducer = combineReducers({
   // productList: productListReducer,
   productDetails: productDetailsReducer,
@@ -137,6 +142,9 @@ const reducer = combineReducers({
   requisitionCreate: requisitionCreateReducer,
   requisitionFullFill: requisitionFullfillReducer,
   workerList: workerListReducer,
+  workorderList: workorderListReducer,
+  workorderCreate: workorderCreateReducer,
+  workorder: workerListReducer,
 });
 const cartItemsFromStorage = localStorage.getItem("cartItems")
   ? JSON.parse(localStorage.getItem("cartItems"))

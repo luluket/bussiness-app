@@ -13,6 +13,8 @@ import { RATE_LIST_RESET } from "../constants/rateOfYieldConstants";
 import { MATERIAL_IMPORT_LIST_RESET } from "../constants/materialImportConstants";
 import { listRequisitions } from "../actions/requisitionActions";
 import { REQUISITION_LIST_RESET } from "../constants/requisitionConstants";
+import { listWorkorders } from "../actions/workorderActions";
+import { WORKORDER_LIST_RESET } from "../constants/workorderConstants";
 
 const ManufactureScreen = () => {
   const dispatch = useDispatch();
@@ -24,6 +26,7 @@ const ManufactureScreen = () => {
   const [showMaterialImportNote, setShowMaterialImportNote] = useState(false);
   const [showRequisitionNote, setShowRequisitionNote] = useState(false);
   const [showRateNote, setShowRateNote] = useState(false);
+  const [showWorkorderNote, setShowWorkorderNote] = useState(false);
 
   const materialLagerList = useSelector((state) => state.materialLagerList);
   const { loading: loadingLager, error: errorLager, lager } = materialLagerList;
@@ -45,14 +48,23 @@ const ManufactureScreen = () => {
     requisitions,
   } = requisitionList;
 
+  const workorderList = useSelector((state) => state.workorderList);
+  const {
+    loading: loadingWorkorders,
+    error: errorWorkorders,
+    workorders,
+  } = workorderList;
+
   useEffect(() => {
     if (loadingLager) {
       dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
+      dispatch({ type: WORKORDER_LIST_RESET });
       dispatch({ type: RATE_LIST_RESET });
       dispatch({ type: REQUISITION_LIST_RESET });
 
       setShowMaterialLagerNote(true);
       setShowMaterialImportNote(false);
+      setShowWorkorderNote(false);
       setShowRequisitionNote(false);
       setShowRateNote(false);
     }
@@ -61,11 +73,13 @@ const ManufactureScreen = () => {
   useEffect(() => {
     if (loadingImports) {
       dispatch({ type: MATERIAL_LAGER_LIST_RESET });
+      dispatch({ type: WORKORDER_LIST_RESET });
       dispatch({ type: RATE_LIST_RESET });
       dispatch({ type: REQUISITION_LIST_RESET });
 
       setShowMaterialImportNote(true);
       setShowMaterialLagerNote(false);
+      setShowWorkorderNote(false);
       setShowRequisitionNote(false);
       setShowRateNote(false);
     }
@@ -75,24 +89,43 @@ const ManufactureScreen = () => {
     if (loadingRates) {
       dispatch({ type: MATERIAL_LAGER_LIST_RESET });
       dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
+      dispatch({ type: WORKORDER_LIST_RESET });
       dispatch({ type: REQUISITION_LIST_RESET });
 
       setShowRateNote(true);
       setShowMaterialImportNote(false);
       setShowMaterialLagerNote(false);
+      setShowWorkorderNote(false);
       setShowRequisitionNote(false);
     }
   }, [loadingRates]);
+
+  useEffect(() => {
+    if (loadingWorkorders) {
+      dispatch({ type: MATERIAL_LAGER_LIST_RESET });
+      dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
+      dispatch({ type: REQUISITION_LIST_RESET });
+      dispatch({ type: RATE_LIST_RESET });
+
+      setShowWorkorderNote(true);
+      setShowRequisitionNote(false);
+      setShowMaterialImportNote(false);
+      setShowMaterialLagerNote(false);
+      setShowRateNote(false);
+    }
+  }, [loadingWorkorders]);
 
   useEffect(() => {
     if (loadingRequisitions) {
       dispatch({ type: MATERIAL_LAGER_LIST_RESET });
       dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
       dispatch({ type: RATE_LIST_RESET });
+      dispatch({ type: WORKORDER_LIST_RESET });
 
       setShowRequisitionNote(true);
       setShowMaterialImportNote(false);
       setShowMaterialLagerNote(false);
+      setShowWorkorderNote(false);
       setShowRateNote(false);
     }
   }, [loadingRequisitions]);
@@ -114,7 +147,7 @@ const ManufactureScreen = () => {
         { name: "Lager", function: listMaterialLager() },
         { name: "Međuskladišnica ulaz", function: listMaterialLager() },
         { name: "Međuskladišnica izlaz", function: listMaterialLager() },
-        { name: "Radni nalog", function: listMaterialLager() },
+        { name: "Radni nalog", function: listWorkorders() },
       ],
       function: listMaterialLager(),
     },
@@ -209,6 +242,88 @@ const ManufactureScreen = () => {
         ) : (
           showMaterialImportNote && (
             <h2>Lista zaprimljenih artikala je prazna</h2>
+          )
+        )}
+        {loadingWorkorders && <Loader />}
+        {errorWorkorders && (
+          <Message variant="danger">{errorWorkorders}</Message>
+        )}
+        {workorders && workorders.length != 0 ? (
+          <>
+            <h2>RADNI NALOZI</h2>
+            <Table striped bordered hover responsive>
+              <thead>
+                <tr>
+                  <th>U IZVRŠAVANJU</th>
+                  <th>ZAKLJUČEN</th>
+                  <th>DOKUMENT</th>
+                  <th>DATUM</th>
+                  <th>VRIJEME</th>
+                </tr>
+              </thead>
+              <tbody>
+                {workorders.map((item) => {
+                  return (
+                    <tr
+                      key={item._id}
+                      // onClick={() =>
+                      //   history.push(`/central/item/${item._id}`)
+                      // }
+                    >
+                      <td>
+                        {item.isInProgress ? (
+                          <i
+                            className="fas fa-check"
+                            style={{ color: "green" }}
+                          ></i>
+                        ) : (
+                          <i
+                            className="fas fa-times"
+                            style={{ color: "red" }}
+                          ></i>
+                        )}
+                      </td>
+                      <td>
+                        {item.isFinished ? (
+                          <i
+                            className="fas fa-check"
+                            style={{ color: "green" }}
+                          ></i>
+                        ) : (
+                          <i
+                            className="fas fa-times"
+                            style={{ color: "red" }}
+                          ></i>
+                        )}
+                      </td>
+                      <td>
+                        {item.documentNumber}-{item.documentType}
+                      </td>
+                      <td>{item.createdAt.substring(0, 10)}</td>
+                      <td>{item.createdAt.substring(11, 19)}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+            <Button
+              type="button"
+              onClick={() => history.push("/manufacture/workorder")}
+            >
+              Novi radni nalog
+            </Button>
+          </>
+        ) : (
+          showWorkorderNote && (
+            <>
+              <h2>Nema kreiranog radnog naloga</h2>
+              <Button
+                type="button"
+                onClick={() => history.push("/manufacture/workorder")}
+              >
+                Novi radni nalog
+              </Button>
+            </>
           )
         )}
         {loadingRates && <Loader />}
