@@ -24,8 +24,7 @@ const WorkorderCreateScreen = ({ history }) => {
   const [totalManufacturePrice, setTotalManufacturePrice] = useState(0);
   const [lotNumber, setLotNumber] = useState(0);
   const [description, setDescription] = useState("");
-  const [isInProgress, setIsInProgress] = useState(true);
-  const [isFinished, setIsFinished] = useState(false);
+  const [status, setStatus] = useState({ toDo: true });
 
   const [rows, setRows] = useState("");
 
@@ -119,7 +118,6 @@ const WorkorderCreateScreen = ({ history }) => {
         user: worker,
       });
     }
-    console.log(workers);
   };
 
   const addRow = () => {
@@ -143,8 +141,7 @@ const WorkorderCreateScreen = ({ history }) => {
         totalPurchasePrice,
         totalManufacturePrice,
         workers,
-        isInProgress,
-        isFinished,
+        status,
       })
     );
   };

@@ -62,13 +62,16 @@ const workorderSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
-    isInProgress: {
-      type: Boolean,
-      required: true,
-    },
-    isFinished: {
-      type: Boolean,
-      required: true,
+    status: {
+      toDo: {
+        type: Boolean,
+      },
+      inProgress: {
+        type: Boolean,
+      },
+      finished: {
+        type: Boolean,
+      },
     },
   },
   {

@@ -17,6 +17,7 @@ import MaterialLager from "./models/MaterialLager.js";
 import MaterialImport from "./models/MaterialImport.js";
 import Requisition from "./models/Requisition.js";
 import RateOfYield from "./models/RateOfYield.js";
+import Workorder from "./models/Workorder.js";
 import connectDB from "./config/db.js";
 
 dotenv.config();
@@ -37,6 +38,7 @@ const importData = async () => {
     await MaterialImport.deleteMany();
     await Requisition.deleteMany();
     await RateOfYield.deleteMany();
+    await Workorder.deleteMany();
 
     const createdUsers = await User.insertMany(users);
     const adminUser = createdUsers.find(({ role }) => role === "admin");

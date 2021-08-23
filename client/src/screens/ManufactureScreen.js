@@ -251,11 +251,10 @@ const ManufactureScreen = () => {
         {workorders && workorders.length != 0 ? (
           <>
             <h2>RADNI NALOZI</h2>
-            <Table striped bordered hover responsive>
+            <Table striped bordered hover responsive size="sm">
               <thead>
                 <tr>
-                  <th>U IZVRŠAVANJU</th>
-                  <th>ZAKLJUČEN</th>
+                  <th>STATUS</th>
                   <th>DOKUMENT</th>
                   <th>DATUM</th>
                   <th>VRIJEME</th>
@@ -271,30 +270,42 @@ const ManufactureScreen = () => {
                       // }
                     >
                       <td>
-                        {item.isInProgress ? (
-                          <i
-                            className="fas fa-check"
-                            style={{ color: "green" }}
-                          ></i>
-                        ) : (
-                          <i
-                            className="fas fa-times"
-                            style={{ color: "red" }}
-                          ></i>
-                        )}
-                      </td>
-                      <td>
-                        {item.isFinished ? (
-                          <i
-                            className="fas fa-check"
-                            style={{ color: "green" }}
-                          ></i>
-                        ) : (
-                          <i
-                            className="fas fa-times"
-                            style={{ color: "red" }}
-                          ></i>
-                        )}
+                        <div
+                          className="p-1 d-flex justify-content-between"
+                          style={{ borderBottomWidth: "thick" }}
+                        >
+                          <span>{`Za izvršiti`} </span>
+                          {item.status.toDo && (
+                            <div>
+                              <i
+                                className="fas fa-check"
+                                style={{ color: "green" }}
+                              ></i>
+                            </div>
+                          )}
+                        </div>
+                        <div className="p-1 d-flex justify-content-between">
+                          <span>{`U izvršavanju`} </span>
+                          {item.status.inProgress && (
+                            <div>
+                              <i
+                                className="fas fa-check"
+                                style={{ color: "green" }}
+                              ></i>
+                            </div>
+                          )}
+                        </div>
+                        <span className="p-1 d-flex justify-content-start">
+                          <span>{`Završen`} </span>
+                          {item.status.finished && (
+                            <div>
+                              <i
+                                className="fas fa-check"
+                                style={{ color: "green" }}
+                              ></i>
+                            </div>
+                          )}
+                        </span>
                       </td>
                       <td>
                         {item.documentNumber}-{item.documentType}
