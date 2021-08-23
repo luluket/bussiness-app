@@ -7,6 +7,10 @@ import {
   RATE_CREATE_FAIL,
   RATE_CREATE_SUCCESS,
   RATE_CREATE_REQUEST,
+  RATE_DETAILS_REQUEST,
+  RATE_DETAILS_SUCCESS,
+  RATE_DETAILS_RESET,
+  RATE_DETAILS_FAIL,
 } from "../constants/rateOfYieldConstants";
 
 export const rateListReducer = (state = { rates: [] }, action) => {
@@ -23,6 +27,26 @@ export const rateListReducer = (state = { rates: [] }, action) => {
         rates: [],
       };
     case RATE_LIST_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const rateDetailsReducer = (state = { rate: {} }, action) => {
+  switch (action.type) {
+    case RATE_DETAILS_REQUEST:
+      return { loading: true, ...state };
+    case RATE_DETAILS_SUCCESS:
+      return {
+        loading: false,
+        rate: action.payload,
+      };
+    case RATE_DETAILS_RESET:
+      return {
+        rate: {},
+      };
+    case RATE_DETAILS_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

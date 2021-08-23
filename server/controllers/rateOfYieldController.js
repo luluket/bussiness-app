@@ -11,6 +11,16 @@ const getRates = asyncHandler(async (req, res) => {
   res.json(rates);
 });
 
+// @desc Get rate of yield
+// @route GET /api/rates/:id
+// @access Public
+const getRate = asyncHandler(async (req, res) => {
+  const rate = await RateOfYield.findById(req.params.id)
+    .populate("product", "name")
+    .populate("components.material", "name");
+  res.json(rate);
+});
+
 // @desc Create single rate of yield
 // @route POST /api/rates
 // @access Public
@@ -23,4 +33,4 @@ const createRate = asyncHandler(async (req, res) => {
   res.status(201).json(createdRate);
 });
 
-export { getRates, createRate };
+export { getRates, createRate, getRate };

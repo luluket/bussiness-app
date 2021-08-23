@@ -105,8 +105,6 @@ const WorkorderCreateScreen = ({ history }) => {
     dispatch(articleLagerPurchasePrices(ids));
   }, [ids]);
 
-  useEffect(() => {});
-
   const handleWorker = (index) => (event) => {
     const worker = workerList.workers.find(
       (worker) => worker._id === event.target.value

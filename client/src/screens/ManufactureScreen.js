@@ -265,9 +265,9 @@ const ManufactureScreen = () => {
                   return (
                     <tr
                       key={item._id}
-                      // onClick={() =>
-                      //   history.push(`/central/item/${item._id}`)
-                      // }
+                      onClick={() =>
+                        history.push(`/manufacture/workorder/${item._id}`)
+                      }
                     >
                       <td>
                         <div

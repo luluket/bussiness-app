@@ -43,7 +43,7 @@ const ArticleListScreen = () => {
                 className="mb-3"
                 onClick={handleButtonClick}
               >
-                <i className="fas fa-plus"></i> Novi Artikal
+                <i className="fas fa-plus"></i> Novi Artikl
               </Button>
             </Col>
           </Row>

@@ -74,6 +74,7 @@ import {
 import { materialImportListReducer } from "./reducers/materialImportReducers.js";
 import {
   rateListReducer,
+  rateDetailsReducer,
   rateCreateReducer,
 } from "./reducers/rateOfYieldReducers.js";
 
@@ -86,6 +87,7 @@ import {
 
 import {
   workorderListReducer,
+  workorderDetailsReducer,
   workorderCreateReducer,
 } from "./reducers/workorderReducers.js";
 
@@ -134,6 +136,7 @@ const reducer = combineReducers({
   materialLagerQuantities: materialLagerQuantitiesReducer,
   materialImportList: materialImportListReducer,
   rateList: rateListReducer,
+  rateDetails: rateDetailsReducer,
   rateCreate: rateCreateReducer,
   productList: productListReducer,
   materialList: materialListReducer,
@@ -144,7 +147,7 @@ const reducer = combineReducers({
   workerList: workerListReducer,
   workorderList: workorderListReducer,
   workorderCreate: workorderCreateReducer,
-  workorder: workerListReducer,
+  workorderDetails: workorderDetailsReducer,
 });
 const cartItemsFromStorage = localStorage.getItem("cartItems")
   ? JSON.parse(localStorage.getItem("cartItems"))

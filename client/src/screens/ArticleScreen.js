@@ -37,10 +37,6 @@ const ArticleScreen = ({ history, match }) => {
     }
   }, [dispatch, match, history, article, success]);
 
-  useEffect(() => {
-    dispatch(listArticleDetails(match.params.id));
-  }, [match]);
-
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(

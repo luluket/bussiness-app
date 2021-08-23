@@ -3,12 +3,23 @@ import Workorder from "../models/Workorder.js";
 import ProductLager from "../models/ProductLager.js";
 import MaterialLager from "../models/MaterialLager.js";
 
-// @desc Fetch all articles
+// @desc Get all workorder
 // @route GET /api/workorders
 // @access Public
 const getWorkorders = asyncHandler(async (req, res) => {
   const workorders = await Workorder.find({});
   res.json(workorders);
+});
+
+// @desc Get single workorder
+// @route GET /api/workorders/:id
+// @access Public
+const getWorkorder = asyncHandler(async (req, res) => {
+  const workorder = await Workorder.findById(req.params.id).populate(
+    "article",
+    "name"
+  );
+  res.json(workorder);
 });
 
 // @desc Create workorder, update MaterialLager, create ProductLager article
@@ -53,4 +64,4 @@ const createWorkorder = asyncHandler(async (req, res) => {
   // }
   // res.status(201).json({ message: "3 documents created" });
 });
-export { getWorkorders, createWorkorder };
+export { getWorkorders, getWorkorder, createWorkorder };
