@@ -49,3 +49,25 @@ export const getArticleQuantities = asyncHandler(async (req, res) => {
   );
   res.json(quantities);
 });
+
+//@desc Get article average purchase prices
+//@route POST /api/lager/purchaseprices
+//@access Public
+export const getArticlePurchasePrices = asyncHandler(async (req, res) => {
+  const ids = req.body; // array of article ids
+  // find every article quantity in material warehouse, if it doesnt exists return 0
+  let purchasePrices = await Promise.all(
+    ids.map(async (id) => {
+      const item = await Lager.findOne()
+        .where("article")
+        .equals(id)
+        .select("averagePurchasePrice -_id");
+      if (item) {
+        return item.averagePurchasePrice;
+      } else {
+        return 0;
+      }
+    })
+  );
+  res.json(purchasePrices);
+});

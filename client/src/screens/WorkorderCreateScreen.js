@@ -3,6 +3,7 @@ import { Form, Row, Col, Button, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { listProducts } from "../actions/articleActions";
 import { articleMaterialLagerQuantities } from "../actions/materialLagerActions";
+import { articleLagerPurchasePrices } from "../actions/lagerActions";
 import { listRates } from "../actions/rateOfYieldActions";
 import { listWorkers } from "../actions/userActions";
 
@@ -17,6 +18,8 @@ const WorkorderCreateScreen = ({ history }) => {
   const [rate, setRate] = useState({});
   const [ids, setIds] = useState([]);
   const [workers, setWorkers] = useState([{ _id: "" }]);
+  const [totalPurchasePrice, setTotalPurchasePrice] = useState(0);
+  const [totalManufacturePrice, setTotalManufacturePrice] = useState(0);
 
   const [rows, setRows] = useState("");
 
@@ -33,11 +36,38 @@ const WorkorderCreateScreen = ({ history }) => {
     (state) => state.materialLagerQuantities.quantities
   );
 
+  const materialPurchasePrices = useSelector(
+    (state) => state.lagerArticlePurchasePrices.purchasePrices
+  );
+
+  // purchase prices of material multiplied by manufacturing product quantity equals total product purchase price
+
   useEffect(() => {
     dispatch(listProducts());
     dispatch(listRates());
     dispatch(listWorkers());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (
+      Object.keys(rate).length !== 0 &&
+      materialPurchasePrices &&
+      materialQuantities
+    ) {
+      var purchasePrices = rate.components.map((item, index) =>
+        parseFloat(
+          productQuantity * item.quantity * materialPurchasePrices[index]
+        )
+      );
+      setTotalPurchasePrice(
+        purchasePrices.reduce((acc, item) => acc + item, 0).toFixed(2)
+      );
+    }
+  }, [productQuantity]);
+
+  useEffect(() => {
+    setTotalManufacturePrice(totalPurchasePrice * 2.5);
+  }, [totalPurchasePrice]);
 
   const handleRate = (event) => {
     if (event.target.value === "") {
@@ -59,6 +89,7 @@ const WorkorderCreateScreen = ({ history }) => {
 
   useEffect(() => {
     dispatch(articleMaterialLagerQuantities(ids));
+    dispatch(articleLagerPurchasePrices(ids));
   }, [ids]);
 
   const handleWorker = (index) => (event) => {
@@ -236,7 +267,16 @@ const WorkorderCreateScreen = ({ history }) => {
                         </td>
                       )}
                       <td>{materialQuantities && materialQuantities[index]}</td>
-                      <td></td>
+                      {materialPurchasePrices && (
+                        <td>
+                          {`${productQuantity * rate.quantity}*${
+                            materialPurchasePrices[index]
+                          }=`}
+                          {productQuantity *
+                            rate.quantity *
+                            materialPurchasePrices[index]}
+                        </td>
+                      )}
                       <td></td>
                     </tr>
                   ))}
@@ -245,8 +285,12 @@ const WorkorderCreateScreen = ({ history }) => {
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td>1</td>
-                    <td>1</td>
+                    <td style={{ fontWeight: "bold" }}>
+                      Σ={totalPurchasePrice}
+                    </td>
+                    <td style={{ fontWeight: "bold" }}>
+                      Σ = {totalManufacturePrice}
+                    </td>
                   </tr>
                 </tbody>
               </Table>

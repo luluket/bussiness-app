@@ -12,6 +12,9 @@ import {
   LAGER_ARTICLE_QUANTITIES_REQUEST,
   LAGER_ARTICLE_QUANTITIES_SUCCESS,
   LAGER_ARTICLE_QUANTITIES_FAIL,
+  LAGER_ARTICLE_PURCHASE_PRICES_REQUEST,
+  LAGER_ARTICLE_PURCHASE_PRICES_SUCCESS,
+  LAGER_ARTICLE_PURCHASE_PRICES_FAIL,
 } from "../constants/lagerConstants";
 
 export const listLager = () => async (dispatch) => {
@@ -70,6 +73,22 @@ export const articleLagerQuantities = (ids) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: LAGER_ARTICLE_QUANTITIES_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const articleLagerPurchasePrices = (ids) => async (dispatch) => {
+  try {
+    dispatch({ type: LAGER_ARTICLE_PURCHASE_PRICES_REQUEST });
+    const { data } = await axios.post(`/api/lager/purchaseprices`, ids);
+    dispatch({ type: LAGER_ARTICLE_PURCHASE_PRICES_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: LAGER_ARTICLE_PURCHASE_PRICES_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

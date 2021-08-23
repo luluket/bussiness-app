@@ -54,6 +54,7 @@ import {
   lagerListMaterialReducer,
   lagerArticleQuantityReducer,
   lagerArticleQuantitiesReducer,
+  lagerArticlePurchasePricesReducer,
 } from "./reducers/lagerReducers.js";
 
 import {
@@ -119,6 +120,7 @@ const reducer = combineReducers({
   lagerListMaterial: lagerListMaterialReducer,
   lagerArticleQuantity: lagerArticleQuantityReducer,
   lagerArticleQuantities: lagerArticleQuantitiesReducer,
+  lagerArticlePurchasePrices: lagerArticlePurchasePricesReducer,
   centralReceiptList: centralReceiptListReducer,
   centralReceiptCreate: centralReceiptCreateReducer,
   centralExportList: centralExportListReducer,
