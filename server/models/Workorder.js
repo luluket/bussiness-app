@@ -51,6 +51,15 @@ const workorderSchema = mongoose.Schema(
         },
       },
     ],
+    workers: [
+      {
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          ref: "User",
+        },
+      },
+    ],
     purchasePrice: {
       type: Number,
       required: true,
@@ -66,7 +75,7 @@ const workorderSchema = mongoose.Schema(
     description: {
       type: String,
     },
-    inProgress: {
+    isInProgress: {
       type: Boolean,
       required: true,
     },

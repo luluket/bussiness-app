@@ -8,11 +8,14 @@ import {
   deleteUser,
   getUserById,
   updateUser,
+  getWorkers,
 } from "../controllers/userController.js";
 import { protect, admin } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 router.route("/").post(registerUser).get(protect, admin, getUsers);
+router.route("/workers").get(getWorkers);
+
 router.post("/login", authUser);
 router
   .route("/profile")

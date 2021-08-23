@@ -4,8 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { listProducts } from "../actions/articleActions";
 import { articleMaterialLagerQuantities } from "../actions/materialLagerActions";
 import { listRates } from "../actions/rateOfYieldActions";
+import { listWorkers } from "../actions/userActions";
 
-const WorkorderCreateScreen = () => {
+const WorkorderCreateScreen = ({ history }) => {
   const dispatch = useDispatch();
   const documentType = "radni nalog";
   const [documentNumber, setDocumentNumber] = useState(0);
@@ -15,6 +16,12 @@ const WorkorderCreateScreen = () => {
   const [productQuantity, setProductQuantity] = useState("");
   const [rate, setRate] = useState({});
   const [ids, setIds] = useState([]);
+  const [workers, setWorkers] = useState([{ _id: "" }]);
+
+  const [rows, setRows] = useState("");
+
+  const workerList = useSelector((state) => state.workerList);
+  const { loading: loadingWorkers } = workerList;
 
   const productList = useSelector((state) => state.productList);
   const { products } = productList;
@@ -29,7 +36,7 @@ const WorkorderCreateScreen = () => {
   useEffect(() => {
     dispatch(listProducts());
     dispatch(listRates());
-    dispatch(listRates());
+    dispatch(listWorkers());
   }, [dispatch]);
 
   const handleRate = (event) => {
@@ -53,6 +60,24 @@ const WorkorderCreateScreen = () => {
   useEffect(() => {
     dispatch(articleMaterialLagerQuantities(ids));
   }, [ids]);
+
+  const handleWorker = (index) => (event) => {
+    const worker = workerList.workers.find(
+      (worker) => worker._id === event.target.value
+    );
+    const { _id } = worker;
+    if (workers[index]) {
+      workers[index]._id = _id;
+    } else {
+      workers.push({
+        _id: _id,
+      });
+    }
+  };
+
+  const addRow = () => {
+    setRows([...rows, "row"]);
+  };
 
   const submitHandler = (e) => {
     e.prevent.default();
@@ -143,21 +168,41 @@ const WorkorderCreateScreen = () => {
           <Col md={6}>
             <Form.Group controlId="rate">
               <Form.Label>Normativ</Form.Label>
-              <Form.Control as="select" type="text" onChange={handleRate}>
-                <option value="">Izaberite normativ</option>
-                {rates.map((rate) => (
-                  <option value={rate._id}>
-                    {rate._id}-{rate.product.name}
-                  </option>
-                ))}
-              </Form.Control>
+              {rates.length === 0 ? (
+                <>
+                  <h3>Lista normativa je prazna</h3>
+                  <Button
+                    type="button"
+                    onClick={() => history.push("/manufacture/rate")}
+                  >
+                    Kreirajte normativ
+                  </Button>
+                </>
+              ) : (
+                <Form.Control as="select" type="text" onChange={handleRate}>
+                  <option value="">Izaberite normativ</option>
+                  {rates.map((rate) => (
+                    <option value={rate._id}>
+                      {rate._id}-{rate.product.name}
+                    </option>
+                  ))}
+                </Form.Control>
+              )}
             </Form.Group>
           </Col>
         </Row>
         <Row className="mb-3">
           {Object.keys(rate).length !== 0 && (
             <>
-              <h4>SASTAVNICE</h4>
+              <div className="d-flex justify-content-between">
+                <h3>SASTAVNICE</h3>
+                <Button
+                  className="mb-2"
+                  onClick={() => history.push("/manufacture/requisition")}
+                >
+                  Novo trebovanje
+                </Button>
+              </div>
               <Table size="sm" bordered responsive>
                 <thead>
                   <tr>
@@ -165,6 +210,8 @@ const WorkorderCreateScreen = () => {
                     <th>NAZIV ARTIKLA</th>
                     <th id="quantityRequisition">KOLIČINA</th>
                     <th>RASPOLOŽIVO</th>
+                    <th>NABAVNA CIJENA</th>
+                    <th>PROIZVODNA CIJENA</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -189,13 +236,84 @@ const WorkorderCreateScreen = () => {
                         </td>
                       )}
                       <td>{materialQuantities && materialQuantities[index]}</td>
+                      <td></td>
+                      <td></td>
                     </tr>
                   ))}
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>1</td>
+                    <td>1</td>
+                  </tr>
                 </tbody>
               </Table>
             </>
           )}
         </Row>
+
+        {rows.length > 0 && (
+          <Table bordered responsive>
+            <thead>
+              <tr>
+                <th>RB</th>
+                <th>RADNIK</th>
+                <th>IZBRIŠI</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, index) => (
+                <tr key={index} id={index}>
+                  <td>{index + 1}</td>
+                  <td>
+                    <Form.Group controlId="article">
+                      <Form.Control
+                        as="select"
+                        type="text"
+                        onChange={handleWorker(index)}
+                      >
+                        <option>Izaberite radnika</option>
+                        {loadingWorkers && <span>loading</span>}
+                        {workerList.workers.map((worker) => {
+                          return (
+                            <option id={worker._id} value={worker._id}>
+                              {worker._id} | {worker.name} {worker.surname}
+                            </option>
+                          );
+                        })}
+                      </Form.Control>
+                    </Form.Group>
+                  </td>
+
+                  <td>
+                    <Button type="button" variant="light">
+                      <i className="fas fa-trash"></i>
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
+        <div className="d-flex justify-content-between mb-3">
+          {loadingWorkers ? (
+            <span></span>
+          ) : (
+            <Button
+              type="button"
+              onClick={addRow}
+              disabled={workerList.workers.length <= rows.length}
+            >
+              Dodaj radnika
+            </Button>
+          )}
+
+          <Button type="submit" disabled={rows.length === 0}>
+            UNESI
+          </Button>
+        </div>
       </Form>
     </>
   );

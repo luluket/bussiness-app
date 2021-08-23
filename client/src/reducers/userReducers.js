@@ -7,6 +7,9 @@ import {
   USER_LIST_REQUEST,
   USER_LIST_SUCCESS,
   USER_LIST_RESET,
+  WORKER_LIST_REQUEST,
+  WORKER_LIST_FAIL,
+  WORKER_LIST_SUCCESS,
   USER_LOGIN_FAIL,
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
@@ -95,6 +98,19 @@ export const userListReducer = (state = { users: [] }, action) => {
       return { loading: false, error: action.payload };
     case USER_LIST_RESET:
       return { users: [] };
+    default:
+      return state;
+  }
+};
+
+export const workerListReducer = (state = { workers: [] }, action) => {
+  switch (action.type) {
+    case WORKER_LIST_REQUEST:
+      return { loading: true };
+    case WORKER_LIST_SUCCESS:
+      return { loading: false, workers: action.payload };
+    case WORKER_LIST_FAIL:
+      return { loading: false, error: action.payload };
     default:
       return state;
   }

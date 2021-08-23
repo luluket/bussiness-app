@@ -23,8 +23,14 @@ const createWorkorder = asyncHandler(async (req, res) => {
     article: req.body.article,
     quantity: req.body.quantity,
     rateOfYield: req.body.rateOfYield,
+    consumedArticles: req.body.consumedArticles,
+    workers: req.body.workers,
     purchasePrice: req.body.purchasePrice,
+    manufacturePrice: req.body.manufacturePrice,
     lot: req.body.lot,
+    description: req.body.description,
+    isInProgress: req.body.isInProgress,
+    isFinished: req.body.isFinished,
   });
   const workorderCreated = await workorder.save();
 

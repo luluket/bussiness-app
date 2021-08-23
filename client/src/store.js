@@ -18,6 +18,7 @@ import {
   userDetailsReducer,
   userUpdateProfileReducer,
   userListReducer,
+  workerListReducer,
   userDeleteReducer,
   userUpdateReducer,
 } from "./reducers/userReducers";
@@ -133,6 +134,7 @@ const reducer = combineReducers({
   requisitionUnfullfilledList: requisitionUnfullfilledListReducer,
   requisitionCreate: requisitionCreateReducer,
   requisitionFullFill: requisitionFullfillReducer,
+  workerList: workerListReducer,
 });
 const cartItemsFromStorage = localStorage.getItem("cartItems")
   ? JSON.parse(localStorage.getItem("cartItems"))

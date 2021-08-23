@@ -105,6 +105,14 @@ const getUsers = asyncHandler(async (req, res) => {
   res.json(users);
 });
 
+// @desc Get user type workers
+// @route GET /api/users/workers
+// @access Public
+const getWorkers = asyncHandler(async (req, res) => {
+  const users = await User.find({ role: "radnik" });
+  res.json(users);
+});
+
 // @desc Delete single user
 // @route DELETE /api/users/:id
 // @access Private/Admin
@@ -163,4 +171,5 @@ export {
   deleteUser,
   getUserById,
   updateUser,
+  getWorkers,
 };

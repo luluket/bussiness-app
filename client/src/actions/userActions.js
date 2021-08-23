@@ -18,6 +18,9 @@ import {
   USER_LIST_FAIL,
   USER_LIST_SUCCESS,
   USER_LIST_RESET,
+  WORKER_LIST_REQUEST,
+  WORKER_LIST_FAIL,
+  WORKER_LIST_SUCCESS,
   USER_DELETE_REQUEST,
   USER_DELETE_SUCCESS,
   USER_DELETE_FAIL,
@@ -199,6 +202,29 @@ export const listUsers = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const listWorkers = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: WORKER_LIST_REQUEST,
+    });
+
+    const { data } = await axios.get(`/api/users/workers`);
+
+    dispatch({
+      type: WORKER_LIST_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: WORKER_LIST_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
