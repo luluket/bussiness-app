@@ -20,6 +20,10 @@ const getWorkorder = asyncHandler(async (req, res) => {
     .populate({
       path: "rateOfYield",
       populate: { path: "product", select: "name" },
+    })
+    .populate({
+      path: "workers",
+      populate: { path: "user", select: "_id name surname" },
     });
   res.json(workorder);
 });

@@ -168,6 +168,7 @@ const ManufactureScreen = () => {
       <Col as={Sidebar} props={props} />
       <Col xs={12} md={9} lg={9}>
         <h1 className="text-center">PROIZVODNI POGON</h1>
+        <hr></hr>
         {loadingLager && <Loader />}
         {errorLager && <Message variant="danger">{errorLager}</Message>}
         {lager.length != 0 ? (

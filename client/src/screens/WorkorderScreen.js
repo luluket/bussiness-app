@@ -32,6 +32,7 @@ const WorkorderScreen = ({ match, history }) => {
   const [ids, setIds] = useState([]);
   const [totalPurchasePrice, setTotalPurchasePrice] = useState(0);
   const [totalManufacturePrice, setTotalManufacturePrice] = useState(0);
+  const [workers, setWorkers] = useState([]);
 
   const isInProgress = useSelector(
     (state) => state.workorderInProgress.workorder.inProgress
@@ -187,6 +188,18 @@ const WorkorderScreen = ({ match, history }) => {
   }, [workorder.description]);
 
   useEffect(() => {
+    if (workorder) {
+      setWorkers(workorder.workers);
+    }
+  }, [workorder.workers]);
+
+  useEffect(() => {
+    if (workers) {
+      console.log(workers);
+    }
+  }, [workers]);
+
+  useEffect(() => {
     if (workorder.totalPurchasePrice) {
       setTotalPurchasePrice(workorder.totalPurchasePrice);
     }
@@ -201,7 +214,6 @@ const WorkorderScreen = ({ match, history }) => {
   useEffect(() => {
     dispatch(articleMaterialLagerQuantities(ids));
     dispatch(articleLagerPurchasePrices(ids));
-    console.log(ids);
   }, [ids]);
 
   const handleRate = (event) => {
@@ -486,6 +498,32 @@ const WorkorderScreen = ({ match, history }) => {
                   Σ={totalManufacturePrice && totalManufacturePrice}
                 </td>
               </tr>
+            </tbody>
+          </Table>
+        )}
+        {workers && (
+          <Table bordered responsive size="sm">
+            <thead>
+              <tr>
+                <th>RB</th>
+                <th>RADNIK</th>
+                <th>IZBRIŠI</th>
+              </tr>
+            </thead>
+            <tbody>
+              {workers.map((worker, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>
+                    {worker.user._id}-{worker.user.name} {worker.user.surname}
+                  </td>
+                  <td>
+                    <Button type="button" variant="light">
+                      <i className="fas fa-trash"></i>
+                    </Button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </Table>
         )}

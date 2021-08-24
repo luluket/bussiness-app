@@ -163,6 +163,7 @@ const CentralScreen = () => {
           </Message>
         )}
         <h1 className="text-center">CENTRALNO SKLADIŠTE</h1>
+        <hr></hr>
         {loadingLager && <Loader />}
         {errorLager && <Message variant="danger">{errorLager}</Message>}
         {lager.length != 0 ? (
