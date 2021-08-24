@@ -322,9 +322,11 @@ const WorkorderCreateScreen = ({ history }) => {
                           {`${productQuantity * rate.quantity}*${
                             materialPurchasePrices[index]
                           }=`}
-                          {productQuantity *
-                            rate.quantity *
-                            materialPurchasePrices[index]}
+                          {parseFloat(
+                            productQuantity *
+                              rate.quantity *
+                              materialPurchasePrices[index]
+                          ).toFixed(2)}
                         </td>
                       )}
                       <td></td>

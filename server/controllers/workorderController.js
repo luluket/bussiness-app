@@ -15,10 +15,12 @@ const getWorkorders = asyncHandler(async (req, res) => {
 // @route GET /api/workorders/:id
 // @access Public
 const getWorkorder = asyncHandler(async (req, res) => {
-  const workorder = await Workorder.findById(req.params.id).populate(
-    "article",
-    "name"
-  );
+  const workorder = await Workorder.findById(req.params.id)
+    .populate("article", "name")
+    .populate({
+      path: "rateOfYield",
+      populate: { path: "product", select: "name" },
+    });
   res.json(workorder);
 });
 

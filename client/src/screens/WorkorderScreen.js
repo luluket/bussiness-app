@@ -13,19 +13,24 @@ import Loader from "../components/Loader";
 const WorkorderScreen = ({ match, history }) => {
   const dispatch = useDispatch();
 
-  const [toDo, setToDo] = useState(true);
-  const [inProgress, setInProgress] = useState(true);
-  const [finished, setFinished] = useState(true);
+  const [toDo, setToDo] = useState(false);
+  const [inProgress, setInProgress] = useState(false);
+  const [finished, setFinished] = useState(false);
   const [documentType, setDocumentType] = useState(0);
   const [documentNumber, setDocumentNumber] = useState(0);
   const [warehouse, setWarehouse] = useState("");
   const [materialWarehouse, setMaterialWarehouse] = useState("");
-  const [article, setArticle] = useState();
+  const [articleId, setArticleId] = useState("");
+  const [articleName, setArticleName] = useState("");
   const [productQuantity, setProductQuantity] = useState(0);
   const [description, setDescription] = useState("");
   const [lotNumber, setLotNumber] = useState(0);
   const [rate, setRate] = useState({});
+  const [rateId, setRateId] = useState("");
+  const [rateProduct, setRateProduct] = useState("");
   const [ids, setIds] = useState([]);
+  const [totalPurchasePrice, setTotalPurchasePrice] = useState(0);
+  const [totalManufacturePrice, setTotalManufacturePrice] = useState(0);
 
   const workorderDetails = useSelector((state) => state.workorderDetails);
   const {
@@ -60,41 +65,138 @@ const WorkorderScreen = ({ match, history }) => {
   );
 
   useEffect(() => {
-    if (!workorder || !workorder.status) {
-      dispatch(listWorkorderDetails(match.params.id));
-      dispatch(listProducts());
-      dispatch(listRates());
-    }
+    dispatch(listWorkorderDetails(match.params.id));
+    dispatch(listProducts());
+    dispatch(listRates());
 
     setToDo(workorder.toDo);
     setInProgress(workorder.inProgress);
     setFinished(workorder.finished);
-    setDocumentType(workorder.documentType);
-    setDocumentNumber(workorder.documentNumber);
-    setWarehouse(workorder.warehouse);
-    setMaterialWarehouse(workorder.materialWarehouse);
-    setArticle(workorder.article);
-    setProductQuantity(workorder.quantity);
-    setDescription(workorder.description);
-    setLotNumber(workorder.lot);
-    // setRate(workorder.rateOfYield);
   }, [dispatch, match]);
 
-  // useEffect(() => {
-  //   if (rate) {
-  //     console.log(rate);
-  //     listRateDetails(rate._id);
-  //   }
-  // }, [rate]);
+  useEffect(() => {
+    if (workorder.documentType) {
+      setDocumentType(workorder.documentType);
+    }
+  }, [workorder.documentType]);
+
+  useEffect(() => {
+    if (workorder.documentNumber) {
+      setDocumentNumber(workorder.documentNumber);
+    }
+  }, [workorder.documentNumber]);
+
+  useEffect(() => {
+    if (workorder.warehouse) {
+      setWarehouse(workorder.warehouse);
+    }
+  }, [workorder.warehouse]);
+
+  useEffect(() => {
+    if (workorder.materialWarehouse) {
+      setMaterialWarehouse(workorder.materialWarehouse);
+    }
+  }, [workorder.materialWarehouse]);
+
+  useEffect(() => {
+    if (workorder.article) {
+      setArticleId(workorder.article._id);
+      setArticleName(workorder.article.name);
+    }
+  }, [workorder.article]);
+
+  useEffect(() => {
+    if (workorder.rateOfYield) {
+      setRateId(workorder.rateOfYield._id);
+      setRateProduct(workorder.rateOfYield.product.name);
+    }
+  }, [workorder.rateOfYield]);
+
+  useEffect(() => {
+    console.log(articleId);
+  }, [articleId]);
+
+  useEffect(() => {
+    if (rateId) {
+      dispatch(listRateDetails(rateId));
+      setRate(rates.find((rate) => rate._id === rateId));
+    }
+  }, [rateId]);
+
+  useEffect(() => {
+    if (Object.keys(workorderRate).length !== 0) {
+      workorderRate.components.forEach((item) => {
+        setIds((ids) => [...ids, item.material._id]);
+      });
+    }
+  }, [workorderRate]);
+
+  useEffect(() => {
+    if (workorder.lot) {
+      setLotNumber(workorder.lot);
+    }
+  }, [workorder.lot]);
+
+  useEffect(() => {
+    if (workorder.quantity) {
+      setProductQuantity(workorder.quantity);
+    }
+  }, [workorder.quantity]);
+
+  useEffect(() => {
+    if (workorder.description) {
+      setDescription(workorder.description);
+    }
+  }, [workorder.description]);
+
+  useEffect(() => {
+    if (workorder.description) {
+      setDescription(workorder.description);
+    }
+  }, [workorder.description]);
+
+  useEffect(() => {
+    if (workorder.totalPurchasePrice) {
+      setTotalPurchasePrice(workorder.totalPurchasePrice);
+    }
+  }, [workorder.totalPurchasePrice]);
+
+  useEffect(() => {
+    if (workorder.totalManufacturePrice) {
+      setTotalManufacturePrice(workorder.totalManufacturePrice);
+    }
+  }, [workorder.totalManufacturePrice]);
 
   useEffect(() => {
     dispatch(articleMaterialLagerQuantities(ids));
     dispatch(articleLagerPurchasePrices(ids));
+    console.log(ids);
   }, [ids]);
 
   const handleRate = (event) => {
     setRate(rates.find((rate) => rate._id === event.target.value));
   };
+
+  useEffect(() => {
+    if (
+      Object.keys(workorderRate).length !== 0 &&
+      materialPurchasePrices &&
+      materialQuantities
+    ) {
+      var purchasePrices = workorderRate.components.map((item, index) =>
+        parseFloat(
+          productQuantity * item.quantity * materialPurchasePrices[index]
+        )
+      );
+      setTotalPurchasePrice(
+        purchasePrices.reduce((acc, item) => acc + item, 0).toFixed(2)
+      );
+    }
+  }, [productQuantity]);
+
+  useEffect(() => {
+    setTotalManufacturePrice(totalPurchasePrice * 2.5);
+  }, [totalPurchasePrice]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -102,10 +204,9 @@ const WorkorderScreen = ({ match, history }) => {
   return (
     <>
       {errorWorkorder && <Message variant="danger">{errorWorkorder}</Message>}
-      {loadingWorkorder && <Loader />}
       <Row className="mb-3" style={{ fontSize: "2rem" }}>
         <Col md={4}>
-          {toDo ? (
+          {workorder.toDo ? (
             <div
               style={{ color: "green", fontWeight: "bold" }}
               className="text-center"
@@ -117,7 +218,7 @@ const WorkorderScreen = ({ match, history }) => {
           )}
         </Col>
         <Col md={4}>
-          {inProgress ? (
+          {workorder.inProgress ? (
             <div
               style={{ color: "green", fontWeight: "bold" }}
               className="text-center"
@@ -129,7 +230,7 @@ const WorkorderScreen = ({ match, history }) => {
           )}
         </Col>
         <Col md={4}>
-          {finished ? (
+          {workorder.finished ? (
             <div
               style={{ color: "green", fontWeight: "bold" }}
               className="text-center"
@@ -142,6 +243,184 @@ const WorkorderScreen = ({ match, history }) => {
         </Col>
       </Row>
       <hr></hr>
+
+      <h1>
+        {documentType}-{documentNumber}
+      </h1>
+
+      <Form onSubmit={submitHandler}>
+        <Row className="mb-3">
+          <Col md={6}>
+            <Form.Group controlId="documentType">
+              <Form.Label>Tip dokumenta</Form.Label>
+              <Form.Control
+                type="text"
+                value={documentType}
+                disabled
+              ></Form.Control>
+            </Form.Group>
+          </Col>
+          <Col md={6}>
+            <Form.Group controlId="documentNumber">
+              <Form.Label>Broj dokumenta</Form.Label>
+              <Form.Control
+                type="text"
+                value={documentNumber}
+                onChange={(e) => setDocumentNumber(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row className="mb-3">
+          <Col md={6}>
+            <Form.Group controlId="warehouse">
+              <Form.Label>Skladište</Form.Label>
+              <Form.Control
+                type="text"
+                value={warehouse}
+                disabled
+              ></Form.Control>
+            </Form.Group>
+          </Col>
+          <Col md={6}>
+            <Form.Group controlId="documentNumber">
+              <Form.Label>Skladište utroška materijala</Form.Label>
+              <Form.Control
+                as="select"
+                type="text"
+                onChange={(e) => setMaterialWarehouse(e.target.value)}
+              >
+                <option value={workorder.materialWarehouse} selected>
+                  {workorder.materialWarehouse}
+                </option>
+              </Form.Control>
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row className="mb-3">
+          <Col md={6}>
+            <Form.Group controlId="article">
+              <Form.Label>Artikl</Form.Label>
+              <Form.Control
+                as="select"
+                type="text"
+                onChange={(e) => setArticleId(e.target.value)}
+              >
+                <option value={articleId} selected>
+                  {articleId} - {articleName}
+                </option>
+                {products.map((product) => {
+                  if (product._id !== articleId) {
+                    return (
+                      <option value={product._id}>
+                        {product._id} - {product.name}
+                      </option>
+                    );
+                  }
+                })}
+              </Form.Control>
+            </Form.Group>
+          </Col>
+          <Col md={6}>
+            <Form.Group controlId="productQuantity">
+              <Form.Label>Komada</Form.Label>
+              <Form.Control
+                type="text"
+                value={productQuantity}
+                onChange={(e) => setProductQuantity(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row className="mb-3">
+          <Form.Group controlId="description">
+            <Form.Label>Opis</Form.Label>
+            <Form.Control
+              as="textarea"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            ></Form.Control>
+          </Form.Group>
+        </Row>
+        <Row className="mb-3">
+          <Col md={6}>
+            <Form.Group controlId="rate">
+              <Form.Label>Normativ</Form.Label>
+              <Form.Control as="select" type="text" onChange={handleRate}>
+                <option value={workorderRate._id} selected>
+                  {workorderRate._id} - {rateProduct}
+                </option>
+                {rates.map((item) => {
+                  if (item._id !== workorderRate._id) {
+                    return (
+                      <option value={item._id}>
+                        {item._id}-{item.product.name}
+                      </option>
+                    );
+                  }
+                })}
+              </Form.Control>
+            </Form.Group>
+          </Col>
+          <Col md={6}>
+            <Form.Group controlId="lotNumber">
+              <Form.Label>LOT broj</Form.Label>
+              <Form.Control
+                type="number"
+                value={lotNumber}
+                onChange={(e) => setLotNumber(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+          </Col>
+        </Row>
+        {Object.keys(workorderRate).length !== 0 && (
+          <Table size="sm" bordered responsive>
+            <thead>
+              <tr>
+                <th>ID ARTIKLA</th>
+                <th>NAZIV ARTIKLA</th>
+                <th id="quantityRequisition">KOLIČINA</th>
+                <th>RASPOLOŽIVO</th>
+                <th>NABAVNA CIJENA</th>
+                <th>PROIZVODNA CIJENA</th>
+              </tr>
+            </thead>
+            <tbody>
+              {workorderRate.components.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.material._id}</td>
+                  <td>{item.material.name}</td>
+                  <td>
+                    {`${productQuantity} * ${item.quantity}=`}
+                    {productQuantity * item.quantity}
+                  </td>
+                  <td>{materialQuantities && materialQuantities[index]}</td>
+                  {materialPurchasePrices && (
+                    <td>
+                      {`${productQuantity * item.quantity}*${
+                        materialPurchasePrices[index]
+                      }=`}
+                      {parseFloat(
+                        productQuantity *
+                          item.quantity *
+                          materialPurchasePrices[index]
+                      ).toFixed(2)}
+                    </td>
+                  )}
+                </tr>
+              ))}
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{totalPurchasePrice && totalPurchasePrice}</td>
+                <td>{totalManufacturePrice && totalManufacturePrice}</td>
+              </tr>
+            </tbody>
+          </Table>
+        )}
+      </Form>
     </>
   );
 };
