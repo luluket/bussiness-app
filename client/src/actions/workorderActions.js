@@ -100,21 +100,21 @@ export const createWorkorder = (workorder) => async (dispatch) => {
   }
 };
 
-// export const updateWorkorder = (workorder) => async (dispatch) => {
-//   try {
-//     dispatch({ type: WORKORDER_UPDATE_REQUEST });
-//     const { data } = await axios.post(
-//       `/api/workorders/${workorder._id}`,
-//       workorder
-//     );
-//     dispatch({ type: WORKORDER_UPDATE_SUCCESS, payload: data });
-//   } catch (error) {
-//     dispatch({
-//       type: WORKORDER_UPDATE_FAIL,
-//       payload:
-//         error.response && error.response.data.message
-//           ? error.response.data.message
-//           : error.message,
-//     });
-//   }
-// };
+export const updateWorkorder = (workorder) => async (dispatch) => {
+  try {
+    dispatch({ type: WORKORDER_UPDATE_REQUEST });
+    const { data } = await axios.put(
+      `/api/workorders/${workorder._id}`,
+      workorder
+    );
+    dispatch({ type: WORKORDER_UPDATE_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: WORKORDER_UPDATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};

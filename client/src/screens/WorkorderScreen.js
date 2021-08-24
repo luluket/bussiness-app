@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   listWorkorderDetails,
   workorderFinished,
+  updateWorkorder,
 } from "../actions/workorderActions";
 import { listRates } from "../actions/rateOfYieldActions";
 import { articleMaterialLagerQuantities } from "../actions/materialLagerActions";
@@ -10,6 +11,7 @@ import { articleLagerPurchasePrices } from "../actions/lagerActions";
 import { workorderInProgress } from "../actions/workorderActions";
 import { Row, Col, Form, Table, Button } from "react-bootstrap";
 import Message from "../components/Message";
+import { WORKORDER_UPDATE_RESET } from "../constants/workorderConstants";
 
 const WorkorderScreen = ({ match, history }) => {
   const dispatch = useDispatch();
@@ -26,7 +28,6 @@ const WorkorderScreen = ({ match, history }) => {
   const [description, setDescription] = useState("");
   const [lotNumber, setLotNumber] = useState(0);
   const [rate, setRate] = useState({});
-  const [rateId, setRateId] = useState("");
   const [ids, setIds] = useState([]);
   const [totalPurchasePrice, setTotalPurchasePrice] = useState(0);
   const [totalManufacturePrice, setTotalManufacturePrice] = useState(0);
@@ -35,10 +36,6 @@ const WorkorderScreen = ({ match, history }) => {
   const isInProgress = useSelector(
     (state) => state.workorderInProgress.workorder.inProgress
   );
-
-  useEffect(() => {
-    console.log(totalPurchasePrice);
-  }, [totalPurchasePrice]);
 
   const isFinished = useSelector(
     (state) => state.workorderFinished.workorder.finished
@@ -62,6 +59,9 @@ const WorkorderScreen = ({ match, history }) => {
     (state) => state.lagerArticlePurchasePrices.purchasePrices
   );
 
+  const workorderUpdate = useSelector((state) => state.workorderUpdate);
+  const { success: successUpdate } = workorderUpdate;
+
   useEffect(() => {
     if (!workorder || Object.keys(workorder).length === 0) {
       dispatch(listWorkorderDetails(match.params.id));
@@ -83,7 +83,13 @@ const WorkorderScreen = ({ match, history }) => {
     setWorkers(workorder.workers);
     setTotalPurchasePrice(workorder.totalPurchasePrice);
     setTotalManufacturePrice(workorder.totalManufacturePrice);
-  }, [dispatch, workorder]);
+
+    if (successUpdate) {
+      dispatch(listWorkorderDetails(match.params.id));
+      dispatch({ type: WORKORDER_UPDATE_RESET });
+      history.push("/manufacture");
+    }
+  }, [dispatch, workorder, successUpdate]);
 
   useEffect(() => {
     if (isInProgress) {
@@ -121,6 +127,7 @@ const WorkorderScreen = ({ match, history }) => {
   };
 
   useEffect(() => {
+    document.getElementById("quantityHeader").style.border = "black";
     if (
       rate &&
       Object.keys(rate).length !== 0 &&
@@ -152,6 +159,34 @@ const WorkorderScreen = ({ match, history }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
+    //upon update check validate rate quantities according to lager
+    var overload = false;
+    rate.components.forEach((item, index) => {
+      if (productQuantity * item.quantity > materialQuantities[index]) {
+        overload = true;
+      }
+    });
+    if (overload) {
+      document.getElementById("quantityHeader").style.border = "red solid";
+    } else {
+      dispatch(
+        updateWorkorder({
+          _id: workorder._id,
+          documentType,
+          documentNumber,
+          warehouse,
+          materialWarehouse,
+          article,
+          quantity: productQuantity,
+          description,
+          rateOfYield: rate,
+          lot: lotNumber,
+          workers,
+          totalPurchasePrice,
+          totalManufacturePrice,
+        })
+      );
+    }
   };
 
   return (
@@ -161,7 +196,7 @@ const WorkorderScreen = ({ match, history }) => {
         <Col md={4}>
           {toDo ? (
             <div
-              style={{ color: "lightblue", fontWeight: "bold" }}
+              style={{ color: "#CCCC00	", fontWeight: "bold" }}
               className="text-center"
             >
               Pripravan
@@ -357,7 +392,7 @@ const WorkorderScreen = ({ match, history }) => {
                   <tr>
                     <th>ID ARTIKLA</th>
                     <th>NAZIV ARTIKLA</th>
-                    <th id="quantityRequisition">KOLIČINA</th>
+                    <th id="quantityHeader">KOLIČINA</th>
                     <th>RASPOLOŽIVO</th>
                     <th>NABAVNA CIJENA</th>
                     <th>PROIZVODNA CIJENA</th>
@@ -442,6 +477,9 @@ const WorkorderScreen = ({ match, history }) => {
                 </tbody>
               </Table>
             )}
+            <Button type="submit" style={{ width: "10rem", height: "3rem" }}>
+              Uredi
+            </Button>
           </Form>
         )}
     </>

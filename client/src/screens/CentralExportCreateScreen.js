@@ -150,14 +150,12 @@ const CentralExportCreateScreen = ({ history }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log(lagerQuantities);
     // send requisition or manually exported articles
     if (Object.keys(requisition).length > 0) {
       var shortage = false;
       requisition.requestedArticles.forEach((item, index) => {
         if (item.quantity > articleQuantities[index]) {
           shortage = true;
-          console.log(item.quantity, articleQuantities[index]);
         }
       });
       if (shortage) {

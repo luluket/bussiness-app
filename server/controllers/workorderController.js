@@ -104,10 +104,39 @@ const setWorkorderToFinished = asyncHandler(async (req, res) => {
   res.json(workorder);
 });
 
+// @desc Update single article
+// @route PUT /api/workorders/:id
+// @access Public
+const updateWorkorder = asyncHandler(async (req, res) => {
+  const workorder = await Workorder.findById(req.params.id);
+  console.log(req.body);
+  if (workorder) {
+    workorder.documentType = req.body.documentType;
+    workorder.documentNumber = req.body.documentNumber;
+    workorder.warehouse = req.body.warehouse;
+    workorder.materialWarehouse = req.body.materialWarehouse;
+    workorder.article = req.body.article;
+    workorder.quantity = req.body.quantity;
+    workorder.description = req.body.description;
+    workorder.rateOfYield = req.body.rateOfYield;
+    workorder.lot = req.body.lot;
+    workorder.workers = req.body.workers;
+    workorder.totalPurchasePrice = req.body.totalPurchasePrice;
+    workorder.totalManufacturePrice = req.body.totalManufacturePrice;
+    const updatedWorkorder = await workorder.save();
+    res.json(updatedWorkorder);
+    console.log(updatedWorkorder);
+  } else {
+    res.status(404);
+    throw new Error("Article not found");
+  }
+});
+
 export {
   getWorkorders,
   getWorkorder,
   createWorkorder,
   setWorkorderInProgress,
   setWorkorderToFinished,
+  updateWorkorder,
 };
