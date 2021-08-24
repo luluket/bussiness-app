@@ -44,6 +44,7 @@ const workorderSchema = mongoose.Schema(
     lot: {
       type: Number,
       required: true,
+      unique: true,
     },
     workers: [
       {

@@ -20,6 +20,7 @@ import rateOfYieldRoutes from "./routes/rateOfYieldRoutes.js";
 import requisitionRoutes from "./routes/requisitionRoutes.js";
 import workorderRoutes from "./routes/workorderRoutes.js";
 import productLagerRoutes from "./routes/productLagerRoutes.js";
+import materialConsumptionRoutes from "./routes/materialConsumptionRoutes.js";
 
 dotenv.config();
 
@@ -48,6 +49,7 @@ app.use("/api/rates", rateOfYieldRoutes);
 app.use("/api/requisitions", requisitionRoutes);
 app.use("/api/workorders", workorderRoutes);
 app.use("/api/product/lager", productLagerRoutes);
+app.use("/api/material/consumptions", materialConsumptionRoutes);
 
 app.get("/api/config/paypal", (req, res) =>
   res.send(process.env.PAYPAL_CLIENT_ID)

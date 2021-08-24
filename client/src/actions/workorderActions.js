@@ -68,10 +68,13 @@ export const workorderInProgress = (id) => async (dispatch) => {
   }
 };
 
-export const workorderFinished = (id) => async (dispatch) => {
+export const workorderFinished = (workorder) => async (dispatch) => {
   try {
     dispatch({ type: WORKORDER_FINISHED_REQUEST });
-    const { data } = await axios.put(`/api/workorders/${id}/finished`);
+    const { data } = await axios.put(
+      `/api/workorders/${workorder._id}/finished`,
+      workorder
+    );
     dispatch({ type: WORKORDER_FINISHED_SUCCESS, payload: data });
   } catch (error) {
     dispatch({

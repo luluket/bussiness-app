@@ -89,7 +89,7 @@ const WorkorderScreen = ({ match, history }) => {
       dispatch({ type: WORKORDER_UPDATE_RESET });
       history.push("/manufacture");
     }
-  }, [dispatch, workorder, successUpdate]);
+  }, [dispatch, history, match, workorder, successUpdate]);
 
   useEffect(() => {
     if (isInProgress) {
@@ -108,6 +108,7 @@ const WorkorderScreen = ({ match, history }) => {
   }, [isFinished]);
 
   useEffect(() => {
+    setIds([]);
     if (rate && Object.keys(rate).length !== 0) {
       rate.components.forEach((item) => {
         setIds((ids) => [...ids, item.material._id]);
@@ -119,6 +120,7 @@ const WorkorderScreen = ({ match, history }) => {
     if (rate && Object.keys(rate).length !== 0) {
       dispatch(articleMaterialLagerQuantities(ids));
       dispatch(articleLagerPurchasePrices(ids));
+      dispatch(listRates());
     }
   }, [ids]);
 
@@ -127,7 +129,6 @@ const WorkorderScreen = ({ match, history }) => {
   };
 
   useEffect(() => {
-    document.getElementById("quantityHeader").style.border = "black";
     if (
       rate &&
       Object.keys(rate).length !== 0 &&
@@ -143,6 +144,9 @@ const WorkorderScreen = ({ match, history }) => {
         purchasePrices.reduce((acc, item) => acc + item, 0).toFixed(2)
       );
     }
+    if (productQuantity) {
+      document.getElementById("quantityHeader").style.border = "black";
+    }
   }, [productQuantity, rate]);
 
   useEffect(() => {
@@ -154,7 +158,30 @@ const WorkorderScreen = ({ match, history }) => {
   };
 
   const handleFinished = () => {
-    dispatch(workorderFinished(match.params.id));
+    const consumedArticles = [];
+    rate.components.map((item) =>
+      consumedArticles.push({
+        article: item.material._id,
+        quantity: item.quantity,
+      })
+    );
+    var overload = false;
+    rate.components.forEach((item, index) => {
+      if (productQuantity * item.quantity > materialQuantities[index]) {
+        overload = true;
+      }
+    });
+    if (overload) {
+      document.getElementById("quantityHeader").style.border = "red solid";
+    } else {
+      dispatch(
+        workorderFinished({
+          _id: workorder._id,
+          article,
+          consumedArticles,
+        })
+      );
+    }
   };
 
   const submitHandler = (e) => {
@@ -477,9 +504,11 @@ const WorkorderScreen = ({ match, history }) => {
                 </tbody>
               </Table>
             )}
-            <Button type="submit" style={{ width: "10rem", height: "3rem" }}>
-              Uredi
-            </Button>
+            {isInProgress && isFinished === false && (
+              <Button type="submit" style={{ width: "10rem", height: "3rem" }}>
+                Uredi
+              </Button>
+            )}
           </Form>
         )}
     </>

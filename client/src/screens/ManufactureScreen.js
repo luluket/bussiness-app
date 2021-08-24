@@ -15,6 +15,8 @@ import { listRequisitions } from "../actions/requisitionActions";
 import { REQUISITION_LIST_RESET } from "../constants/requisitionConstants";
 import { listWorkorders } from "../actions/workorderActions";
 import { WORKORDER_LIST_RESET } from "../constants/workorderConstants";
+import { listMaterialConsumptions } from "../actions/materialConsumptionActions";
+import { MATERIAL_CONSUMPTION_LIST_RESET } from "../constants/materialConsumptionConstants";
 
 const ManufactureScreen = () => {
   const dispatch = useDispatch();
@@ -24,12 +26,23 @@ const ManufactureScreen = () => {
   // states to handle empty database tables
   const [showMaterialLagerNote, setShowMaterialLagerNote] = useState(false);
   const [showMaterialImportNote, setShowMaterialImportNote] = useState(false);
+  const [showMaterialConsumptionNote, setShowMaterialConsumptionNote] =
+    useState(false);
   const [showRequisitionNote, setShowRequisitionNote] = useState(false);
   const [showRateNote, setShowRateNote] = useState(false);
   const [showWorkorderNote, setShowWorkorderNote] = useState(false);
 
   const materialLagerList = useSelector((state) => state.materialLagerList);
   const { loading: loadingLager, error: errorLager, lager } = materialLagerList;
+
+  const materialConsumptionList = useSelector(
+    (state) => state.materialConsumptionList
+  );
+  const {
+    loading: loadingConsumptions,
+    error: errorConsumptions,
+    consumptions,
+  } = materialConsumptionList;
 
   const rateList = useSelector((state) => state.rateList);
   const { loading: loadingRates, error: errorRates, rates } = rateList;
@@ -56,6 +69,14 @@ const ManufactureScreen = () => {
   } = workorderList;
 
   useEffect(() => {
+    dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
+    dispatch({ type: WORKORDER_LIST_RESET });
+    dispatch({ type: RATE_LIST_RESET });
+    dispatch({ type: REQUISITION_LIST_RESET });
+    dispatch({ type: MATERIAL_CONSUMPTION_LIST_RESET });
+  }, [dispatch]);
+
+  useEffect(() => {
     if (loadingLager) {
       dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
       dispatch({ type: WORKORDER_LIST_RESET });
@@ -64,6 +85,7 @@ const ManufactureScreen = () => {
 
       setShowMaterialLagerNote(true);
       setShowMaterialImportNote(false);
+      setShowMaterialConsumptionNote(false);
       setShowWorkorderNote(false);
       setShowRequisitionNote(false);
       setShowRateNote(false);
@@ -73,12 +95,14 @@ const ManufactureScreen = () => {
   useEffect(() => {
     if (loadingImports) {
       dispatch({ type: MATERIAL_LAGER_LIST_RESET });
+      dispatch({ type: MATERIAL_CONSUMPTION_LIST_RESET });
       dispatch({ type: WORKORDER_LIST_RESET });
       dispatch({ type: RATE_LIST_RESET });
       dispatch({ type: REQUISITION_LIST_RESET });
 
       setShowMaterialImportNote(true);
       setShowMaterialLagerNote(false);
+      setShowMaterialConsumptionNote(false);
       setShowWorkorderNote(false);
       setShowRequisitionNote(false);
       setShowRateNote(false);
@@ -86,15 +110,34 @@ const ManufactureScreen = () => {
   }, [loadingImports]);
 
   useEffect(() => {
+    if (loadingConsumptions) {
+      dispatch({ type: MATERIAL_LAGER_LIST_RESET });
+      dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
+      dispatch({ type: WORKORDER_LIST_RESET });
+      dispatch({ type: RATE_LIST_RESET });
+      dispatch({ type: REQUISITION_LIST_RESET });
+
+      setShowMaterialConsumptionNote(true);
+      setShowMaterialImportNote(false);
+      setShowMaterialLagerNote(false);
+      setShowWorkorderNote(false);
+      setShowRequisitionNote(false);
+      setShowRateNote(false);
+    }
+  }, [loadingConsumptions]);
+
+  useEffect(() => {
     if (loadingRates) {
       dispatch({ type: MATERIAL_LAGER_LIST_RESET });
       dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
+      dispatch({ type: MATERIAL_CONSUMPTION_LIST_RESET });
       dispatch({ type: WORKORDER_LIST_RESET });
       dispatch({ type: REQUISITION_LIST_RESET });
 
       setShowRateNote(true);
       setShowMaterialImportNote(false);
       setShowMaterialLagerNote(false);
+      setShowMaterialConsumptionNote(true);
       setShowWorkorderNote(false);
       setShowRequisitionNote(false);
     }
@@ -104,12 +147,14 @@ const ManufactureScreen = () => {
     if (loadingWorkorders) {
       dispatch({ type: MATERIAL_LAGER_LIST_RESET });
       dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
+      dispatch({ type: MATERIAL_CONSUMPTION_LIST_RESET });
       dispatch({ type: REQUISITION_LIST_RESET });
       dispatch({ type: RATE_LIST_RESET });
 
       setShowWorkorderNote(true);
       setShowRequisitionNote(false);
       setShowMaterialImportNote(false);
+      setShowMaterialConsumptionNote(false);
       setShowMaterialLagerNote(false);
       setShowRateNote(false);
     }
@@ -119,11 +164,13 @@ const ManufactureScreen = () => {
     if (loadingRequisitions) {
       dispatch({ type: MATERIAL_LAGER_LIST_RESET });
       dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
+      dispatch({ type: MATERIAL_CONSUMPTION_LIST_RESET });
       dispatch({ type: RATE_LIST_RESET });
       dispatch({ type: WORKORDER_LIST_RESET });
 
       setShowRequisitionNote(true);
       setShowMaterialImportNote(false);
+      setShowMaterialConsumptionNote(false);
       setShowMaterialLagerNote(false);
       setShowWorkorderNote(false);
       setShowRateNote(false);
@@ -137,7 +184,7 @@ const ManufactureScreen = () => {
         { name: "Lager", function: listMaterialLager() },
         { name: "Međuskladišnica ulaz", function: listMaterialImports() },
         { name: "Međuskladišnica izlaz", function: listMaterialLager() },
-        { name: "Utrošak materijala", function: listMaterialLager() },
+        { name: "Utrošak materijala", function: listMaterialConsumptions() },
       ],
       function: listMaterialLager(),
     },
@@ -244,6 +291,51 @@ const ManufactureScreen = () => {
           showMaterialImportNote && (
             <h2>Lista zaprimljenih artikala je prazna</h2>
           )
+        )}
+        {loadingConsumptions && <Loader />}
+        {errorConsumptions && (
+          <Message variant="danger">{errorConsumptions}</Message>
+        )}
+        {consumptions && consumptions.length != 0 ? (
+          <>
+            <h2>UTROŠAK MATERIJALA</h2>
+            <Table striped bordered responsive size="sm">
+              <thead>
+                <tr>
+                  <th>ZAKLJUČEN</th>
+                  <th>RADNI NALOG</th>
+                  <th>DATUM</th>
+                  <th>VRIJEME</th>
+                  <th>ARTIKL</th>
+                </tr>
+              </thead>
+              <tbody>
+                {consumptions.map((item) => {
+                  return (
+                    <tr key={item._id}>
+                      <td>
+                        <i
+                          className="fas fa-check"
+                          style={{ color: "green" }}
+                        ></i>
+                      </td>
+                      <td>
+                        {item.workorder.documentNumber}-
+                        {item.workorder.documentType}
+                      </td>
+                      <td>{item.createdAt.substring(0, 10)}</td>
+                      <td>{item.createdAt.substring(11, 19)}</td>
+                      <td>
+                        {item.article._id}-{item.article.name}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+          </>
+        ) : (
+          showMaterialConsumptionNote && <h2>Nema utroška materijala</h2>
         )}
         {loadingWorkorders && <Loader />}
         {errorWorkorders && (

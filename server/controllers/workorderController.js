@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import Workorder from "../models/Workorder.js";
 import ProductLager from "../models/ProductLager.js";
 import MaterialLager from "../models/MaterialLager.js";
+import MaterialConsumption from "../models/MaterialConsumption.js";
 
 // @desc Get all workorder
 // @route GET /api/workorders
@@ -100,8 +101,26 @@ const setWorkorderToFinished = asyncHandler(async (req, res) => {
   workorder.toDo = false;
   workorder.inProgress = false;
   workorder.finished = true;
-  await workorder.save();
-  res.json(workorder);
+
+  const workorderFinished = await workorder.save();
+
+  if (workorderFinished) {
+    //create material consumption document
+    const materialConsumption = new MaterialConsumption({
+      workorder: req.body._id,
+      article: req.body.article,
+      consumedArticles: req.body.consumedArticles,
+    });
+    await materialConsumption.save();
+    res.status(201).json(materialConsumption);
+  }
+  // substract material warehouse quantities
+  req.body.consumedArticles.forEach(async (item) => {
+    const material = await MaterialLager.findOne({ article: item.article });
+    material.quantity -= item.quantity;
+    await material.save();
+  });
+  //add manufactured product to product warehouse
 });
 
 // @desc Update single article

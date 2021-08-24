@@ -94,6 +94,8 @@ import {
   workorderFinishedReducer,
 } from "./reducers/workorderReducers.js";
 
+import { materialConsumptionListReducer } from "./reducers/materialConsumptionReducers.js";
+
 const reducer = combineReducers({
   // productList: productListReducer,
   productDetails: productDetailsReducer,
@@ -138,6 +140,7 @@ const reducer = combineReducers({
   materialLagerList: materialLagerListReducer,
   materialLagerQuantities: materialLagerQuantitiesReducer,
   materialImportList: materialImportListReducer,
+  materialConsumptionList: materialConsumptionListReducer,
   rateList: rateListReducer,
   rateDetails: rateDetailsReducer,
   rateCreate: rateCreateReducer,
