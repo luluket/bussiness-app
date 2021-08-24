@@ -274,8 +274,8 @@ const ManufactureScreen = () => {
                           className="p-1 d-flex justify-content-between"
                           style={{ borderBottomWidth: "thick" }}
                         >
-                          <span>{`Za izvršiti`} </span>
-                          {item.status.toDo && (
+                          <span>{`Pripravan`} </span>
+                          {item.toDo && (
                             <div>
                               <i
                                 className="fas fa-check"
@@ -286,7 +286,7 @@ const ManufactureScreen = () => {
                         </div>
                         <div className="p-1 d-flex justify-content-between">
                           <span>{`U izvršavanju`} </span>
-                          {item.status.inProgress && (
+                          {item.inProgress && (
                             <div>
                               <i
                                 className="fas fa-check"
@@ -297,7 +297,7 @@ const ManufactureScreen = () => {
                         </div>
                         <span className="p-1 d-flex justify-content-start">
                           <span>{`Završen`} </span>
-                          {item.status.finished && (
+                          {item.finished && (
                             <div>
                               <i
                                 className="fas fa-check"
@@ -319,7 +319,7 @@ const ManufactureScreen = () => {
             </Table>
             <Button
               type="button"
-              onClick={() => history.push("/manufacture/workorder")}
+              onClick={() => history.push("/manufacture/workorder/create")}
             >
               Novi radni nalog
             </Button>
@@ -330,7 +330,7 @@ const ManufactureScreen = () => {
               <h2>Nema kreiranog radnog naloga</h2>
               <Button
                 type="button"
-                onClick={() => history.push("/manufacture/workorder")}
+                onClick={() => history.push("/manufacture/workorder/create")}
               >
                 Novi radni nalog
               </Button>
@@ -397,6 +397,7 @@ const ManufactureScreen = () => {
                 <tr>
                   <th>ZAHTIJEVANO</th>
                   <th>ZAPRIMLJENO</th>
+                  <th>DOKUMENT</th>
                   <th>ARTIKLI</th>
                   <th>KOLIČINA</th>
                   <th>DATUM</th>
@@ -439,6 +440,7 @@ const ManufactureScreen = () => {
                           ></i>
                         )}
                       </td>
+                      <td>{item.document}</td>
                       <td>
                         {item.requestedArticles.map((o) => (
                           <div>{`${o.article.name}\n`}</div>

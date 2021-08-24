@@ -13,11 +13,9 @@ import Loader from "../components/Loader";
 const WorkorderScreen = ({ match, history }) => {
   const dispatch = useDispatch();
 
-  const [status, setStatus] = useState({
-    toDo: "",
-    inProgress: "",
-    finished: "",
-  });
+  const [toDo, setToDo] = useState(true);
+  const [inProgress, setInProgress] = useState(true);
+  const [finished, setFinished] = useState(true);
   const [documentType, setDocumentType] = useState(0);
   const [documentNumber, setDocumentNumber] = useState(0);
   const [warehouse, setWarehouse] = useState("");
@@ -68,7 +66,9 @@ const WorkorderScreen = ({ match, history }) => {
       dispatch(listRates());
     }
 
-    setStatus(workorder.status);
+    setToDo(workorder.toDo);
+    setInProgress(workorder.inProgress);
+    setFinished(workorder.finished);
     setDocumentType(workorder.documentType);
     setDocumentNumber(workorder.documentNumber);
     setWarehouse(workorder.warehouse);
@@ -78,11 +78,7 @@ const WorkorderScreen = ({ match, history }) => {
     setDescription(workorder.description);
     setLotNumber(workorder.lot);
     // setRate(workorder.rateOfYield);
-  }, [dispatch, match, history, workorder]);
-
-  useEffect(() => {
-    console.log(status);
-  }, [status]);
+  }, [dispatch, match]);
 
   // useEffect(() => {
   //   if (rate) {
@@ -107,7 +103,45 @@ const WorkorderScreen = ({ match, history }) => {
     <>
       {errorWorkorder && <Message variant="danger">{errorWorkorder}</Message>}
       {loadingWorkorder && <Loader />}
-      {status.toDo && <h1>ante</h1>}
+      <Row className="mb-3" style={{ fontSize: "2rem" }}>
+        <Col md={4}>
+          {toDo ? (
+            <div
+              style={{ color: "green", fontWeight: "bold" }}
+              className="text-center"
+            >
+              Pripravan
+            </div>
+          ) : (
+            <div className="text-center">Pripravan</div>
+          )}
+        </Col>
+        <Col md={4}>
+          {inProgress ? (
+            <div
+              style={{ color: "green", fontWeight: "bold" }}
+              className="text-center"
+            >
+              U izvršavanju
+            </div>
+          ) : (
+            <div className="text-center">U izvršavanju</div>
+          )}
+        </Col>
+        <Col md={4}>
+          {finished ? (
+            <div
+              style={{ color: "green", fontWeight: "bold" }}
+              className="text-center"
+            >
+              Završen
+            </div>
+          ) : (
+            <div className="text-center">Završen</div>
+          )}
+        </Col>
+      </Row>
+      <hr></hr>
     </>
   );
 };
