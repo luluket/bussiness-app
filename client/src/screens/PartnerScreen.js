@@ -33,7 +33,7 @@ const PartnerScreen = ({ history, match }) => {
   const { receipts } = centralReceiptsList;
 
   const partnerReceipts = receipts.filter(
-    (receipt) => receipt.partner === partner._id
+    (receipt) => receipt.partner._id === partner._id
   );
 
   useEffect(() => {
