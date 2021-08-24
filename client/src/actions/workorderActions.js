@@ -9,6 +9,15 @@ import {
   WORKORDER_CREATE_REQUEST,
   WORKORDER_CREATE_SUCCESS,
   WORKORDER_CREATE_FAIL,
+  WORKORDER_PROGRESS_REQUEST,
+  WORKORDER_PROGRESS_SUCCESS,
+  WORKORDER_PROGRESS_FAIL,
+  WORKORDER_FINISHED_FAIL,
+  WORKORDER_FINISHED_SUCCESS,
+  WORKORDER_FINISHED_REQUEST,
+  WORKORDER_UPDATE_REQUEST,
+  WORKORDER_UPDATE_SUCCESS,
+  WORKORDER_UPDATE_FAIL,
 } from "../constants/workorderConstants";
 
 export const listWorkorders = () => async (dispatch) => {
@@ -43,6 +52,38 @@ export const listWorkorderDetails = (id) => async (dispatch) => {
   }
 };
 
+export const workorderInProgress = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: WORKORDER_PROGRESS_REQUEST });
+    const { data } = await axios.put(`/api/workorders/${id}/inprogress`);
+    dispatch({ type: WORKORDER_PROGRESS_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: WORKORDER_PROGRESS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const workorderFinished = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: WORKORDER_FINISHED_REQUEST });
+    const { data } = await axios.put(`/api/workorders/${id}/finished`);
+    dispatch({ type: WORKORDER_FINISHED_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: WORKORDER_FINISHED_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
 export const createWorkorder = (workorder) => async (dispatch) => {
   try {
     dispatch({ type: WORKORDER_CREATE_REQUEST });
@@ -58,3 +99,22 @@ export const createWorkorder = (workorder) => async (dispatch) => {
     });
   }
 };
+
+// export const updateWorkorder = (workorder) => async (dispatch) => {
+//   try {
+//     dispatch({ type: WORKORDER_UPDATE_REQUEST });
+//     const { data } = await axios.post(
+//       `/api/workorders/${workorder._id}`,
+//       workorder
+//     );
+//     dispatch({ type: WORKORDER_UPDATE_SUCCESS, payload: data });
+//   } catch (error) {
+//     dispatch({
+//       type: WORKORDER_UPDATE_FAIL,
+//       payload:
+//         error.response && error.response.data.message
+//           ? error.response.data.message
+//           : error.message,
+//     });
+//   }
+// };

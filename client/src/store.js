@@ -89,6 +89,8 @@ import {
   workorderListReducer,
   workorderDetailsReducer,
   workorderCreateReducer,
+  workorderInProgressReducer,
+  workorderFinishedReducer,
 } from "./reducers/workorderReducers.js";
 
 const reducer = combineReducers({
@@ -147,6 +149,8 @@ const reducer = combineReducers({
   workerList: workerListReducer,
   workorderList: workorderListReducer,
   workorderCreate: workorderCreateReducer,
+  workorderInProgress: workorderInProgressReducer,
+  workorderFinished: workorderFinishedReducer,
   workorderDetails: workorderDetailsReducer,
 });
 const cartItemsFromStorage = localStorage.getItem("cartItems")

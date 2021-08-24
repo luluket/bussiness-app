@@ -270,10 +270,7 @@ const ManufactureScreen = () => {
                       }
                     >
                       <td>
-                        <div
-                          className="p-1 d-flex justify-content-between"
-                          style={{ borderBottomWidth: "thick" }}
-                        >
+                        <div className="p-1 d-flex justify-content-between">
                           <span>{`Pripravan`} </span>
                           {item.toDo && (
                             <div>
@@ -295,7 +292,7 @@ const ManufactureScreen = () => {
                             </div>
                           )}
                         </div>
-                        <span className="p-1 d-flex justify-content-start">
+                        <span className="p-1 d-flex justify-content-between">
                           <span>{`Završen`} </span>
                           {item.finished && (
                             <div>

@@ -6,7 +6,8 @@ import { listRates } from "../actions/rateOfYieldActions";
 import { listRateDetails } from "../actions/rateOfYieldActions";
 import { articleMaterialLagerQuantities } from "../actions/materialLagerActions";
 import { articleLagerPurchasePrices } from "../actions/lagerActions";
-import { Row, Col, Form, Table } from "react-bootstrap";
+import { workorderInProgress } from "../actions/workorderActions";
+import { Row, Col, Form, Table, Button } from "react-bootstrap";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 
@@ -31,6 +32,10 @@ const WorkorderScreen = ({ match, history }) => {
   const [ids, setIds] = useState([]);
   const [totalPurchasePrice, setTotalPurchasePrice] = useState(0);
   const [totalManufacturePrice, setTotalManufacturePrice] = useState(0);
+
+  const isInProgress = useSelector(
+    (state) => state.workorderInProgress.workorder.inProgress
+  );
 
   const workorderDetails = useSelector((state) => state.workorderDetails);
   const {
@@ -65,6 +70,14 @@ const WorkorderScreen = ({ match, history }) => {
   );
 
   useEffect(() => {
+    if (isInProgress) {
+      setToDo(false);
+      setInProgress(true);
+      setFinished(false);
+    }
+  }, [isInProgress]);
+
+  useEffect(() => {
     dispatch(listWorkorderDetails(match.params.id));
     dispatch(listProducts());
     dispatch(listRates());
@@ -73,6 +86,24 @@ const WorkorderScreen = ({ match, history }) => {
     setInProgress(workorder.inProgress);
     setFinished(workorder.finished);
   }, [dispatch, match]);
+
+  useEffect(() => {
+    if (workorder.toDo) {
+      setToDo(workorder.toDo);
+    }
+  }, [workorder.toDo]);
+
+  useEffect(() => {
+    if (workorder.inProgress) {
+      setInProgress(workorder.inProgress);
+    }
+  }, [workorder.inProgress]);
+
+  useEffect(() => {
+    if (workorder.finished) {
+      setFinished(workorder.finished);
+    }
+  }, [workorder.finished]);
 
   useEffect(() => {
     if (workorder.documentType) {
@@ -198,6 +229,10 @@ const WorkorderScreen = ({ match, history }) => {
     setTotalManufacturePrice(totalPurchasePrice * 2.5);
   }, [totalPurchasePrice]);
 
+  const handleInProgress = () => {
+    dispatch(workorderInProgress(match.params.id));
+  };
+
   const submitHandler = (e) => {
     e.preventDefault();
   };
@@ -206,7 +241,7 @@ const WorkorderScreen = ({ match, history }) => {
       {errorWorkorder && <Message variant="danger">{errorWorkorder}</Message>}
       <Row className="mb-3" style={{ fontSize: "2rem" }}>
         <Col md={4}>
-          {workorder.toDo ? (
+          {toDo ? (
             <div
               style={{ color: "green", fontWeight: "bold" }}
               className="text-center"
@@ -218,7 +253,7 @@ const WorkorderScreen = ({ match, history }) => {
           )}
         </Col>
         <Col md={4}>
-          {workorder.inProgress ? (
+          {inProgress ? (
             <div
               style={{ color: "green", fontWeight: "bold" }}
               className="text-center"
@@ -230,7 +265,7 @@ const WorkorderScreen = ({ match, history }) => {
           )}
         </Col>
         <Col md={4}>
-          {workorder.finished ? (
+          {finished ? (
             <div
               style={{ color: "green", fontWeight: "bold" }}
               className="text-center"
@@ -243,10 +278,28 @@ const WorkorderScreen = ({ match, history }) => {
         </Col>
       </Row>
       <hr></hr>
-
-      <h1>
-        {documentType}-{documentNumber}
-      </h1>
+      <Row className="mb-3">
+        <Col md={8}>
+          <h1>
+            {documentType}-{documentNumber}
+          </h1>
+        </Col>
+        <Col md={4} className="text-center">
+          {toDo && (
+            <Button type="button" onClick={handleInProgress} className="mt-3">
+              Preuzmi na izvršavanje
+            </Button>
+          )}
+          {inProgress && (
+            <Button type="button" onClick={handleInProgress} className="mt-3">
+              Završi
+            </Button>
+          )}
+          {finished && (
+            <Message variant="success">Radni nalog je zaključen</Message>
+          )}
+        </Col>
+      </Row>
 
       <Form onSubmit={submitHandler}>
         <Row className="mb-3">
@@ -390,10 +443,22 @@ const WorkorderScreen = ({ match, history }) => {
                 <tr key={index}>
                   <td>{item.material._id}</td>
                   <td>{item.material.name}</td>
-                  <td>
-                    {`${productQuantity} * ${item.quantity}=`}
-                    {productQuantity * item.quantity}
-                  </td>
+                  {materialQuantities &&
+                  productQuantity * item.quantity >
+                    materialQuantities[index] ? (
+                    <td>
+                      {`${productQuantity}*${item.quantity}=`}
+                      <span style={{ color: "red" }}>
+                        {productQuantity * item.quantity}
+                      </span>
+                    </td>
+                  ) : (
+                    <td>
+                      {`${productQuantity}*${item.quantity}=`}
+                      {productQuantity * item.quantity}
+                    </td>
+                  )}
+
                   <td>{materialQuantities && materialQuantities[index]}</td>
                   {materialPurchasePrices && (
                     <td>
@@ -414,8 +479,12 @@ const WorkorderScreen = ({ match, history }) => {
                 <td></td>
                 <td></td>
                 <td></td>
-                <td>{totalPurchasePrice && totalPurchasePrice}</td>
-                <td>{totalManufacturePrice && totalManufacturePrice}</td>
+                <td style={{ fontWeight: "bold" }}>
+                  Σ={totalPurchasePrice && totalPurchasePrice}
+                </td>
+                <td style={{ fontWeight: "bold" }}>
+                  Σ={totalManufacturePrice && totalManufacturePrice}
+                </td>
               </tr>
             </tbody>
           </Table>

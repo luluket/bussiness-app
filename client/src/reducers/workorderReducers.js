@@ -11,6 +11,14 @@ import {
   WORKORDER_LIST_RESET,
   WORKORDER_CREATE_RESET,
   WORKORDER_DETAILS_RESET,
+  WORKORDER_PROGRESS_REQUEST,
+  WORKORDER_PROGRESS_SUCCESS,
+  WORKORDER_PROGRESS_FAIL,
+  WORKORDER_PROGRESS_RESET,
+  WORKORDER_FINISHED_REQUEST,
+  WORKORDER_FINISHED_SUCCESS,
+  WORKORDER_FINISHED_FAIL,
+  WORKORDER_FINISHED_RESET,
 } from "../constants/workorderConstants";
 
 export const workorderListReducer = (state = { workorders: [] }, action) => {
@@ -49,6 +57,50 @@ export const workorderDetailsReducer = (state = { workorder: {} }, action) => {
         error: action.payload,
       };
     case WORKORDER_DETAILS_RESET:
+      return { workorder: {} };
+    default:
+      return state;
+  }
+};
+export const workorderInProgressReducer = (
+  state = { workorder: {} },
+  action
+) => {
+  switch (action.type) {
+    case WORKORDER_PROGRESS_REQUEST:
+      return { loading: true, ...state };
+    case WORKORDER_PROGRESS_SUCCESS:
+      return {
+        loading: false,
+        workorder: action.payload,
+      };
+    case WORKORDER_PROGRESS_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    case WORKORDER_PROGRESS_RESET:
+      return { workorder: {} };
+    default:
+      return state;
+  }
+};
+
+export const workorderFinishedReducer = (state = { workorder: {} }, action) => {
+  switch (action.type) {
+    case WORKORDER_FINISHED_REQUEST:
+      return { loading: true, ...state };
+    case WORKORDER_FINISHED_SUCCESS:
+      return {
+        loading: false,
+        workorder: action.payload,
+      };
+    case WORKORDER_FINISHED_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    case WORKORDER_FINISHED_RESET:
       return { workorder: {} };
     default:
       return state;

@@ -68,4 +68,35 @@ const createWorkorder = asyncHandler(async (req, res) => {
   // }
   // res.status(201).json({ message: "3 documents created" });
 });
-export { getWorkorders, getWorkorder, createWorkorder };
+
+// @desc Set workorder in progress
+// @route PUT /api/workorders/:id/inprogress
+// @access Public
+const setWorkorderInProgress = asyncHandler(async (req, res) => {
+  const workorder = await Workorder.findById(req.params.id);
+  workorder.toDo = false;
+  workorder.inProgress = true;
+  workorder.finished = false;
+  await workorder.save();
+  res.json(workorder);
+});
+
+// @desc Set workorder to finished
+// @route PUT /api/workorders/:id/finished
+// @access Public
+const setWorkorderToFinished = asyncHandler(async (req, res) => {
+  const workorder = await Workorder.findById(req.params.id);
+  workorder.toDo = false;
+  workorder.inProgress = false;
+  workorder.finished = true;
+  await workorder.save();
+  res.json(workorder);
+});
+
+export {
+  getWorkorders,
+  getWorkorder,
+  createWorkorder,
+  setWorkorderInProgress,
+  setWorkorderToFinished,
+};
