@@ -21,6 +21,7 @@ const getExports = asyncHandler(async (req, res) => {
 // @access Public
 const createExport = asyncHandler(async (req, res) => {
   const exportArticles = new ProductExport({
+    departureWarehouse: req.body.despartureWarehouse,
     destinationWarehouse: req.body.destinationWarehouse,
     documentType: req.body.documentType,
     documentNumber: req.body.documentNumber,
@@ -54,6 +55,7 @@ const createExport = asyncHandler(async (req, res) => {
           quantity: item.quantity,
           accumulatedQuantity: item.quantity,
           accumulatedPurchasePrice: item.purchasePrice,
+          averagePurchasePrice: item.purchasePrice,
           sellingPrice: item.manufacturePrice * 2.5,
         });
         await itemProduct.save();

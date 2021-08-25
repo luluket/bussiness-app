@@ -29,7 +29,8 @@ const getUnfullfilledRequisitions = asyncHandler(async (req, res) => {
 const createRequisition = asyncHandler(async (req, res) => {
   const requisition = new Requisition({
     requestedArticles: req.body.requestedArticles,
-    document: req.body.document,
+    documentType: req.body.documentType,
+    documentNumber: req.body.documentNumber,
     isSent: true,
     isFullfilled: false,
   });

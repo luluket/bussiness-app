@@ -95,7 +95,11 @@ import {
 } from "./reducers/workorderReducers.js";
 
 import { materialConsumptionListReducer } from "./reducers/materialConsumptionReducers.js";
-import { productLagerListReducer } from "./reducers/productLagerReducers.js";
+import {
+  productLagerListReducer,
+  lagerProductQuantityReducer,
+  lagerProductQuantitiesReducer,
+} from "./reducers/productLagerReducers.js";
 import {
   productExportListReducer,
   productExportCreateReducer,
@@ -167,6 +171,8 @@ const reducer = combineReducers({
   productLagerList: productLagerListReducer,
   productExportList: productExportListReducer,
   productExportCreate: productExportCreateReducer,
+  lagerProductQuantities: lagerProductQuantitiesReducer,
+  lagerProductQuantity: lagerProductQuantityReducer,
 });
 const cartItemsFromStorage = localStorage.getItem("cartItems")
   ? JSON.parse(localStorage.getItem("cartItems"))

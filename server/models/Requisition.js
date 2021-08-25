@@ -2,6 +2,16 @@ import mongoose from "mongoose";
 
 const requisitionSchema = mongoose.Schema(
   {
+    documentType: {
+      type: String,
+      required: true,
+    },
+    documentNumber: {
+      type: Number,
+      required: true,
+      unique: true,
+      min: 1,
+    },
     requestedArticles: [
       {
         article: {
@@ -15,11 +25,6 @@ const requisitionSchema = mongoose.Schema(
         },
       },
     ],
-    document: {
-      type: Number,
-      required: true,
-      unique: true,
-    },
     isSent: {
       type: Boolean,
       required: true,

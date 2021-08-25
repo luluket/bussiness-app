@@ -6,7 +6,11 @@ const centralReceiptSchema = mongoose.Schema(
       required: true,
       ref: "Partner",
     },
-    document: {
+    documentType: {
+      type: String,
+      required: true,
+    },
+    documentNumber: {
       type: Number,
       required: true,
       unique: true,

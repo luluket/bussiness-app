@@ -10,6 +10,7 @@ import { LAGER_LIST_RESET } from "../constants/lagerConstants";
 import { CENTRAL_RECEIPT_LIST_RESET } from "../constants/centralReceiptConstants";
 import { listCentralReceipts } from "../actions/centralReceiptActions";
 import { listCentralExports } from "../actions/centralExportActions";
+import { listCentralImports } from "../actions/centralImportActions";
 import { CENTRAL_EXPORT_LIST_RESET } from "../constants/centralExportConstants";
 import {
   listRequisitions,
@@ -17,9 +18,9 @@ import {
 } from "../actions/requisitionActions";
 import {
   REQUISITION_LIST_RESET,
-  REQUISITION_UNFULLFILLED_LIST_REQUEST,
   REQUISITION_UNFULLFILLED_LIST_RESET,
 } from "../constants/requisitionConstants";
+import { CENTRAL_IMPORT_LIST_RESET } from "../constants/centralImportConstants";
 
 const CentralScreen = () => {
   const dispatch = useDispatch();
@@ -29,6 +30,7 @@ const CentralScreen = () => {
   // states to handle empty database tables
   const [showLagerNote, setShowLagerNote] = useState(false);
   const [showReceiptNote, setShowReceiptNote] = useState(false);
+  const [showImportNote, setShowImportNote] = useState(false);
   const [showExportNote, setShowExportNote] = useState(false);
   const [showRequisitionNote, setShowRequisitionNote] = useState(false);
 
@@ -41,6 +43,13 @@ const CentralScreen = () => {
     error: errorReceipts,
     receipts,
   } = centralReceiptList;
+
+  const centralImportList = useSelector((state) => state.centralImportList);
+  const {
+    loading: loadingImports,
+    error: errorImports,
+    imports,
+  } = centralImportList;
 
   const centralExportList = useSelector((state) => state.centralExportList);
   const {
@@ -72,6 +81,7 @@ const CentralScreen = () => {
   useEffect(() => {
     if (loadingLager) {
       dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
+      dispatch({ type: CENTRAL_IMPORT_LIST_RESET });
       dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
       dispatch({ type: REQUISITION_LIST_RESET });
 
@@ -79,12 +89,14 @@ const CentralScreen = () => {
       setShowReceiptNote(false);
       setShowExportNote(false);
       setShowRequisitionNote(false);
+      setShowImportNote(false);
     }
   }, [loadingLager]);
 
   useEffect(() => {
     if (loadingReceipts) {
       dispatch({ type: LAGER_LIST_RESET });
+      dispatch({ type: CENTRAL_IMPORT_LIST_RESET });
       dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
       dispatch({ type: REQUISITION_LIST_RESET });
 
@@ -92,6 +104,7 @@ const CentralScreen = () => {
       setShowLagerNote(false);
       setShowExportNote(false);
       setShowRequisitionNote(false);
+      setShowImportNote(false);
     }
   }, [loadingReceipts]);
 
@@ -99,27 +112,47 @@ const CentralScreen = () => {
     if (loadingExports) {
       dispatch({ type: LAGER_LIST_RESET });
       dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
+      dispatch({ type: CENTRAL_IMPORT_LIST_RESET });
       dispatch({ type: REQUISITION_LIST_RESET });
 
       setShowExportNote(true);
       setShowLagerNote(false);
       setShowReceiptNote(false);
       setShowRequisitionNote(false);
+      setShowImportNote(false);
     } else {
     }
   }, [loadingExports]);
+
+  useEffect(() => {
+    if (loadingImports) {
+      dispatch({ type: LAGER_LIST_RESET });
+      dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
+      dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
+      dispatch({ type: REQUISITION_LIST_RESET });
+
+      setShowImportNote(true);
+      setShowExportNote(false);
+      setShowLagerNote(false);
+      setShowReceiptNote(false);
+      setShowRequisitionNote(false);
+    } else {
+    }
+  }, [loadingImports]);
 
   useEffect(() => {
     if (loadingRequisitions) {
       dispatch({ type: LAGER_LIST_RESET });
       dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
       dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
+      dispatch({ type: CENTRAL_IMPORT_LIST_RESET });
       dispatch({ type: REQUISITION_UNFULLFILLED_LIST_RESET });
 
       setShowRequisitionNote(true);
       setShowLagerNote(false);
       setShowReceiptNote(false);
       setShowExportNote(false);
+      setShowImportNote(false);
     }
   }, [loadingRequisitions]);
 
@@ -137,7 +170,7 @@ const CentralScreen = () => {
     {
       name: "Međuskladišnica ulaz",
       subitems: [],
-      function: listLager(),
+      function: listCentralImports(),
     },
     {
       name: "Međuskladišnica izlaz",
@@ -230,7 +263,9 @@ const CentralScreen = () => {
                           style={{ color: "green" }}
                         ></i>
                       </td>
-                      <td>{receipt.document}-ulazni račun</td>
+                      <td>
+                        {receipt.documentNumber}-{receipt.documentType}
+                      </td>
                       <td>{receipt.createdAt.substring(0, 10)}</td>
                       <td>{receipt.createdAt.substring(11, 19)}</td>
                       <td>
@@ -266,7 +301,7 @@ const CentralScreen = () => {
         {errorExports && <Message variant="danger">{errorExports}</Message>}
         {exports.length != 0 ? (
           <>
-            <h2>MEĐUSKLADIŠNICA - IZLAZ</h2>
+            <h2>MEĐUSKLADIŠNICA IZLAZ</h2>
             <Table striped bordered hover responsive>
               <thead>
                 <tr>
@@ -292,7 +327,9 @@ const CentralScreen = () => {
                           style={{ color: "green" }}
                         ></i>
                       </td>
-                      <td>{item.document}-izlazni račun</td>
+                      <td>
+                        {item.documentNumber}-{item.documentType}
+                      </td>
                       <td>{item.createdAt.substring(0, 10)}</td>
                       <td>{item.createdAt.substring(11, 19)}</td>
                       <td>{item.destinationWarehouse}</td>
@@ -321,6 +358,52 @@ const CentralScreen = () => {
               </Button>
             </>
           )
+        )}
+        {loadingImports && <Loader />}
+        {errorImports && <Message variant="danger">{errorImports}</Message>}
+        {imports.length != 0 ? (
+          <>
+            <h2>MEĐUSKLADIŠNICA ULAZ</h2>
+            <Table striped bordered hover responsive>
+              <thead>
+                <tr>
+                  <th>ZAKLJUČEN</th>
+                  <th>DOKUMENT</th>
+                  <th>DATUM</th>
+                  <th>VRIJEME</th>
+                  <th>SKLADIŠTE</th>
+                </tr>
+              </thead>
+              <tbody>
+                {imports.map((item) => {
+                  return (
+                    <tr
+                      key={item._id}
+                      // onClick={() =>
+                      //   history.push(`/central/item/${item._id}`)
+                      // }
+                    >
+                      <td>
+                        <i
+                          className="fas fa-check"
+                          style={{ color: "green" }}
+                        ></i>
+                      </td>
+                      <td>
+                        {item.documentNumber}-{item.documentType}
+                      </td>
+                      <td>{item.createdAt.substring(0, 10)}</td>
+                      <td>{item.createdAt.substring(11, 19)}</td>
+                      <td>{item.departureWarehouse}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+          </>
+        ) : (
+          loadingImports === false &&
+          showImportNote && <h2>Nema zaprimljenih artikala</h2>
         )}
         {loadingRequisitions && <Loader />}
         {errorRequisitions && (
@@ -377,7 +460,9 @@ const CentralScreen = () => {
                           ></i>
                         )}
                       </td>
-                      <td>{item.document}</td>
+                      <td>
+                        {item.documentNumber}-{item.documentType}
+                      </td>
                       <td>
                         {item.requestedArticles.map((o) => (
                           <div>{`${o.article.name}\n`}</div>

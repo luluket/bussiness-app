@@ -373,7 +373,9 @@ const ManufactureScreen = () => {
                           style={{ color: "green" }}
                         ></i>
                       </td>
-                      <td>{item.document}-ulazni račun</td>
+                      <td>
+                        {item.documentNumber}-{item.documentType}
+                      </td>
                       <td>{item.createdAt.substring(0, 10)}</td>
                       <td>{item.createdAt.substring(11, 19)}</td>
                       <td>{item.departureWarehouse}</td>
@@ -470,7 +472,12 @@ const ManufactureScreen = () => {
             <>
               {" "}
               <h2>NEMA OTPREMLJENIH MATERIJALA</h2>
-              <Button type="button">Nova otprema</Button>
+              <Button
+                type="button"
+                onClick={() => history.push("/manufacture/export")}
+              >
+                Nova otprema
+              </Button>
             </>
           )
         )}
@@ -715,7 +722,9 @@ const ManufactureScreen = () => {
                           ></i>
                         )}
                       </td>
-                      <td>{item.document}</td>
+                      <td>
+                        {item.documentNumber}-{item.documentType}
+                      </td>
                       <td>
                         {item.requestedArticles.map((o) => (
                           <div>{`${o.article.name}\n`}</div>

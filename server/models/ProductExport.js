@@ -5,6 +5,10 @@ const productExportSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    departureWarehouse: {
+      type: String,
+      required: true,
+    },
     documentType: {
       type: String,
       required: true,

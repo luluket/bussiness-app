@@ -20,6 +20,7 @@ import RateOfYield from "./models/RateOfYield.js";
 import Workorder from "./models/Workorder.js";
 import MaterialConsumption from "./models/MaterialConsumption.js";
 import ProductLager from "./models/ProductLager.js";
+import CentralImport from "./models/CentralImport.js";
 import connectDB from "./config/db.js";
 
 dotenv.config();
@@ -36,6 +37,7 @@ const importData = async () => {
     await Lager.deleteMany();
     await CentralReceipt.deleteMany();
     await CentralExport.deleteMany();
+    await CentralImport.deleteMany();
     await MaterialLager.deleteMany();
     await MaterialImport.deleteMany();
     await Requisition.deleteMany();

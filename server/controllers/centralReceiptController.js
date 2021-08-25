@@ -18,7 +18,8 @@ const getReceipts = asyncHandler(async (req, res) => {
 const createReceipt = asyncHandler(async (req, res) => {
   const receipt = new CentralReceipt({
     partner: req.body.partner,
-    document: req.body.document,
+    documentType: req.body.documentType,
+    documentNumber: req.body.documentNumber,
     receivedArticles: req.body.receivedArticles,
   });
   const createdReceipt = await receipt.save();

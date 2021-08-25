@@ -22,14 +22,16 @@ const createExport = asyncHandler(async (req, res) => {
   const exportArticles = new CentralExport({
     departureWarehouse: req.body.departureWarehouse,
     destinationWarehouse: req.body.destinationWarehouse,
-    document: req.body.document,
+    documentType: req.body.documentType,
+    documentNumber: req.body.documentNumber,
     exportedArticles: req.body.exportedArticles,
   });
 
   const importArticles = new MaterialImport({
     departureWarehouse: req.body.departureWarehouse,
     destinationWarehouse: req.body.destinationWarehouse,
-    document: req.body.document,
+    documentType: "mđskl-ulaz",
+    documentNumber: req.body.documentNumber,
     importedArticles: req.body.exportedArticles,
   });
 

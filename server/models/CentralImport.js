@@ -5,6 +5,10 @@ const centralImportSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    destinationWarehouse: {
+      type: String,
+      required: true,
+    },
     documentType: {
       type: String,
       required: true,

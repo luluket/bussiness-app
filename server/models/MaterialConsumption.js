@@ -1,6 +1,16 @@
 import mongoose from "mongoose";
 const materialConsumptionSchema = mongoose.Schema(
   {
+    documentType: {
+      type: String,
+      required: true,
+    },
+    documentNumber: {
+      type: Number,
+      required: true,
+      unique: true,
+      min: 1,
+    },
     workorder: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,

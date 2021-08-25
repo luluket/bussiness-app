@@ -15,7 +15,8 @@ const CentralReceiptCreateScreen = ({ history }) => {
   const dispatch = useDispatch();
 
   const [partner, setPartner] = useState("");
-  const [document, setDocument] = useState();
+  const [documentType, setDocumentType] = useState("ulazni račun");
+  const [documentNumber, setDocumentNumber] = useState();
   const [receivedArticles, setReceivedArticles] = useState([
     { article: "", quantity: 0, purchasePrice: 0 },
   ]);
@@ -96,7 +97,8 @@ const CentralReceiptCreateScreen = ({ history }) => {
     dispatch(
       createReceipt({
         partner,
-        document,
+        documentType,
+        documentNumber,
         receivedArticles,
       })
     );
@@ -132,13 +134,26 @@ const CentralReceiptCreateScreen = ({ history }) => {
                 </Form.Control>
               </Form.Group>
             </Col>
+          </Row>
+          <Row className="mb-3">
             <Col md={6}>
-              <Form.Group controlId="document">
+              <Form.Group controlId="documentType">
+                <Form.Label>Tip dokumenta</Form.Label>
+                <Form.Control
+                  type="number"
+                  value={documentType}
+                  placeholder={documentType}
+                  disabled
+                ></Form.Control>
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group controlId="documentNumber">
                 <Form.Label>Broj dokumenta</Form.Label>
                 <Form.Control
                   type="number"
                   placeholder="Unesite broj dokumenta"
-                  onChange={(e) => setDocument(e.target.value)}
+                  onChange={(e) => setDocumentNumber(e.target.value)}
                 ></Form.Control>
               </Form.Group>
             </Col>

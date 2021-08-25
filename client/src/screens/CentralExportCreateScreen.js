@@ -24,6 +24,7 @@ const CentralExportCreateScreen = ({ history }) => {
     "Centralno skladište"
   );
   const [destinationWarehouse, setDestinationWarehouse] = useState("");
+  const [documentType, setDocumentType] = useState("mđskl-izlaz");
   const [documentNumber, setDocumentNumber] = useState();
   const [requisition, setRequisition] = useState({});
   const [lagerQuantities, setLagerQuantities] = useState([]);
@@ -189,7 +190,8 @@ const CentralExportCreateScreen = ({ history }) => {
           createExport({
             departureWarehouse,
             destinationWarehouse,
-            document: documentNumber,
+            documentType,
+            documentNumber,
             exportedArticles,
           })
         );
@@ -232,15 +234,26 @@ const CentralExportCreateScreen = ({ history }) => {
           </Col>
         </Row>
 
-        <Form.Group as={Col} md={6} controlId="documentNumber" className="mb-3">
-          <Form.Label>Broj dokumenta</Form.Label>
-          <Form.Control
-            type="number"
-            value={documentNumber}
-            placeholder="Unesite broj dokumenta"
-            onChange={(e) => setDocumentNumber(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+        <Row className="mb-3">
+          <Form.Group as={Col} md={6} controlId="documentType">
+            <Form.Label>Tip dokumenta</Form.Label>
+            <Form.Control
+              type="number"
+              value={documentType}
+              placeholder={documentType}
+              disabled
+            ></Form.Control>
+          </Form.Group>
+          <Form.Group as={Col} md={6} controlId="documentNumber">
+            <Form.Label>Broj dokumenta</Form.Label>
+            <Form.Control
+              type="number"
+              value={documentNumber}
+              placeholder="Unesite broj dokumenta"
+              onChange={(e) => setDocumentNumber(e.target.value)}
+            ></Form.Control>
+          </Form.Group>
+        </Row>
 
         <Form.Group as={Col} md={6} controlId="requisition" className="mb-3">
           <Form.Label>Dokument trebovanje</Form.Label>

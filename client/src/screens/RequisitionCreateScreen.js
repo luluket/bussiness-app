@@ -13,10 +13,11 @@ const RequisitionCreateScreen = ({ history }) => {
   const dispatch = useDispatch();
 
   const [departureWarehouse, setDepartureWarehouse] = useState(
-    "Skladište materijala"
+    "skladište materijala"
   );
   const [destinationWarehouse, setDestinationWarehouse] = useState("");
-  const [document, setDocument] = useState(0);
+  const [documentType, setDocumentType] = useState("trebovanje");
+  const [documentNumber, setDocumentNumber] = useState(0);
   const [requestedArticles, setRequestedArticles] = useState([
     { article: "", quantity: 0 },
   ]);
@@ -81,7 +82,8 @@ const RequisitionCreateScreen = ({ history }) => {
     dispatch(
       createRequisition({
         requestedArticles,
-        document,
+        documentNumber,
+        documentType,
         isSent: true,
         isFullfilled: false,
       })
@@ -121,14 +123,30 @@ const RequisitionCreateScreen = ({ history }) => {
           </Col>
         </Row>
 
-        <Form.Group as={Col} md={6} controlId="documentNumber" className="mb-3">
-          <Form.Label>Broj dokumenta</Form.Label>
-          <Form.Control
-            type="number"
-            placeholder="Unesite broj dokumenta"
-            onChange={(e) => setDocument(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+        <Row className="mb-3">
+          <Form.Group as={Col} md={6} controlId="documentType" className="mb-3">
+            <Form.Label>Tip dokumenta</Form.Label>
+            <Form.Control
+              type="number"
+              placeholder={documentType}
+              value={documentType}
+              disabled
+            ></Form.Control>
+          </Form.Group>
+          <Form.Group
+            as={Col}
+            md={6}
+            controlId="documentNumber"
+            className="mb-3"
+          >
+            <Form.Label>Broj dokumenta</Form.Label>
+            <Form.Control
+              type="number"
+              placeholder="Unesite broj dokumenta"
+              onChange={(e) => setDocumentNumber(e.target.value)}
+            ></Form.Control>
+          </Form.Group>
+        </Row>
 
         {rows.length > 0 && (
           <Table bordered responsive>
@@ -155,7 +173,7 @@ const RequisitionCreateScreen = ({ history }) => {
                         {materials.map((item) => {
                           return (
                             <option id={item._id} value={item._id}>
-                              {item._id} | {item.name}{" "}
+                              {item._id} - {item.name}
                             </option>
                           );
                         })}
