@@ -197,6 +197,7 @@ const CentralScreen = () => {
             </Table>
           </>
         ) : (
+          loadingLager === false &&
           showLagerNote && <h2>Lager lista je prazna</h2>
         )}
         {loadingReceipts && <Loader />}
@@ -248,6 +249,7 @@ const CentralScreen = () => {
             </Button>
           </>
         ) : (
+          loadingReceipts === false &&
           showReceiptNote && (
             <>
               <h2>Lista primki je prazna</h2>
@@ -307,6 +309,7 @@ const CentralScreen = () => {
             </Button>
           </>
         ) : (
+          loadingExports === false &&
           showExportNote && (
             <>
               <h2>Nema otpremljenih artikala</h2>
@@ -395,6 +398,7 @@ const CentralScreen = () => {
             </Table>
           </>
         ) : (
+          loadingRequisitions === false &&
           showRequisitionNote && <h2>Nema zahtjeva za otpremom materijala</h2>
         )}
       </Col>

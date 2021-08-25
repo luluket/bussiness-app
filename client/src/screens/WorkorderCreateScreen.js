@@ -8,9 +8,11 @@ import { listRates } from "../actions/rateOfYieldActions";
 import { listWorkers } from "../actions/userActions";
 import { createWorkorder, listWorkorders } from "../actions/workorderActions";
 import { WORKORDER_CREATE_RESET } from "../constants/workorderConstants";
+import { RATE_LIST_RESET } from "../constants/rateOfYieldConstants";
 
 const WorkorderCreateScreen = ({ history }) => {
   const dispatch = useDispatch();
+
   const documentType = "radni nalog";
   const [documentNumber, setDocumentNumber] = useState(0);
   const warehouse = "skladište gotovih proizvoda";
@@ -35,7 +37,7 @@ const WorkorderCreateScreen = ({ history }) => {
   const { products } = productList;
 
   const rateList = useSelector((state) => state.rateList);
-  const { rates } = rateList;
+  const { loading: loadingRates, rates } = rateList;
 
   const materialQuantities = useSelector(
     (state) => state.materialLagerQuantities.quantities
@@ -51,9 +53,12 @@ const WorkorderCreateScreen = ({ history }) => {
   // purchase prices of material multiplied by manufacturing product quantity equals total product purchase price
 
   useEffect(() => {
-    dispatch(listProducts());
-    dispatch(listRates());
-    dispatch(listWorkers());
+    if (!successCreate) {
+      dispatch(listProducts());
+      dispatch(listRates());
+      dispatch(listWorkers());
+    }
+
     if (successCreate) {
       dispatch({ type: WORKORDER_CREATE_RESET });
       dispatch(listWorkorders());
@@ -76,10 +81,10 @@ const WorkorderCreateScreen = ({ history }) => {
         purchasePrices.reduce((acc, item) => acc + item, 0).toFixed(2)
       );
     }
-  }, [productQuantity]);
+  }, [productQuantity, rate]);
 
   useEffect(() => {
-    setTotalManufacturePrice(totalPurchasePrice * 2.5);
+    setTotalManufacturePrice((totalPurchasePrice * 2.5).toFixed(2));
   }, [totalPurchasePrice]);
 
   const handleRate = (event) => {
@@ -239,7 +244,7 @@ const WorkorderCreateScreen = ({ history }) => {
           <Col md={6}>
             <Form.Group controlId="rate">
               <Form.Label>Normativ</Form.Label>
-              {rates.length === 0 ? (
+              {loadingRates === false && rates.length === 0 ? (
                 <>
                   <h3>Lista normativa je prazna</h3>
                   <Button

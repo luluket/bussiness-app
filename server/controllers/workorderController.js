@@ -102,25 +102,33 @@ const setWorkorderToFinished = asyncHandler(async (req, res) => {
   workorder.inProgress = false;
   workorder.finished = true;
 
-  const workorderFinished = await workorder.save();
+  await workorder.save();
 
-  if (workorderFinished) {
-    //create material consumption document
-    const materialConsumption = new MaterialConsumption({
-      workorder: req.body._id,
-      article: req.body.article,
-      consumedArticles: req.body.consumedArticles,
-    });
-    await materialConsumption.save();
-    res.status(201).json(materialConsumption);
-  }
+  //create material consumption document
+  const materialConsumption = new MaterialConsumption({
+    workorder: req.body._id,
+    article: req.body.article,
+    consumedArticles: req.body.consumedArticles,
+  });
+  await materialConsumption.save();
+
   // substract material warehouse quantities
   req.body.consumedArticles.forEach(async (item) => {
     const material = await MaterialLager.findOne({ article: item.article });
     material.quantity -= item.quantity;
     await material.save();
   });
+
   //add manufactured product to product warehouse
+  const product = new ProductLager({
+    article: req.body.article,
+    quantity: req.body.productQuantity,
+    purchasePrice: req.body.totalPurchasePrice / req.body.productQuantity,
+    manufacturePrice: req.body.totalManufacturePrice / req.body.productQuantity,
+  });
+  await product.save();
+
+  res.status(201).json({ message: "Workorder finished" });
 });
 
 // @desc Update single article

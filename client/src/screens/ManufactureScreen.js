@@ -79,6 +79,7 @@ const ManufactureScreen = () => {
   useEffect(() => {
     if (loadingLager) {
       dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
+      dispatch({ type: MATERIAL_CONSUMPTION_LIST_RESET });
       dispatch({ type: WORKORDER_LIST_RESET });
       dispatch({ type: RATE_LIST_RESET });
       dispatch({ type: REQUISITION_LIST_RESET });
@@ -137,7 +138,7 @@ const ManufactureScreen = () => {
       setShowRateNote(true);
       setShowMaterialImportNote(false);
       setShowMaterialLagerNote(false);
-      setShowMaterialConsumptionNote(true);
+      setShowMaterialConsumptionNote(false);
       setShowWorkorderNote(false);
       setShowRequisitionNote(false);
     }
@@ -245,6 +246,7 @@ const ManufactureScreen = () => {
             </Table>
           </>
         ) : (
+          loadingLager === false &&
           showMaterialLagerNote && <h2>Lager lista je prazna</h2>
         )}
         {loadingImports && <Loader />}
@@ -288,6 +290,7 @@ const ManufactureScreen = () => {
             </Table>
           </>
         ) : (
+          loadingImports === false &&
           showMaterialImportNote && (
             <h2>Lista zaprimljenih artikala je prazna</h2>
           )
@@ -335,6 +338,7 @@ const ManufactureScreen = () => {
             </Table>
           </>
         ) : (
+          loadingConsumptions === false &&
           showMaterialConsumptionNote && <h2>Nema utroška materijala</h2>
         )}
         {loadingWorkorders && <Loader />}
@@ -415,6 +419,7 @@ const ManufactureScreen = () => {
             </Button>
           </>
         ) : (
+          loadingWorkorders === false &&
           showWorkorderNote && (
             <>
               <h2>Nema kreiranog radnog naloga</h2>
@@ -463,6 +468,7 @@ const ManufactureScreen = () => {
             </Button>
           </>
         ) : (
+          loadingRates === false &&
           showRateNote && (
             <>
               <h2>Nema kreiranog normativa</h2>
@@ -557,6 +563,7 @@ const ManufactureScreen = () => {
             </Button>
           </>
         ) : (
+          loadingRequisitions === false &&
           showRequisitionNote && (
             <>
               <h2>Lista trebovanja je prazna</h2>

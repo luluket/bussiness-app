@@ -15,10 +15,10 @@ import {
   WORKORDER_PROGRESS_SUCCESS,
   WORKORDER_PROGRESS_FAIL,
   WORKORDER_PROGRESS_RESET,
-  WORKORDER_FINISHED_REQUEST,
-  WORKORDER_FINISHED_SUCCESS,
-  WORKORDER_FINISHED_FAIL,
-  WORKORDER_FINISHED_RESET,
+  WORKORDER_FINISH_REQUEST,
+  WORKORDER_FINISH_SUCCESS,
+  WORKORDER_FINISH_FAIL,
+  WORKORDER_FINISH_RESET,
   WORKORDER_UPDATE_REQUEST,
   WORKORDER_UPDATE_SUCCESS,
   WORKORDER_UPDATE_FAIL,
@@ -92,19 +92,20 @@ export const workorderInProgressReducer = (
 
 export const workorderFinishedReducer = (state = { workorder: {} }, action) => {
   switch (action.type) {
-    case WORKORDER_FINISHED_REQUEST:
+    case WORKORDER_FINISH_REQUEST:
       return { loading: true, ...state };
-    case WORKORDER_FINISHED_SUCCESS:
+    case WORKORDER_FINISH_SUCCESS:
       return {
         loading: false,
+        success: true,
         workorder: action.payload,
       };
-    case WORKORDER_FINISHED_FAIL:
+    case WORKORDER_FINISH_FAIL:
       return {
         loading: false,
         error: action.payload,
       };
-    case WORKORDER_FINISHED_RESET:
+    case WORKORDER_FINISH_RESET:
       return { workorder: {} };
     default:
       return state;

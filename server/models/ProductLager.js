@@ -13,10 +13,9 @@ const productLagerSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
-  workorder: {
-    type: mongoose.Schema.Types.ObjectId,
+  manufacturePrice: {
+    type: Number,
     required: true,
-    ref: "Workorder",
   },
 });
 const ProductLager = mongoose.model("ProductLager", productLagerSchema);

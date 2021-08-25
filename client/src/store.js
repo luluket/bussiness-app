@@ -95,6 +95,7 @@ import {
 } from "./reducers/workorderReducers.js";
 
 import { materialConsumptionListReducer } from "./reducers/materialConsumptionReducers.js";
+import { productLagerListReducer } from "./reducers/productLagerReducers.js";
 
 const reducer = combineReducers({
   // productList: productListReducer,
@@ -157,6 +158,7 @@ const reducer = combineReducers({
   workorderInProgress: workorderInProgressReducer,
   workorderFinished: workorderFinishedReducer,
   workorderDetails: workorderDetailsReducer,
+  productLagerList: productLagerListReducer,
 });
 const cartItemsFromStorage = localStorage.getItem("cartItems")
   ? JSON.parse(localStorage.getItem("cartItems"))

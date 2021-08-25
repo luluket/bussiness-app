@@ -12,9 +12,9 @@ import {
   WORKORDER_PROGRESS_REQUEST,
   WORKORDER_PROGRESS_SUCCESS,
   WORKORDER_PROGRESS_FAIL,
-  WORKORDER_FINISHED_FAIL,
-  WORKORDER_FINISHED_SUCCESS,
-  WORKORDER_FINISHED_REQUEST,
+  WORKORDER_FINISH_FAIL,
+  WORKORDER_FINISH_SUCCESS,
+  WORKORDER_FINISH_REQUEST,
   WORKORDER_UPDATE_REQUEST,
   WORKORDER_UPDATE_SUCCESS,
   WORKORDER_UPDATE_FAIL,
@@ -68,17 +68,17 @@ export const workorderInProgress = (id) => async (dispatch) => {
   }
 };
 
-export const workorderFinished = (workorder) => async (dispatch) => {
+export const workorderFinish = (workorder) => async (dispatch) => {
   try {
-    dispatch({ type: WORKORDER_FINISHED_REQUEST });
+    dispatch({ type: WORKORDER_FINISH_REQUEST });
     const { data } = await axios.put(
       `/api/workorders/${workorder._id}/finished`,
       workorder
     );
-    dispatch({ type: WORKORDER_FINISHED_SUCCESS, payload: data });
+    dispatch({ type: WORKORDER_FINISH_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
-      type: WORKORDER_FINISHED_FAIL,
+      type: WORKORDER_FINISH_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
