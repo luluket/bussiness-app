@@ -19,7 +19,6 @@ const rateOfYieldSchema = mongoose.Schema({
       },
       factor: {
         type: Number,
-        required: true,
       },
     },
   ],

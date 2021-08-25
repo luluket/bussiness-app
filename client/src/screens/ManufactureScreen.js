@@ -17,6 +17,8 @@ import { listWorkorders } from "../actions/workorderActions";
 import { WORKORDER_LIST_RESET } from "../constants/workorderConstants";
 import { listMaterialConsumptions } from "../actions/materialConsumptionActions";
 import { MATERIAL_CONSUMPTION_LIST_RESET } from "../constants/materialConsumptionConstants";
+import { listProductLager } from "../actions/productLagerActions";
+import { PRODUCT_LAGER_LIST_RESET } from "../constants/productLagerConstants";
 
 const ManufactureScreen = () => {
   const dispatch = useDispatch();
@@ -31,9 +33,14 @@ const ManufactureScreen = () => {
   const [showRequisitionNote, setShowRequisitionNote] = useState(false);
   const [showRateNote, setShowRateNote] = useState(false);
   const [showWorkorderNote, setShowWorkorderNote] = useState(false);
+  const [showProductLagerNote, setShowProductLagerNote] = useState(false);
 
   const materialLagerList = useSelector((state) => state.materialLagerList);
-  const { loading: loadingLager, error: errorLager, lager } = materialLagerList;
+  const {
+    loading: loadingMaterialLager,
+    error: errorMaterialLager,
+    lager: materialLager,
+  } = materialLagerList;
 
   const materialConsumptionList = useSelector(
     (state) => state.materialConsumptionList
@@ -43,6 +50,13 @@ const ManufactureScreen = () => {
     error: errorConsumptions,
     consumptions,
   } = materialConsumptionList;
+
+  const productLagerList = useSelector((state) => state.productLagerList);
+  const {
+    loading: loadingProductLager,
+    error: errorProductLager,
+    lager: productLager,
+  } = productLagerList;
 
   const rateList = useSelector((state) => state.rateList);
   const { loading: loadingRates, error: errorRates, rates } = rateList;
@@ -74,35 +88,40 @@ const ManufactureScreen = () => {
     dispatch({ type: RATE_LIST_RESET });
     dispatch({ type: REQUISITION_LIST_RESET });
     dispatch({ type: MATERIAL_CONSUMPTION_LIST_RESET });
+    dispatch({ type: PRODUCT_LAGER_LIST_RESET });
   }, [dispatch]);
 
   useEffect(() => {
-    if (loadingLager) {
+    if (loadingMaterialLager) {
       dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
       dispatch({ type: MATERIAL_CONSUMPTION_LIST_RESET });
+      dispatch({ type: PRODUCT_LAGER_LIST_RESET });
       dispatch({ type: WORKORDER_LIST_RESET });
       dispatch({ type: RATE_LIST_RESET });
       dispatch({ type: REQUISITION_LIST_RESET });
 
       setShowMaterialLagerNote(true);
       setShowMaterialImportNote(false);
+      setShowProductLagerNote(false);
       setShowMaterialConsumptionNote(false);
       setShowWorkorderNote(false);
       setShowRequisitionNote(false);
       setShowRateNote(false);
     }
-  }, [loadingLager]);
+  }, [loadingMaterialLager]);
 
   useEffect(() => {
     if (loadingImports) {
       dispatch({ type: MATERIAL_LAGER_LIST_RESET });
       dispatch({ type: MATERIAL_CONSUMPTION_LIST_RESET });
+      dispatch({ type: PRODUCT_LAGER_LIST_RESET });
       dispatch({ type: WORKORDER_LIST_RESET });
       dispatch({ type: RATE_LIST_RESET });
       dispatch({ type: REQUISITION_LIST_RESET });
 
       setShowMaterialImportNote(true);
       setShowMaterialLagerNote(false);
+      setShowProductLagerNote(false);
       setShowMaterialConsumptionNote(false);
       setShowWorkorderNote(false);
       setShowRequisitionNote(false);
@@ -111,9 +130,29 @@ const ManufactureScreen = () => {
   }, [loadingImports]);
 
   useEffect(() => {
+    if (loadingProductLager) {
+      dispatch({ type: MATERIAL_LAGER_LIST_RESET });
+      dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
+      dispatch({ type: MATERIAL_CONSUMPTION_LIST_RESET });
+      dispatch({ type: WORKORDER_LIST_RESET });
+      dispatch({ type: RATE_LIST_RESET });
+      dispatch({ type: REQUISITION_LIST_RESET });
+
+      setShowProductLagerNote(true);
+      setShowMaterialLagerNote(true);
+      setShowMaterialImportNote(false);
+      setShowMaterialConsumptionNote(false);
+      setShowWorkorderNote(false);
+      setShowRequisitionNote(false);
+      setShowRateNote(false);
+    }
+  }, [loadingProductLager]);
+
+  useEffect(() => {
     if (loadingConsumptions) {
       dispatch({ type: MATERIAL_LAGER_LIST_RESET });
       dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
+      dispatch({ type: PRODUCT_LAGER_LIST_RESET });
       dispatch({ type: WORKORDER_LIST_RESET });
       dispatch({ type: RATE_LIST_RESET });
       dispatch({ type: REQUISITION_LIST_RESET });
@@ -121,6 +160,7 @@ const ManufactureScreen = () => {
       setShowMaterialConsumptionNote(true);
       setShowMaterialImportNote(false);
       setShowMaterialLagerNote(false);
+      setShowProductLagerNote(false);
       setShowWorkorderNote(false);
       setShowRequisitionNote(false);
       setShowRateNote(false);
@@ -131,6 +171,7 @@ const ManufactureScreen = () => {
     if (loadingRates) {
       dispatch({ type: MATERIAL_LAGER_LIST_RESET });
       dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
+      dispatch({ type: PRODUCT_LAGER_LIST_RESET });
       dispatch({ type: MATERIAL_CONSUMPTION_LIST_RESET });
       dispatch({ type: WORKORDER_LIST_RESET });
       dispatch({ type: REQUISITION_LIST_RESET });
@@ -138,6 +179,7 @@ const ManufactureScreen = () => {
       setShowRateNote(true);
       setShowMaterialImportNote(false);
       setShowMaterialLagerNote(false);
+      setShowProductLagerNote(false);
       setShowMaterialConsumptionNote(false);
       setShowWorkorderNote(false);
       setShowRequisitionNote(false);
@@ -148,6 +190,7 @@ const ManufactureScreen = () => {
     if (loadingWorkorders) {
       dispatch({ type: MATERIAL_LAGER_LIST_RESET });
       dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
+      dispatch({ type: PRODUCT_LAGER_LIST_RESET });
       dispatch({ type: MATERIAL_CONSUMPTION_LIST_RESET });
       dispatch({ type: REQUISITION_LIST_RESET });
       dispatch({ type: RATE_LIST_RESET });
@@ -155,6 +198,7 @@ const ManufactureScreen = () => {
       setShowWorkorderNote(true);
       setShowRequisitionNote(false);
       setShowMaterialImportNote(false);
+      setShowProductLagerNote(false);
       setShowMaterialConsumptionNote(false);
       setShowMaterialLagerNote(false);
       setShowRateNote(false);
@@ -165,6 +209,7 @@ const ManufactureScreen = () => {
     if (loadingRequisitions) {
       dispatch({ type: MATERIAL_LAGER_LIST_RESET });
       dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
+      dispatch({ type: PRODUCT_LAGER_LIST_RESET });
       dispatch({ type: MATERIAL_CONSUMPTION_LIST_RESET });
       dispatch({ type: RATE_LIST_RESET });
       dispatch({ type: WORKORDER_LIST_RESET });
@@ -172,6 +217,7 @@ const ManufactureScreen = () => {
       setShowRequisitionNote(true);
       setShowMaterialImportNote(false);
       setShowMaterialConsumptionNote(false);
+      setShowProductLagerNote(false);
       setShowMaterialLagerNote(false);
       setShowWorkorderNote(false);
       setShowRateNote(false);
@@ -192,7 +238,7 @@ const ManufactureScreen = () => {
     {
       name: "Skladište gotovih proizvoda",
       subitems: [
-        { name: "Lager", function: listMaterialLager() },
+        { name: "Lager", function: listProductLager() },
         { name: "Međuskladišnica ulaz", function: listMaterialLager() },
         { name: "Međuskladišnica izlaz", function: listMaterialLager() },
         { name: "Radni nalog", function: listWorkorders() },
@@ -217,11 +263,13 @@ const ManufactureScreen = () => {
       <Col xs={12} md={9} lg={9}>
         <h1 className="text-center">PROIZVODNI POGON</h1>
         <hr></hr>
-        {loadingLager && <Loader />}
-        {errorLager && <Message variant="danger">{errorLager}</Message>}
-        {lager.length != 0 ? (
+        {loadingMaterialLager && <Loader />}
+        {errorMaterialLager && (
+          <Message variant="danger">{errorMaterialLager}</Message>
+        )}
+        {materialLager.length != 0 ? (
           <>
-            <h2>LAGER LISTA</h2>
+            <h2>SKLADIŠTE MATERIJALA - LAGER LISTA</h2>
             <Table striped bordered responsive>
               <thead>
                 <tr>
@@ -232,7 +280,7 @@ const ManufactureScreen = () => {
                 </tr>
               </thead>
               <tbody>
-                {lager.map((item) => {
+                {materialLager.map((item) => {
                   return (
                     <tr key={item._id}>
                       <td>{item._id}</td>
@@ -246,14 +294,14 @@ const ManufactureScreen = () => {
             </Table>
           </>
         ) : (
-          loadingLager === false &&
+          loadingMaterialLager === false &&
           showMaterialLagerNote && <h2>Lager lista je prazna</h2>
         )}
         {loadingImports && <Loader />}
         {errorImports && <Message variant="danger">{errorImports}</Message>}
         {imports.length != 0 ? (
           <>
-            <h2>MEĐUSKLADIŠNICA - ULAZ</h2>
+            <h2>SKLADIŠTE MATERIJALA - MEĐUSKLADIŠNICA ULAZ</h2>
             <Table striped bordered hover responsive>
               <thead>
                 <tr>
@@ -295,13 +343,51 @@ const ManufactureScreen = () => {
             <h2>Lista zaprimljenih artikala je prazna</h2>
           )
         )}
+        {loadingProductLager && <Loader />}
+        {errorProductLager && (
+          <Message variant="danger">{errorProductLager}</Message>
+        )}
+        {productLager.length != 0 ? (
+          <>
+            <h2>SKLADIŠTE GOTOVIH PROIZVODA - LAGER LISTA</h2>
+            <Table striped bordered responsive>
+              <thead>
+                <tr>
+                  <th>ID artikla</th>
+                  <th>Naziv artikla</th>
+                  <th>Jedinica mjere</th>
+                  <th>Količina</th>
+                  <th>NABAVNA CIJENA</th>
+                  <th>PROIZVODNA CIJENA</th>
+                </tr>
+              </thead>
+              <tbody>
+                {productLager.map((item) => {
+                  return (
+                    <tr key={item._id}>
+                      <td>{item._id}</td>
+                      <td>{item.article.name}</td>
+                      <td>{item.article.unit}</td>
+                      <td>{item.quantity}</td>
+                      <td>{item.purchasePrice}</td>
+                      <td>{item.manufacturePrice}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+          </>
+        ) : (
+          loadingProductLager === false &&
+          showProductLagerNote && <h2>Lager lista je prazna</h2>
+        )}
         {loadingConsumptions && <Loader />}
         {errorConsumptions && (
           <Message variant="danger">{errorConsumptions}</Message>
         )}
         {consumptions && consumptions.length != 0 ? (
           <>
-            <h2>UTROŠAK MATERIJALA</h2>
+            <h2>SKLADIŠTE MATERIJALA - UTROŠAK MATERIJALA</h2>
             <Table striped bordered responsive size="sm">
               <thead>
                 <tr>
@@ -347,7 +433,7 @@ const ManufactureScreen = () => {
         )}
         {workorders && workorders.length != 0 ? (
           <>
-            <h2>RADNI NALOZI</h2>
+            <h2>SKLADIŠTE GOTOVIH PROIZVODA - RADNI NALOZI</h2>
             <Table striped bordered hover responsive size="sm">
               <thead>
                 <tr>
