@@ -59,26 +59,6 @@ const createWorkorder = asyncHandler(async (req, res) => {
   });
   const workorderCreated = await workorder.save();
   res.status(201).json(workorderCreated);
-
-  // // product to be stored at warehouse
-  // const product = new ProductLager({
-  //   article: req.body.article,
-  //   quantity: req.body.quantity,
-  //   purchasePrice: req.body.purchasePrice,
-  //   workorder: workorderCreated._id,
-  // });
-  // await product.save();
-
-  // // change material lager quantity
-  // if (workorderCreated) {
-  //   // loop through rate of yield article and substract quantities from material lager
-  //   workorderCreated.rateOfYield.components.forEach(async (item) => {
-  //     const material = await MaterialLager.findOne({ article: item.material });
-  //     material.quantity -= item.quantity;
-  //     await material.save();
-  //   });
-  // }
-  // res.status(201).json({ message: "3 documents created" });
 });
 
 // @desc Set workorder in progress
