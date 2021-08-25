@@ -4,6 +4,7 @@ import {
   listWorkorderDetails,
   workorderFinish,
   updateWorkorder,
+  listWorkorders,
 } from "../actions/workorderActions";
 import { listRates } from "../actions/rateOfYieldActions";
 import { articleMaterialLagerQuantities } from "../actions/materialLagerActions";
@@ -12,7 +13,9 @@ import { workorderInProgress } from "../actions/workorderActions";
 import { Row, Col, Form, Table, Button } from "react-bootstrap";
 import Message from "../components/Message";
 import {
+  WORKORDER_DETAILS_RESET,
   WORKORDER_FINISH_RESET,
+  WORKORDER_PROGRESS_RESET,
   WORKORDER_UPDATE_RESET,
 } from "../constants/workorderConstants";
 
@@ -36,10 +39,6 @@ const WorkorderScreen = ({ match, history }) => {
   const [totalManufacturePrice, setTotalManufacturePrice] = useState(0);
   const [workers, setWorkers] = useState([]);
 
-  const isInProgress = useSelector(
-    (state) => state.workorderInProgress.workorder.inProgress
-  );
-
   const workorderDetails = useSelector((state) => state.workorderDetails);
   const {
     loading: loadingWorkorder,
@@ -60,9 +59,6 @@ const WorkorderScreen = ({ match, history }) => {
 
   const workorderUpdate = useSelector((state) => state.workorderUpdate);
   const { success: successUpdate } = workorderUpdate;
-
-  const workorderFinished = useSelector((state) => state.workorderFinished);
-  const { success: successFinished } = workorderFinished;
 
   useEffect(() => {
     if (!workorder || Object.keys(workorder).length === 0) {
@@ -88,24 +84,27 @@ const WorkorderScreen = ({ match, history }) => {
 
     if (successUpdate) {
       dispatch(listWorkorderDetails(match.params.id));
+      dispatch(listWorkorders());
       dispatch({ type: WORKORDER_UPDATE_RESET });
       history.push("/manufacture");
     }
-
-    if (successFinished) {
-      dispatch(listWorkorderDetails(match.params.id));
-      dispatch({ type: WORKORDER_FINISH_RESET });
-      history.push("/manufacture");
-    }
-  }, [dispatch, history, match, workorder, successUpdate, successFinished]);
+  }, [dispatch, history, match, workorder, successUpdate]);
 
   useEffect(() => {
-    if (isInProgress) {
+    if (workorder.toDo) {
+      setToDo(true);
+      setInProgress(false);
+      setFinished(false);
+    }
+  }, [workorder.toDo]);
+
+  useEffect(() => {
+    if (workorder.inProgress) {
       setToDo(false);
       setInProgress(true);
       setFinished(false);
     }
-  }, [isInProgress]);
+  }, [workorder.inProgress]);
 
   useEffect(() => {
     setIds([]);
@@ -182,6 +181,7 @@ const WorkorderScreen = ({ match, history }) => {
           totalPurchasePrice,
           totalManufacturePrice,
           consumedArticles,
+          documentNumber,
         })
       );
     }
@@ -269,12 +269,38 @@ const WorkorderScreen = ({ match, history }) => {
         </Col>
         <Col md={4} className="text-center">
           {toDo && (
-            <Button type="button" onClick={handleInProgress} className="mt-3">
+            <Button
+              type="button"
+              onClick={() =>
+                dispatch(
+                  updateWorkorder({
+                    _id: match.params.id,
+                    toDo: "false",
+                    inProgress: "true",
+                    finished: "false",
+                  })
+                )
+              }
+              className="mt-3"
+            >
               Preuzmi na izvršavanje
             </Button>
           )}
           {inProgress && (
-            <Button type="button" onClick={handleFinished} className="mt-3">
+            <Button
+              type="button"
+              onClick={() =>
+                dispatch(
+                  updateWorkorder({
+                    _id: match.params.id,
+                    toDo: "false",
+                    inProgress: "false",
+                    finished: "true",
+                  })
+                )
+              }
+              className="mt-3"
+            >
               Završi
             </Button>
           )}

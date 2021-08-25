@@ -413,7 +413,7 @@ const ManufactureScreen = () => {
                 {productLager.map((item) => {
                   return (
                     <tr key={item._id}>
-                      <td>{item._id}</td>
+                      <td>{item.article._id}</td>
                       <td>{item.article.name}</td>
                       <td>{item.article.unit}</td>
                       <td>{item.quantity}</td>
@@ -492,10 +492,11 @@ const ManufactureScreen = () => {
               <thead>
                 <tr>
                   <th>ZAKLJUČEN</th>
-                  <th>RADNI NALOG</th>
+                  <th>DOKUMENT</th>
                   <th>DATUM</th>
                   <th>VRIJEME</th>
                   <th>ARTIKL</th>
+                  <th>REF. DOKUMENT</th>
                 </tr>
               </thead>
               <tbody>
@@ -509,13 +510,17 @@ const ManufactureScreen = () => {
                         ></i>
                       </td>
                       <td>
-                        {item.workorder.documentNumber}-
-                        {item.workorder.documentType}
+                        {item.documentNumber}-{item.documentType}
                       </td>
+
                       <td>{item.createdAt.substring(0, 10)}</td>
                       <td>{item.createdAt.substring(11, 19)}</td>
                       <td>
                         {item.article._id}-{item.article.name}
+                      </td>
+                      <td>
+                        {item.workorder.documentNumber}-
+                        {item.workorder.documentType}
                       </td>
                     </tr>
                   );

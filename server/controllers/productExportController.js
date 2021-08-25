@@ -8,7 +8,6 @@ import ProductLager from "../models/ProductLager.js";
 // @route GET /api/product/exports
 // @access Public
 const getExports = asyncHandler(async (req, res) => {
-  console.log("daaaaaaaaaaa");
   const exports = await ProductExport.find({}).populate(
     "exportedArticles.article",
     "name unit"
@@ -20,8 +19,9 @@ const getExports = asyncHandler(async (req, res) => {
 // @route POST /api/product/exports
 // @access Public
 const createExport = asyncHandler(async (req, res) => {
+  console.log(req.body);
   const exportArticles = new ProductExport({
-    departureWarehouse: req.body.despartureWarehouse,
+    departureWarehouse: req.body.departureWarehouse,
     destinationWarehouse: req.body.destinationWarehouse,
     documentType: req.body.documentType,
     documentNumber: req.body.documentNumber,
@@ -30,6 +30,7 @@ const createExport = asyncHandler(async (req, res) => {
 
   const importArticles = new CentralImport({
     departureWarehouse: req.body.departureWarehouse,
+    destinationWarehouse: req.body.destinationWarehouse,
     documentType: req.body.documentType,
     documentNumber: req.body.documentNumber,
     importedArticles: req.body.exportedArticles,

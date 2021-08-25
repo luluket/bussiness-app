@@ -85,7 +85,7 @@ const CentralExportCreateScreen = ({ history }) => {
         setIds((ids) => [...ids, item.article._id]);
       });
     }
-    setDocumentNumber(requisition.document);
+    setDocumentNumber(requisition.documentNumber);
   }, [requisition]);
 
   // array of article ids sent to lager to fetch quantites
@@ -167,7 +167,8 @@ const CentralExportCreateScreen = ({ history }) => {
           createExport({
             departureWarehouse,
             destinationWarehouse,
-            document: documentNumber,
+            documentNumber,
+            documentType,
             exportedArticles: requisition.requestedArticles,
           })
         );

@@ -77,6 +77,7 @@ const setWorkorderInProgress = asyncHandler(async (req, res) => {
 // @route PUT /api/workorders/:id/finished
 // @access Public
 const setWorkorderToFinished = asyncHandler(async (req, res) => {
+  console.log(req.body);
   const workorder = await Workorder.findById(req.params.id);
   workorder.toDo = false;
   workorder.inProgress = false;
@@ -86,6 +87,8 @@ const setWorkorderToFinished = asyncHandler(async (req, res) => {
 
   //create material consumption document
   const materialConsumption = new MaterialConsumption({
+    documentType: "utrošak materijala",
+    documentNumber: req.body.documentNumber,
     workorder: req.body._id,
     article: req.body.article,
     consumedArticles: req.body.consumedArticles,
@@ -118,18 +121,25 @@ const updateWorkorder = asyncHandler(async (req, res) => {
   const workorder = await Workorder.findById(req.params.id);
   console.log(req.body);
   if (workorder) {
-    workorder.documentType = req.body.documentType;
-    workorder.documentNumber = req.body.documentNumber;
-    workorder.warehouse = req.body.warehouse;
-    workorder.materialWarehouse = req.body.materialWarehouse;
-    workorder.article = req.body.article;
-    workorder.quantity = req.body.quantity;
-    workorder.description = req.body.description;
-    workorder.rateOfYield = req.body.rateOfYield;
-    workorder.lot = req.body.lot;
-    workorder.workers = req.body.workers;
-    workorder.totalPurchasePrice = req.body.totalPurchasePrice;
-    workorder.totalManufacturePrice = req.body.totalManufacturePrice;
+    workorder.documentType = req.body.documentType || workorder.documentType;
+    workorder.documentNumber =
+      req.body.documentNumber || workorder.documentNumber;
+    workorder.warehouse = req.body.warehouse || workorder.warehouse;
+    workorder.materialWarehouse =
+      req.body.materialWarehouse || workorder.materialWarehouse;
+    workorder.article = req.body.article || workorder.article;
+    workorder.quantity = req.body.quantity || workorder.quantity;
+    workorder.description = req.body.description || workorder.description;
+    workorder.rateOfYield = req.body.rateOfYield || workorder.rateOfYield;
+    workorder.lot = req.body.lot || workorder.lot;
+    workorder.workers = req.body.workers || workorder.workers;
+    workorder.totalPurchasePrice =
+      req.body.totalPurchasePrice || workorder.totalPurchasePrice;
+    workorder.totalManufacturePrice =
+      req.body.totalManufacturePrice || workorder.totalManufacturePrice;
+    (workorder.toDo = req.body.toDo || workorder.toDo),
+      (workorder.inProgress = req.body.inProgress || workorder.inProgress),
+      (workorder.finished = req.body.finished || workorder.finished);
     const updatedWorkorder = await workorder.save();
     res.json(updatedWorkorder);
     console.log(updatedWorkorder);
