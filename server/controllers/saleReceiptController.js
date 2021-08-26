@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import SaleReceipt from "../models/CentralReceipt.js";
+import SaleReceipt from "../models/SaleReceipt.js";
 import Lager from "../models/Lager.js";
 
 // @desc Get all sale receipts

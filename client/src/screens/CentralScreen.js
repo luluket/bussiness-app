@@ -21,6 +21,8 @@ import {
   REQUISITION_UNFULLFILLED_LIST_RESET,
 } from "../constants/requisitionConstants";
 import { CENTRAL_IMPORT_LIST_RESET } from "../constants/centralImportConstants";
+import { listSaleReceipts } from "../actions/saleReceiptActions";
+import { SALE_RECEIPT_LIST_RESET } from "../constants/saleReceiptConstants";
 
 const CentralScreen = () => {
   const dispatch = useDispatch();
@@ -33,6 +35,7 @@ const CentralScreen = () => {
   const [showImportNote, setShowImportNote] = useState(false);
   const [showExportNote, setShowExportNote] = useState(false);
   const [showRequisitionNote, setShowRequisitionNote] = useState(false);
+  const [showSaleReceiptNote, setSaleReceiptNote] = useState(false);
 
   const lagerList = useSelector((state) => state.lagerList);
   const { loading: loadingLager, error: errorLager, lager } = lagerList;
@@ -74,6 +77,13 @@ const CentralScreen = () => {
     requisitions,
   } = requisitionList;
 
+  const saleReceiptList = useSelector((state) => state.saleReceiptList);
+  const {
+    loading: loadingSaleReceipts,
+    error: errorSaleReceipts,
+    receipts: saleReceipts,
+  } = saleReceiptList;
+
   useEffect(() => {
     dispatch(listUnfullfilledRequisitions());
   }, [dispatch]);
@@ -84,12 +94,14 @@ const CentralScreen = () => {
       dispatch({ type: CENTRAL_IMPORT_LIST_RESET });
       dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
       dispatch({ type: REQUISITION_LIST_RESET });
+      dispatch({ type: SALE_RECEIPT_LIST_RESET });
 
       setShowLagerNote(true);
       setShowReceiptNote(false);
       setShowExportNote(false);
       setShowRequisitionNote(false);
       setShowImportNote(false);
+      setSaleReceiptNote(false);
     }
   }, [loadingLager]);
 
@@ -99,12 +111,14 @@ const CentralScreen = () => {
       dispatch({ type: CENTRAL_IMPORT_LIST_RESET });
       dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
       dispatch({ type: REQUISITION_LIST_RESET });
+      dispatch({ type: SALE_RECEIPT_LIST_RESET });
 
       setShowReceiptNote(true);
       setShowLagerNote(false);
       setShowExportNote(false);
       setShowRequisitionNote(false);
       setShowImportNote(false);
+      setSaleReceiptNote(false);
     }
   }, [loadingReceipts]);
 
@@ -114,13 +128,14 @@ const CentralScreen = () => {
       dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
       dispatch({ type: CENTRAL_IMPORT_LIST_RESET });
       dispatch({ type: REQUISITION_LIST_RESET });
+      dispatch({ type: SALE_RECEIPT_LIST_RESET });
 
       setShowExportNote(true);
       setShowLagerNote(false);
       setShowReceiptNote(false);
       setShowRequisitionNote(false);
       setShowImportNote(false);
-    } else {
+      setSaleReceiptNote(false);
     }
   }, [loadingExports]);
 
@@ -130,13 +145,14 @@ const CentralScreen = () => {
       dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
       dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
       dispatch({ type: REQUISITION_LIST_RESET });
+      dispatch({ type: SALE_RECEIPT_LIST_RESET });
 
       setShowImportNote(true);
       setShowExportNote(false);
       setShowLagerNote(false);
       setShowReceiptNote(false);
       setShowRequisitionNote(false);
-    } else {
+      setSaleReceiptNote(false);
     }
   }, [loadingImports]);
 
@@ -147,14 +163,33 @@ const CentralScreen = () => {
       dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
       dispatch({ type: CENTRAL_IMPORT_LIST_RESET });
       dispatch({ type: REQUISITION_UNFULLFILLED_LIST_RESET });
+      dispatch({ type: SALE_RECEIPT_LIST_RESET });
 
       setShowRequisitionNote(true);
       setShowLagerNote(false);
       setShowReceiptNote(false);
       setShowExportNote(false);
       setShowImportNote(false);
+      setSaleReceiptNote(false);
     }
   }, [loadingRequisitions]);
+
+  useEffect(() => {
+    if (loadingSaleReceipts) {
+      dispatch({ type: LAGER_LIST_RESET });
+      dispatch({ type: CENTRAL_RECEIPT_LIST_RESET });
+      dispatch({ type: CENTRAL_IMPORT_LIST_RESET });
+      dispatch({ type: CENTRAL_EXPORT_LIST_RESET });
+      dispatch({ type: REQUISITION_LIST_RESET });
+
+      setSaleReceiptNote(true);
+      setShowReceiptNote(false);
+      setShowLagerNote(false);
+      setShowExportNote(false);
+      setShowRequisitionNote(false);
+      setShowImportNote(false);
+    }
+  }, [loadingSaleReceipts]);
 
   const props = [
     {
@@ -185,7 +220,7 @@ const CentralScreen = () => {
     {
       name: "Račun VP",
       subitems: [],
-      function: listRequisitions(),
+      function: listSaleReceipts(),
     },
   ];
 
@@ -490,6 +525,72 @@ const CentralScreen = () => {
         ) : (
           loadingRequisitions === false &&
           showRequisitionNote && <h2>Nema zahtjeva za otpremom materijala</h2>
+        )}
+        {loadingSaleReceipts && <Loader />}
+        {errorSaleReceipts && (
+          <Message variant="danger">{errorSaleReceipts}</Message>
+        )}
+        {saleReceipts.length != 0 ? (
+          <>
+            <h2>PRIMKE</h2>
+            <Table striped bordered hover responsive>
+              <thead>
+                <tr>
+                  <th>ZAKLJUČEN</th>
+                  <th>DOKUMENT</th>
+                  <th>DATUM</th>
+                  <th>VRIJEME</th>
+                  <th>KUPAC</th>
+                </tr>
+              </thead>
+              <tbody>
+                {saleReceipts.map((receipt) => {
+                  return (
+                    <tr
+                      key={receipt._id}
+                      onClick={() =>
+                        history.push(`/central/receipt/${receipt._id}`)
+                      }
+                    >
+                      <td>
+                        <i
+                          className="fas fa-check"
+                          style={{ color: "green" }}
+                        ></i>
+                      </td>
+                      <td>
+                        {receipt.documentNumber}-{receipt.documentType}
+                      </td>
+                      <td>{receipt.createdAt.substring(0, 10)}</td>
+                      <td>{receipt.createdAt.substring(11, 19)}</td>
+                      <td>
+                        {receipt.partner.name} {receipt.partner.surname}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+            <Button
+              type="button"
+              onClick={() => history.push("/central/sale/receipt/create")}
+            >
+              Novi račun VP
+            </Button>
+          </>
+        ) : (
+          loadingSaleReceipts === false &&
+          showSaleReceiptNote && (
+            <>
+              <h2>Lista izlaznih računa je prazna</h2>
+              <Button
+                type="button"
+                onClick={() => history.push("/central/sale/receipt/create")}
+              >
+                Novi račun VP
+              </Button>
+            </>
+          )
         )}
       </Col>
     </Row>

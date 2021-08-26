@@ -24,6 +24,14 @@ const saleReceiptSchema = mongoose.Schema(
           ref: "Article",
         },
         quantity: { type: Number, required: true, min: 1 },
+        base: {
+          type: Number,
+          required: true,
+        },
+        pdv: {
+          type: Number,
+          required: true,
+        },
         sellingPrice: {
           type: Number,
           required: true,

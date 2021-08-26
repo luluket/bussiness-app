@@ -15,6 +15,9 @@ import {
   LAGER_ARTICLE_PURCHASE_PRICES_REQUEST,
   LAGER_ARTICLE_PURCHASE_PRICES_SUCCESS,
   LAGER_ARTICLE_PURCHASE_PRICES_FAIL,
+  LAGER_ARTICLE_SELLING_PRICES_FAIL,
+  LAGER_ARTICLE_SELLING_PRICES_SUCCESS,
+  LAGER_ARTICLE_SELLING_PRICES_REQUEST,
 } from "../constants/lagerConstants";
 
 export const lagerListReducer = (state = { lager: [] }, action) => {
@@ -105,6 +108,26 @@ export const lagerArticlePurchasePricesReducer = (
         purchasePrices: action.payload,
       };
     case LAGER_ARTICLE_PURCHASE_PRICES_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const lagerArticleSellingPricesReducer = (
+  state = { sellingPrices: [] },
+  action
+) => {
+  switch (action.type) {
+    case LAGER_ARTICLE_SELLING_PRICES_REQUEST:
+      return { loading: true };
+    case LAGER_ARTICLE_SELLING_PRICES_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        sellingPrices: action.payload,
+      };
+    case LAGER_ARTICLE_SELLING_PRICES_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;
