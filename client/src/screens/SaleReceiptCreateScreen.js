@@ -59,55 +59,60 @@ const SaleReceiptCreateScreen = ({ history }) => {
   const addRow = () => {
     setRows([...rows, "row"]);
   };
+  useEffect(() => {
+    console.log(ids);
+  }, [ids]);
 
   const handleArticle = (index) => (event) => {
-    setIds((ids) => [...ids, event.target.value]);
+    let newArray = [...ids];
+    newArray[index] = event.target.value;
+    setIds(newArray);
 
-    const receivedArticle = articles.find(
-      (item) => item._id === event.target.value
+    setSoldArticles(
+      soldArticles.map((item) =>
+        item.article === event.target.value
+          ? { ...item, article: event.target.value }
+          : {
+              article: event.target.value,
+              quantity: 0,
+              base: 0,
+              pdv: 0,
+              sellingPrice: 0,
+            }
+      )
     );
-
-    const { _id } = receivedArticle;
-    if (soldArticles[index]) {
-      soldArticles[index].article = _id;
-    } else {
-      soldArticles.push({
-        article: _id,
-        quantity: 0,
-        base: 0,
-        pdv: 0,
-        sellingPrice: 0,
-      });
-    }
   };
+
+  useEffect(() => {
+    console.log(soldArticles);
+  }, [soldArticles]);
 
   useEffect(() => {
     if (ids) {
       dispatch(articleLagerQuantities(ids));
       dispatch(articleLagerSellingPrices(ids));
-      console.log(ids);
     }
   }, [ids]);
 
-  const handleQuantity = (index) => (event) => {
-    if (soldArticles[index]) {
-      soldArticles[index].quantity = event.target.value;
-      soldArticles[index].base =
-        event.target.value * sellingPrices[index] * 0.75;
-      soldArticles[index].pdv =
-        event.target.value * sellingPrices[index] * 0.25;
-      soldArticles[index].sellingPrice =
-        event.target.value * sellingPrices[index];
-    } else {
-      soldArticles.push({
-        article: "",
-        quantity: event.target.value,
-        base: 0,
-        pdv: 0,
-        sellingPrice: 0,
-      });
-    }
-  };
+  // const handleQuantity = (index) => (event) => {
+  //   if (soldArticles[index]) {
+  //     soldArticles[index].quantity = event.target.value;
+  //     soldArticles[index].base =
+  //       event.target.value * sellingPrices[index] * 0.75;
+  //     soldArticles[index].pdv =
+  //       event.target.value * sellingPrices[index] * 0.25;
+  //     soldArticles[index].sellingPrice =
+  //       event.target.value * sellingPrices[index];
+  //   } else {
+  //     soldArticles.push({
+  //       article: "",
+  //       quantity: event.target.value,
+  //       base: 0,
+  //       pdv: 0,
+  //       sellingPrice: 0,
+  //     });
+  //   }
+  // };
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -216,10 +221,10 @@ const SaleReceiptCreateScreen = ({ history }) => {
                       <Form.Control
                         type="number"
                         placeholder="Unesite količinu"
-                        onChange={handleQuantity(index)}
+                        // onChange={handleQuantity(index)}
                       ></Form.Control>
                     </td>
-                    <td>{quantities && quantities[index]}</td>
+                    {/* <td>{quantities && quantities[index]}</td>
                     <td>
                       {soldArticles[index].base && soldArticles[index].base}
                     </td>
@@ -229,7 +234,7 @@ const SaleReceiptCreateScreen = ({ history }) => {
                     <td>
                       {soldArticles[index].sellingPrice &&
                         soldArticles[index].sellingPrice}
-                    </td>
+                    </td> */}
                     <td>
                       <Button type="button" variant="light">
                         <i className="fas fa-trash"></i>
