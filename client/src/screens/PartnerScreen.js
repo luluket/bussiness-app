@@ -5,6 +5,7 @@ import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { getPartnerDetails, updatePartner } from "../actions/partnerActions";
 import { listCentralReceipts } from "../actions/centralReceiptActions";
+import { listSaleReceipts } from "../actions/saleReceiptActions";
 import { PARTNER_UPDATE_RESET } from "../constants/partnerConstants";
 
 const PartnerScreen = ({ history, match }) => {
@@ -36,10 +37,18 @@ const PartnerScreen = ({ history, match }) => {
     (receipt) => receipt.partner._id === partner._id
   );
 
+  const saleReceiptList = useSelector((state) => state.saleReceiptList);
+  const { receipts: saleReceipts } = saleReceiptList;
+
+  const partnerPurchases = saleReceipts.filter(
+    (receipt) => receipt.partner._id === partner._id
+  );
+
   useEffect(() => {
     if (!partner || !partner.name) {
       dispatch(getPartnerDetails(match.params.id));
       dispatch(listCentralReceipts());
+      dispatch(listSaleReceipts());
     } else {
       setName(partner.name);
       setSurname(partner.surname);
@@ -236,9 +245,10 @@ const PartnerScreen = ({ history, match }) => {
               <Table striped bordered hover responsive className="table-sm">
                 <thead>
                   <tr>
-                    <th>ID</th>
+                    <th>ZAKLJUČEN</th>
                     <th>DOKUMENT</th>
                     <th>DATUM</th>
+                    <th>VRIJEME</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -247,11 +257,17 @@ const PartnerScreen = ({ history, match }) => {
                       key={receipt._id}
                       onClick={() => handleRowClick(receipt._id)}
                     >
-                      <td>{receipt._id}</td>
+                      <td>
+                        <i
+                          className="fas fa-check"
+                          style={{ color: "green" }}
+                        ></i>
+                      </td>
                       <td>
                         {receipt.documentNumber}-{receipt.documentType}
                       </td>
                       <td>{receipt.createdAt.substring(0, 10)}</td>
+                      <td>{receipt.createdAt.substring(11, 19)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -263,13 +279,40 @@ const PartnerScreen = ({ history, match }) => {
         ) : (
           <>
             <h2>Narudžbe</h2>
-            <Table
-              striped
-              bordered
-              hover
-              responsive
-              className="table-sm"
-            ></Table>
+            {partnerPurchases ? (
+              <Table striped bordered hover responsive className="table-sm">
+                <thead>
+                  <tr>
+                    <th>ZAKLJUČEN</th>
+                    <th>DOKUMENT</th>
+                    <th>DATUM</th>
+                    <th>VRIJEME</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {partnerPurchases.map((receipt) => (
+                    <tr
+                      key={receipt._id}
+                      onClick={() => handleRowClick(receipt._id)}
+                    >
+                      <td>
+                        <i
+                          className="fas fa-check"
+                          style={{ color: "green" }}
+                        ></i>
+                      </td>
+                      <td>
+                        {receipt.documentNumber}-{receipt.documentType}
+                      </td>
+                      <td>{receipt.createdAt.substring(0, 10)}</td>
+                      <td>{receipt.createdAt.substring(11, 19)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            ) : (
+              <h2>Nema zaprimljene robe</h2>
+            )}
           </>
         )}
       </Col>

@@ -20,6 +20,7 @@ import ProductListScreen from "./screens/ProductListScreen";
 import ProductEditScreen from "./screens/ProductEditScreen";
 
 import MenuScreen from "./screens/MenuScreen";
+import UserScreen from "./screens/UserScreen";
 import PartnerListScreen from "./screens/PartnerListScreen";
 import PartnerScreen from "./screens/PartnerScreen";
 import PartnerCreateScreen from "./screens/PartnerCreateScreen";
@@ -103,6 +104,7 @@ const App = () => {
               component={SaleReceiptCreateScreen}
               exact
             />
+            <Route path="/user/:id" component={UserScreen} />
 
             <Route path="/shipping" component={ShippingScreen} />
             <Route path="/order/:id" component={OrderScreen} />

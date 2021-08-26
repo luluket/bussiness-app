@@ -324,7 +324,7 @@ const CentralExportCreateScreen = ({ history }) => {
                               id={item.article._id}
                               value={item.article._id}
                             >
-                              {item.article._id} | {item.article.name} |{" "}
+                              {item.article._id} - {item.article.name} -{" "}
                               {item.quantity}
                             </option>
                           );

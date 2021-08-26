@@ -41,10 +41,7 @@ const PartnerListScreen = () => {
           {users.map((user) => {
             return (
               <Col lg={4} md={6} className="mb-3" key={user._id}>
-                <Link
-                  to={`/partner/${user._id}`}
-                  className="text-decoration-none"
-                >
+                <Link to={`/user/${user._id}`} className="text-decoration-none">
                   <Card className="bg-dark shadow-lg rounded partner-card">
                     <Card.Img src={picture} alt="picture" variant="top" />
                     <Card.Body className="bg-light">

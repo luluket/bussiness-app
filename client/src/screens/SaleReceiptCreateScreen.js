@@ -85,6 +85,7 @@ const SaleReceiptCreateScreen = ({ history }) => {
   }, [ids]);
 
   const handleQuantity = (index) => (event) => {
+    document.getElementById("quantityHeader").style.border = "black";
     let newArray = [...soldArticles];
     newArray[index].quantity = event.target.value;
     newArray[index].base = event.target.value * sellingPrices[index] * 0.75;
@@ -95,14 +96,25 @@ const SaleReceiptCreateScreen = ({ history }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(
-      createReceipt({
-        partner,
-        documentType,
-        documentNumber,
-        soldArticles,
-      })
-    );
+    //validate quantities before selling
+    var overload = false;
+    soldArticles.forEach((item, index) => {
+      if (item.quantity > quantities[index]) {
+        overload = true;
+      }
+    });
+    if (overload) {
+      document.getElementById("quantityHeader").style.border = "red solid";
+    } else {
+      dispatch(
+        createReceipt({
+          partner,
+          documentType,
+          documentNumber,
+          soldArticles,
+        })
+      );
+    }
   };
 
   return (
@@ -166,7 +178,7 @@ const SaleReceiptCreateScreen = ({ history }) => {
                 <tr>
                   <th>RB</th>
                   <th>ARTIKAL</th>
-                  <th>KOLIČINA</th>
+                  <th id="quantityHeader">KOLIČINA</th>
                   <th>RASPOLOŽIVO</th>
                   <th>OSNOVICA</th>
                   <th>PDV 25%</th>
