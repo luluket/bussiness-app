@@ -9,9 +9,6 @@ import {
   WORKORDER_CREATE_REQUEST,
   WORKORDER_CREATE_SUCCESS,
   WORKORDER_CREATE_FAIL,
-  WORKORDER_PROGRESS_REQUEST,
-  WORKORDER_PROGRESS_SUCCESS,
-  WORKORDER_PROGRESS_FAIL,
   WORKORDER_FINISH_FAIL,
   WORKORDER_FINISH_SUCCESS,
   WORKORDER_FINISH_REQUEST,
@@ -44,22 +41,6 @@ export const listWorkorderDetails = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: WORKORDER_DETAILS_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
-
-export const workorderInProgress = (id) => async (dispatch) => {
-  try {
-    dispatch({ type: WORKORDER_PROGRESS_REQUEST });
-    const { data } = await axios.put(`/api/workorders/${id}/inprogress`);
-    dispatch({ type: WORKORDER_PROGRESS_SUCCESS, payload: data });
-  } catch (error) {
-    dispatch({
-      type: WORKORDER_PROGRESS_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

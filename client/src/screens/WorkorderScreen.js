@@ -9,15 +9,9 @@ import {
 import { listRates } from "../actions/rateOfYieldActions";
 import { articleMaterialLagerQuantities } from "../actions/materialLagerActions";
 import { articleLagerPurchasePrices } from "../actions/lagerActions";
-import { workorderInProgress } from "../actions/workorderActions";
 import { Row, Col, Form, Table, Button } from "react-bootstrap";
 import Message from "../components/Message";
-import {
-  WORKORDER_DETAILS_RESET,
-  WORKORDER_FINISH_RESET,
-  WORKORDER_PROGRESS_RESET,
-  WORKORDER_UPDATE_RESET,
-} from "../constants/workorderConstants";
+import { WORKORDER_UPDATE_RESET } from "../constants/workorderConstants";
 
 const WorkorderScreen = ({ match, history }) => {
   const dispatch = useDispatch();
@@ -91,22 +85,6 @@ const WorkorderScreen = ({ match, history }) => {
   }, [dispatch, history, match, workorder, successUpdate]);
 
   useEffect(() => {
-    if (workorder.toDo) {
-      setToDo(true);
-      setInProgress(false);
-      setFinished(false);
-    }
-  }, [workorder.toDo]);
-
-  useEffect(() => {
-    if (workorder.inProgress) {
-      setToDo(false);
-      setInProgress(true);
-      setFinished(false);
-    }
-  }, [workorder.inProgress]);
-
-  useEffect(() => {
     setIds([]);
     if (rate && Object.keys(rate).length !== 0) {
       rate.components.forEach((item) => {
@@ -152,10 +130,6 @@ const WorkorderScreen = ({ match, history }) => {
     setTotalManufacturePrice((totalPurchasePrice * 2.5).toFixed(2));
   }, [totalPurchasePrice]);
 
-  const handleInProgress = () => {
-    dispatch(workorderInProgress(match.params.id));
-  };
-
   const handleFinished = () => {
     const consumedArticles = [];
     rate.components.map((item) =>
@@ -174,14 +148,24 @@ const WorkorderScreen = ({ match, history }) => {
       document.getElementById("quantityHeader").style.border = "red solid";
     } else {
       dispatch(
-        workorderFinish({
+        updateWorkorder({
           _id: workorder._id,
+          documentType,
+          documentNumber,
+          warehouse,
+          materialWarehouse,
           article,
-          productQuantity,
+          quantity: productQuantity,
+          description,
+          rateOfYield: rate,
+          lot: lotNumber,
+          workers,
           totalPurchasePrice,
           totalManufacturePrice,
+          toDo: "false",
+          inProgress: "false",
+          finished: "true",
           consumedArticles,
-          documentNumber,
         })
       );
     }
@@ -269,38 +253,12 @@ const WorkorderScreen = ({ match, history }) => {
         </Col>
         <Col md={4} className="text-center">
           {toDo && (
-            <Button
-              type="button"
-              onClick={() =>
-                dispatch(
-                  updateWorkorder({
-                    _id: match.params.id,
-                    toDo: "false",
-                    inProgress: "true",
-                    finished: "false",
-                  })
-                )
-              }
-              className="mt-3"
-            >
+            <Button type="button" className="mt-3">
               Preuzmi na izvršavanje
             </Button>
           )}
           {inProgress && (
-            <Button
-              type="button"
-              onClick={() =>
-                dispatch(
-                  updateWorkorder({
-                    _id: match.params.id,
-                    toDo: "false",
-                    inProgress: "false",
-                    finished: "true",
-                  })
-                )
-              }
-              className="mt-3"
-            >
+            <Button type="button" onClick={handleFinished} className="mt-3">
               Završi
             </Button>
           )}

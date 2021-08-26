@@ -90,7 +90,6 @@ import {
   workorderDetailsReducer,
   workorderCreateReducer,
   workorderUpdateReducer,
-  workorderInProgressReducer,
   workorderFinishedReducer,
 } from "./reducers/workorderReducers.js";
 
@@ -165,7 +164,6 @@ const reducer = combineReducers({
   workorderList: workorderListReducer,
   workorderCreate: workorderCreateReducer,
   workorderUpdate: workorderUpdateReducer,
-  workorderInProgress: workorderInProgressReducer,
   workorderFinished: workorderFinishedReducer,
   workorderDetails: workorderDetailsReducer,
   productLagerList: productLagerListReducer,

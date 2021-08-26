@@ -84,34 +84,6 @@ const setWorkorderToFinished = asyncHandler(async (req, res) => {
   workorder.finished = true;
 
   await workorder.save();
-
-  //create material consumption document
-  const materialConsumption = new MaterialConsumption({
-    documentType: "utrošak materijala",
-    documentNumber: req.body.documentNumber,
-    workorder: req.body._id,
-    article: req.body.article,
-    consumedArticles: req.body.consumedArticles,
-  });
-  await materialConsumption.save();
-
-  // substract material warehouse quantities
-  req.body.consumedArticles.forEach(async (item) => {
-    const material = await MaterialLager.findOne({ article: item.article });
-    material.quantity -= item.quantity;
-    await material.save();
-  });
-
-  //add manufactured product to product warehouse
-  const product = new ProductLager({
-    article: req.body.article,
-    quantity: req.body.productQuantity,
-    purchasePrice: req.body.totalPurchasePrice / req.body.productQuantity,
-    manufacturePrice: req.body.totalManufacturePrice / req.body.productQuantity,
-  });
-  await product.save();
-
-  res.status(201).json({ message: "Workorder finished" });
 });
 
 // @desc Update single article
@@ -141,8 +113,39 @@ const updateWorkorder = asyncHandler(async (req, res) => {
       (workorder.inProgress = req.body.inProgress || workorder.inProgress),
       (workorder.finished = req.body.finished || workorder.finished);
     const updatedWorkorder = await workorder.save();
-    res.json(updatedWorkorder);
-    console.log(updatedWorkorder);
+
+    if (req.body.finished === "true") {
+      //create material consumption document
+      const materialConsumption = new MaterialConsumption({
+        documentType: "utrošak materijala",
+        documentNumber: req.body.documentNumber,
+        workorder: req.body._id,
+        article: req.body.article,
+        consumedArticles: req.body.consumedArticles,
+      });
+      await materialConsumption.save();
+
+      // substract material warehouse quantities
+      console.log(req.body.rateOfYield.components);
+      req.body.rateOfYield.components.forEach(async (item) => {
+        const material = await MaterialLager.findOne({
+          article: item.material._id,
+        });
+        material.quantity -= item.quantity;
+        await material.save();
+      });
+
+      //add manufactured product to product warehouse
+      const product = new ProductLager({
+        article: req.body.article,
+        quantity: req.body.quantity,
+        purchasePrice: req.body.totalPurchasePrice / req.body.quantity,
+        manufacturePrice: req.body.totalManufacturePrice / req.body.quantity,
+      });
+      await product.save();
+
+      res.status(201).json({ message: "Workorder finished" });
+    }
   } else {
     res.status(404);
     throw new Error("Article not found");
