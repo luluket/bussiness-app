@@ -183,17 +183,17 @@ export const listUsers = () => async (dispatch, getState) => {
       type: USER_LIST_REQUEST,
     });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
+    // const {
+    //   userLogin: { userInfo },
+    // } = getState();
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+    // const config = {
+    //   headers: {
+    //     Authorization: `Bearer ${userInfo.token}`,
+    //   },
+    // };
 
-    const { data } = await axios.get(`/api/users`, config);
+    const { data } = await axios.get(`/api/users`);
 
     dispatch({
       type: USER_LIST_SUCCESS,

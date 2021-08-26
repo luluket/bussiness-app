@@ -532,7 +532,7 @@ const CentralScreen = () => {
         )}
         {saleReceipts.length != 0 ? (
           <>
-            <h2>PRIMKE</h2>
+            <h2>PRODAJA</h2>
             <Table striped bordered hover responsive>
               <thead>
                 <tr>

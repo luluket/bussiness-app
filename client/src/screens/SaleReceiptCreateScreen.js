@@ -10,7 +10,7 @@ import {
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { SALE_RECEIPT_CREATE_RESET } from "../constants/saleReceiptConstants";
-
+import { createReceipt, listSaleReceipts } from "../actions/saleReceiptActions";
 const SaleReceiptCreateScreen = ({ history }) => {
   const dispatch = useDispatch();
 
@@ -47,12 +47,12 @@ const SaleReceiptCreateScreen = ({ history }) => {
   useEffect(() => {
     dispatch(listCustomers());
     dispatch(listArticles());
-    // if (successCreate) {
-    //   dispatch({ type: SALE_RECEIPT_CREATE_RESET });
-    //   dispatch(listSaleReceipts());
-    //   history.push("/central");
-    // }
-  }, [dispatch]);
+    if (successCreate) {
+      dispatch({ type: SALE_RECEIPT_CREATE_RESET });
+      dispatch(listSaleReceipts());
+      history.push("/central");
+    }
+  }, [dispatch, successCreate]);
 
   const addRow = () => {
     setRows([...rows, "row"]);
@@ -71,18 +71,6 @@ const SaleReceiptCreateScreen = ({ history }) => {
       article: event.target.value,
     };
     setSoldArticles(newArray2);
-
-    // if (soldArticles[index]) {
-    //   soldArticles[index].article = event.target.value;
-    // } else {
-    //   soldArticles.push({
-    //     article: event.target.value,
-    //     quantity: 0,
-    //     base: 0,
-    //     pdv: 0,
-    //     sellingPrice: 0,
-    //   });
-    // }
   };
 
   useEffect(() => {
@@ -103,40 +91,23 @@ const SaleReceiptCreateScreen = ({ history }) => {
     newArray[index].pdv = event.target.value * sellingPrices[index] * 0.25;
     newArray[index].sellingPrice = event.target.value * sellingPrices[index];
     setSoldArticles(newArray);
-    // if (soldArticles[index]) {
-    //   soldArticles[index].quantity = event.target.value;
-    //   soldArticles[index].base =
-    //     event.target.value * sellingPrices[index] * 0.75;
-    //   soldArticles[index].pdv =
-    //     event.target.value * sellingPrices[index] * 0.25;
-    //   soldArticles[index].sellingPrice =
-    //     event.target.value * sellingPrices[index];
-    // } else {
-    //   soldArticles.push({
-    //     article: "",
-    //     quantity: event.target.value,
-    //     base: 0,
-    //     pdv: 0,
-    //     sellingPrice: 0,
-    //   });
-    // }
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
-    // dispatch(
-    //   createReceipt({
-    //     partner,
-    //     documentType,
-    //     documentNumber,
-    //     soldArticles,
-    //   })
-    // );
+    dispatch(
+      createReceipt({
+        partner,
+        documentType,
+        documentNumber,
+        soldArticles,
+      })
+    );
   };
 
   return (
     <>
-      <h1>PRIMKA - CENTRALNO SKLADIŠTE</h1>
+      <h1>RAČUN VP - CENTRALNO SKLADIŠTE</h1>
       {errorCreate && <Message variant="danger">{errorCreate}</Message>}
       {loadingCustomers ? (
         <Loader />

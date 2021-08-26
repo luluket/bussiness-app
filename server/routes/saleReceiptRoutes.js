@@ -1,10 +1,10 @@
 import express from "express";
 import {
+  createReceipt,
   getReceipts,
-  //   createReceipt,
 } from "../controllers/saleReceiptController.js";
 
 const router = express.Router();
-router.route("/").get(getReceipts);
+router.route("/").get(getReceipts).post(createReceipt);
 
 export default router;
