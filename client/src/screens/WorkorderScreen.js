@@ -88,7 +88,11 @@ const WorkorderScreen = ({ match, history }) => {
       dispatch({ type: WORKORDER_UPDATE_RESET });
       history.push("/manufacture");
     }
-  }, [dispatch, history, match, workorder, successUpdate]);
+  }, [dispatch, match, history, workorder, successUpdate]);
+
+  useEffect(() => {
+    dispatch(listWorkorderDetails(match.params.id));
+  }, [match.params.id]);
 
   useEffect(() => {
     setIds([]);
@@ -166,8 +170,8 @@ const WorkorderScreen = ({ match, history }) => {
           rateOfYield: rate,
           lot: lotNumber,
           workers,
-          totalPurchasePrice,
-          totalManufacturePrice,
+          totalPurchasePrice: totalPurchasePrice,
+          totalManufacturePrice: totalManufacturePrice,
           toDo: "false",
           inProgress: "false",
           finished: "true",

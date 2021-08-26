@@ -65,6 +65,7 @@ const createWorkorder = asyncHandler(async (req, res) => {
 // @route PUT /api/workorders/:id
 // @access Public
 const updateWorkorder = asyncHandler(async (req, res) => {
+  console.log(req.body);
   const workorder = await Workorder.findById(req.params.id);
   if (workorder) {
     workorder.documentType = req.body.documentType || workorder.documentType;
@@ -111,13 +112,42 @@ const updateWorkorder = asyncHandler(async (req, res) => {
       //add manufactured product to product warehouse
       var exists = await ProductLager.findOne({ article: req.body.article });
       if (exists) {
-        console.log("yes");
+        exists.quantity += req.body.quantity;
+        exists.accumulatedQuantity += req.body.quantity;
+        exists.accumulatedPurchasePrice = (
+          exists.accumulatedPurchasePrice +
+          parseFloat(req.body.totalPurchasePrice)
+        ).toFixed(2);
+        exists.purchasePrice = (
+          exists.accumulatedPurchasePrice / exists.accumulatedQuantity
+        ).toFixed(2);
+        exists.accumulatedManufacturePrice = (
+          exists.accumulatedManufacturePrice +
+          parseFloat(req.body.totalManufacturePrice)
+        ).toFixed(2);
+
+        exists.manufacturePrice = (
+          exists.accumulatedManufacturePrice / exists.accumulatedQuantity
+        ).toFixed(2);
+
+        await exists.save();
       } else {
         const product = new ProductLager({
           article: req.body.article,
           quantity: req.body.quantity,
-          purchasePrice: req.body.totalPurchasePrice / req.body.quantity,
-          manufacturePrice: req.body.totalManufacturePrice / req.body.quantity,
+          accumulatedQuantity: req.body.quantity,
+          purchasePrice: (
+            req.body.totalPurchasePrice / req.body.quantity
+          ).toFixed(2),
+          accumulatedPurchasePrice: (
+            req.body.totalPurchasePrice / req.body.quantity
+          ).toFixed(2),
+          manufacturePrice: (
+            req.body.totalManufacturePrice / req.body.quantity
+          ).toFixed(2),
+          accumulatedManufacturePrice: (
+            req.body.totalManufacturePrice / req.body.quantity
+          ).toFixed(2),
         });
         await product.save();
       }

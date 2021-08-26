@@ -9,11 +9,23 @@ const productLagerSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
+  accumulatedQuantity: {
+    type: Number,
+    required: true,
+  },
   purchasePrice: {
     type: Number,
     required: true,
   },
+  accumulatedPurchasePrice: {
+    type: Number,
+    required: true,
+  },
   manufacturePrice: {
+    type: Number,
+    required: true,
+  },
+  accumulatedManufacturePrice: {
     type: Number,
     required: true,
   },
