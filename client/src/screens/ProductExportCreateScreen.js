@@ -39,12 +39,13 @@ const ProductExportCreateScreen = ({ history }) => {
   const { quantities: productQuantities } = lagerProductQuantities;
 
   useEffect(() => {
-    dispatch(productLagerQuantities());
-    dispatch(listProductLager());
     if (successCreate) {
       dispatch(listProductExports());
       dispatch({ type: PRODUCT_EXPORT_CREATE_RESET });
       history.push("/manufacture");
+    } else {
+      dispatch(productLagerQuantities());
+      dispatch(listProductLager());
     }
   }, [dispatch, successCreate]);
 

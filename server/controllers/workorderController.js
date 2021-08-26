@@ -65,7 +65,6 @@ const createWorkorder = asyncHandler(async (req, res) => {
 // @route PUT /api/workorders/:id
 // @access Public
 const updateWorkorder = asyncHandler(async (req, res) => {
-  console.log(req.body);
   const workorder = await Workorder.findById(req.params.id);
   if (workorder) {
     workorder.documentType = req.body.documentType || workorder.documentType;

@@ -19,7 +19,6 @@ const getExports = asyncHandler(async (req, res) => {
 // @route POST /api/product/exports
 // @access Public
 const createExport = asyncHandler(async (req, res) => {
-  console.log(req.body);
   const exportArticles = new ProductExport({
     departureWarehouse: req.body.departureWarehouse,
     destinationWarehouse: req.body.destinationWarehouse,

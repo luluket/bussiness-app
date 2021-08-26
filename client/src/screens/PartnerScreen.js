@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Row, Col, Table } from "react-bootstrap";
+import { Form, Button, Row, Col, Table, NavItem } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
@@ -248,7 +248,9 @@ const PartnerScreen = ({ history, match }) => {
                       onClick={() => handleRowClick(receipt._id)}
                     >
                       <td>{receipt._id}</td>
-                      <td>{receipt.document}</td>
+                      <td>
+                        {receipt.documentNumber}-{receipt.documentType}
+                      </td>
                       <td>{receipt.createdAt.substring(0, 10)}</td>
                     </tr>
                   ))}

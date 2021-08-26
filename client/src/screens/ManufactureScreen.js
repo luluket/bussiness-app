@@ -93,13 +93,14 @@ const ManufactureScreen = () => {
   } = workorderList;
 
   useEffect(() => {
+    dispatch({ type: MATERIAL_LAGER_LIST_RESET });
     dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
-    dispatch({ type: WORKORDER_LIST_RESET });
-    dispatch({ type: RATE_LIST_RESET });
-    dispatch({ type: REQUISITION_LIST_RESET });
     dispatch({ type: MATERIAL_CONSUMPTION_LIST_RESET });
     dispatch({ type: PRODUCT_LAGER_LIST_RESET });
     dispatch({ type: PRODUCT_EXPORT_LIST_RESET });
+    dispatch({ type: WORKORDER_LIST_RESET });
+    dispatch({ type: REQUISITION_LIST_RESET });
+    dispatch({ type: RATE_LIST_RESET });
   }, [dispatch]);
 
   useEffect(() => {
@@ -109,8 +110,8 @@ const ManufactureScreen = () => {
       dispatch({ type: PRODUCT_LAGER_LIST_RESET });
       dispatch({ type: PRODUCT_EXPORT_LIST_RESET });
       dispatch({ type: WORKORDER_LIST_RESET });
-      dispatch({ type: RATE_LIST_RESET });
       dispatch({ type: REQUISITION_LIST_RESET });
+      dispatch({ type: RATE_LIST_RESET });
 
       setShowMaterialLagerNote(true);
       setShowMaterialImportNote(false);
@@ -130,8 +131,8 @@ const ManufactureScreen = () => {
       dispatch({ type: PRODUCT_LAGER_LIST_RESET });
       dispatch({ type: PRODUCT_EXPORT_LIST_RESET });
       dispatch({ type: WORKORDER_LIST_RESET });
-      dispatch({ type: RATE_LIST_RESET });
       dispatch({ type: REQUISITION_LIST_RESET });
+      dispatch({ type: RATE_LIST_RESET });
 
       setShowMaterialImportNote(true);
       setShowMaterialLagerNote(false);
@@ -145,17 +146,38 @@ const ManufactureScreen = () => {
   }, [loadingImports]);
 
   useEffect(() => {
+    if (loadingConsumptions) {
+      dispatch({ type: MATERIAL_LAGER_LIST_RESET });
+      dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
+      dispatch({ type: PRODUCT_LAGER_LIST_RESET });
+      dispatch({ type: PRODUCT_EXPORT_LIST_RESET });
+      dispatch({ type: WORKORDER_LIST_RESET });
+      dispatch({ type: REQUISITION_LIST_RESET });
+      dispatch({ type: RATE_LIST_RESET });
+
+      setShowMaterialConsumptionNote(true);
+      setShowMaterialImportNote(false);
+      setShowMaterialLagerNote(false);
+      setShowProductLagerNote(false);
+      setShowProductExportNote(false);
+      setShowWorkorderNote(false);
+      setShowRequisitionNote(false);
+      setShowRateNote(false);
+    }
+  }, [loadingConsumptions]);
+
+  useEffect(() => {
     if (loadingProductLager) {
       dispatch({ type: MATERIAL_LAGER_LIST_RESET });
       dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
       dispatch({ type: MATERIAL_CONSUMPTION_LIST_RESET });
       dispatch({ type: PRODUCT_EXPORT_LIST_RESET });
       dispatch({ type: WORKORDER_LIST_RESET });
-      dispatch({ type: RATE_LIST_RESET });
       dispatch({ type: REQUISITION_LIST_RESET });
+      dispatch({ type: RATE_LIST_RESET });
 
       setShowProductLagerNote(true);
-      setShowMaterialLagerNote(true);
+      setShowMaterialLagerNote(false);
       setShowMaterialImportNote(false);
       setShowMaterialConsumptionNote(false);
       setShowWorkorderNote(false);
@@ -166,35 +188,14 @@ const ManufactureScreen = () => {
   }, [loadingProductLager]);
 
   useEffect(() => {
-    if (loadingConsumptions) {
-      dispatch({ type: MATERIAL_LAGER_LIST_RESET });
-      dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
-      dispatch({ type: PRODUCT_LAGER_LIST_RESET });
-      dispatch({ type: PRODUCT_EXPORT_LIST_RESET });
-      dispatch({ type: WORKORDER_LIST_RESET });
-      dispatch({ type: RATE_LIST_RESET });
-      dispatch({ type: REQUISITION_LIST_RESET });
-
-      setShowMaterialConsumptionNote(true);
-      setShowMaterialImportNote(false);
-      setShowMaterialLagerNote(false);
-      setShowProductLagerNote(false);
-      setShowWorkorderNote(false);
-      setShowRequisitionNote(false);
-      setShowRateNote(false);
-      setShowProductExportNote(false);
-    }
-  }, [loadingConsumptions]);
-
-  useEffect(() => {
     if (loadingProductExports) {
       dispatch({ type: MATERIAL_LAGER_LIST_RESET });
       dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
-      dispatch({ type: PRODUCT_LAGER_LIST_RESET });
       dispatch({ type: MATERIAL_CONSUMPTION_LIST_RESET });
+      dispatch({ type: PRODUCT_LAGER_LIST_RESET });
       dispatch({ type: WORKORDER_LIST_RESET });
-      dispatch({ type: RATE_LIST_RESET });
       dispatch({ type: REQUISITION_LIST_RESET });
+      dispatch({ type: RATE_LIST_RESET });
 
       setShowProductExportNote(true);
       setShowMaterialConsumptionNote(false);
@@ -208,33 +209,12 @@ const ManufactureScreen = () => {
   }, [loadingProductExports]);
 
   useEffect(() => {
-    if (loadingRates) {
-      dispatch({ type: MATERIAL_LAGER_LIST_RESET });
-      dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
-      dispatch({ type: PRODUCT_LAGER_LIST_RESET });
-      dispatch({ type: PRODUCT_EXPORT_LIST_RESET });
-      dispatch({ type: MATERIAL_CONSUMPTION_LIST_RESET });
-      dispatch({ type: WORKORDER_LIST_RESET });
-      dispatch({ type: REQUISITION_LIST_RESET });
-
-      setShowRateNote(true);
-      setShowMaterialImportNote(false);
-      setShowMaterialLagerNote(false);
-      setShowProductLagerNote(false);
-      setShowMaterialConsumptionNote(false);
-      setShowWorkorderNote(false);
-      setShowRequisitionNote(false);
-      setShowProductExportNote(false);
-    }
-  }, [loadingRates]);
-
-  useEffect(() => {
     if (loadingWorkorders) {
       dispatch({ type: MATERIAL_LAGER_LIST_RESET });
       dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
+      dispatch({ type: MATERIAL_CONSUMPTION_LIST_RESET });
       dispatch({ type: PRODUCT_LAGER_LIST_RESET });
       dispatch({ type: PRODUCT_EXPORT_LIST_RESET });
-      dispatch({ type: MATERIAL_CONSUMPTION_LIST_RESET });
       dispatch({ type: REQUISITION_LIST_RESET });
       dispatch({ type: RATE_LIST_RESET });
 
@@ -253,11 +233,11 @@ const ManufactureScreen = () => {
     if (loadingRequisitions) {
       dispatch({ type: MATERIAL_LAGER_LIST_RESET });
       dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
+      dispatch({ type: MATERIAL_CONSUMPTION_LIST_RESET });
       dispatch({ type: PRODUCT_LAGER_LIST_RESET });
       dispatch({ type: PRODUCT_EXPORT_LIST_RESET });
-      dispatch({ type: MATERIAL_CONSUMPTION_LIST_RESET });
-      dispatch({ type: RATE_LIST_RESET });
       dispatch({ type: WORKORDER_LIST_RESET });
+      dispatch({ type: RATE_LIST_RESET });
 
       setShowRequisitionNote(true);
       setShowMaterialImportNote(false);
@@ -269,6 +249,27 @@ const ManufactureScreen = () => {
       setShowProductExportNote(false);
     }
   }, [loadingRequisitions]);
+
+  useEffect(() => {
+    if (loadingRates) {
+      dispatch({ type: MATERIAL_LAGER_LIST_RESET });
+      dispatch({ type: MATERIAL_IMPORT_LIST_RESET });
+      dispatch({ type: MATERIAL_CONSUMPTION_LIST_RESET });
+      dispatch({ type: PRODUCT_LAGER_LIST_RESET });
+      dispatch({ type: PRODUCT_EXPORT_LIST_RESET });
+      dispatch({ type: WORKORDER_LIST_RESET });
+      dispatch({ type: REQUISITION_LIST_RESET });
+
+      setShowRateNote(true);
+      setShowMaterialImportNote(false);
+      setShowMaterialLagerNote(false);
+      setShowProductLagerNote(false);
+      setShowMaterialConsumptionNote(false);
+      setShowWorkorderNote(false);
+      setShowRequisitionNote(false);
+      setShowProductExportNote(false);
+    }
+  }, [loadingRates]);
 
   const props = [
     {
