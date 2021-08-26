@@ -27,6 +27,8 @@ const productExportSchema = mongoose.Schema(
           ref: "Article",
         },
         quantity: { type: Number, required: true },
+        purchasePrice: { type: Number, required: true },
+        manufacturePrice: { type: Number, required: true },
       },
     ],
   },

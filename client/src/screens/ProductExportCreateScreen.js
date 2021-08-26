@@ -22,7 +22,7 @@ const ProductExportCreateScreen = ({ history }) => {
   const [documentType, setDocumentType] = useState("mđskl-izlaz");
   const [documentNumber, setDocumentNumber] = useState();
   const [exportedArticles, setExportedArticles] = useState([
-    { article: "", quantity: 0 },
+    { article: "", quantity: 0, purchasePrice: 0, manufacturePrice: 0 },
   ]);
   const [ids, setIds] = useState([]);
   const [rows, setRows] = useState("");
@@ -57,13 +57,18 @@ const ProductExportCreateScreen = ({ history }) => {
     const exportedArticle = lager.find(
       (item) => item.article._id === event.target.value
     );
-    const { article } = exportedArticle;
+    const { article, purchasePrice, manufacturePrice } = exportedArticle;
+    console.log(article, purchasePrice, manufacturePrice);
     if (exportedArticles[index]) {
       exportedArticles[index].article = article._id;
+      exportedArticles[index].purchasePrice = purchasePrice;
+      exportedArticles[index].manufacturePrice = manufacturePrice;
     } else {
       exportedArticles.push({
         article: article._id,
         quantity: 0,
+        purchasePrice: purchasePrice,
+        manufacturePrice: manufacturePrice,
       });
     }
   };
@@ -96,6 +101,7 @@ const ProductExportCreateScreen = ({ history }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
+    console.log(exportedArticles);
     // check if exported amount is inside product warehouse limit
     var overload = false;
     exportedArticles.forEach((item, index) => {

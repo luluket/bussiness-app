@@ -43,7 +43,7 @@ const createExport = asyncHandler(async (req, res) => {
     createdExport.exportedArticles.forEach(async (item) => {
       var exists = await Lager.findOne({ article: item.article });
       if (exists) {
-        // update product lager article quantity
+        // update lager article quantity
         exists.quantity += item.quantity;
         exists.accumulatedQuantity += item.quantity;
         exists.accumulatedPurchasePrice += item.purchasePrice;

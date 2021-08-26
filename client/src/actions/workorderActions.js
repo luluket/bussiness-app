@@ -49,25 +49,6 @@ export const listWorkorderDetails = (id) => async (dispatch) => {
   }
 };
 
-export const workorderFinish = (workorder) => async (dispatch) => {
-  try {
-    dispatch({ type: WORKORDER_FINISH_REQUEST });
-    const { data } = await axios.put(
-      `/api/workorders/${workorder._id}/finished`,
-      workorder
-    );
-    dispatch({ type: WORKORDER_FINISH_SUCCESS, payload: data });
-  } catch (error) {
-    dispatch({
-      type: WORKORDER_FINISH_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
-
 export const createWorkorder = (workorder) => async (dispatch) => {
   try {
     dispatch({ type: WORKORDER_CREATE_REQUEST });

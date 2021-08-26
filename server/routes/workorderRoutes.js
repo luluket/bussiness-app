@@ -3,8 +3,6 @@ import {
   getWorkorders,
   getWorkorder,
   createWorkorder,
-  setWorkorderInProgress,
-  setWorkorderToFinished,
   updateWorkorder,
 } from "../controllers/workorderController.js";
 const router = express.Router();
@@ -12,6 +10,4 @@ const router = express.Router();
 router.route("/").get(getWorkorders).post(createWorkorder);
 router.route("/:id").get(getWorkorder).put(updateWorkorder);
 
-router.route("/:id/inprogress").put(setWorkorderInProgress);
-router.route("/:id/finished").put(setWorkorderToFinished);
 export default router;

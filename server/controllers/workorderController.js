@@ -61,37 +61,11 @@ const createWorkorder = asyncHandler(async (req, res) => {
   res.status(201).json(workorderCreated);
 });
 
-// @desc Set workorder in progress
-// @route PUT /api/workorders/:id/inprogress
-// @access Public
-const setWorkorderInProgress = asyncHandler(async (req, res) => {
-  const workorder = await Workorder.findById(req.params.id);
-  workorder.toDo = false;
-  workorder.inProgress = true;
-  workorder.finished = false;
-  await workorder.save();
-  res.json(workorder);
-});
-
-// @desc Set workorder to finished
-// @route PUT /api/workorders/:id/finished
-// @access Public
-const setWorkorderToFinished = asyncHandler(async (req, res) => {
-  console.log(req.body);
-  const workorder = await Workorder.findById(req.params.id);
-  workorder.toDo = false;
-  workorder.inProgress = false;
-  workorder.finished = true;
-
-  await workorder.save();
-});
-
 // @desc Update single article
 // @route PUT /api/workorders/:id
 // @access Public
 const updateWorkorder = asyncHandler(async (req, res) => {
   const workorder = await Workorder.findById(req.params.id);
-  console.log(req.body);
   if (workorder) {
     workorder.documentType = req.body.documentType || workorder.documentType;
     workorder.documentNumber =
@@ -112,7 +86,7 @@ const updateWorkorder = asyncHandler(async (req, res) => {
     (workorder.toDo = req.body.toDo || workorder.toDo),
       (workorder.inProgress = req.body.inProgress || workorder.inProgress),
       (workorder.finished = req.body.finished || workorder.finished);
-    const updatedWorkorder = await workorder.save();
+    const workorderUpdated = await workorder.save();
 
     if (req.body.finished === "true") {
       //create material consumption document
@@ -126,7 +100,6 @@ const updateWorkorder = asyncHandler(async (req, res) => {
       await materialConsumption.save();
 
       // substract material warehouse quantities
-      console.log(req.body.rateOfYield.components);
       req.body.rateOfYield.components.forEach(async (item) => {
         const material = await MaterialLager.findOne({
           article: item.material._id,
@@ -136,15 +109,22 @@ const updateWorkorder = asyncHandler(async (req, res) => {
       });
 
       //add manufactured product to product warehouse
-      const product = new ProductLager({
-        article: req.body.article,
-        quantity: req.body.quantity,
-        purchasePrice: req.body.totalPurchasePrice / req.body.quantity,
-        manufacturePrice: req.body.totalManufacturePrice / req.body.quantity,
-      });
-      await product.save();
+      var exists = await ProductLager.findOne({ article: req.body.article });
+      if (exists) {
+        console.log("yes");
+      } else {
+        const product = new ProductLager({
+          article: req.body.article,
+          quantity: req.body.quantity,
+          purchasePrice: req.body.totalPurchasePrice / req.body.quantity,
+          manufacturePrice: req.body.totalManufacturePrice / req.body.quantity,
+        });
+        await product.save();
+      }
 
       res.status(201).json({ message: "Workorder finished" });
+    } else {
+      res.json(workorderUpdated);
     }
   } else {
     res.status(404);
@@ -152,11 +132,4 @@ const updateWorkorder = asyncHandler(async (req, res) => {
   }
 });
 
-export {
-  getWorkorders,
-  getWorkorder,
-  createWorkorder,
-  setWorkorderInProgress,
-  setWorkorderToFinished,
-  updateWorkorder,
-};
+export { getWorkorders, getWorkorder, createWorkorder, updateWorkorder };

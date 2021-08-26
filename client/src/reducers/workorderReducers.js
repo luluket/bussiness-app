@@ -11,10 +11,6 @@ import {
   WORKORDER_LIST_RESET,
   WORKORDER_CREATE_RESET,
   WORKORDER_DETAILS_RESET,
-  WORKORDER_FINISH_REQUEST,
-  WORKORDER_FINISH_SUCCESS,
-  WORKORDER_FINISH_FAIL,
-  WORKORDER_FINISH_RESET,
   WORKORDER_UPDATE_REQUEST,
   WORKORDER_UPDATE_SUCCESS,
   WORKORDER_UPDATE_FAIL,
@@ -57,28 +53,6 @@ export const workorderDetailsReducer = (state = { workorder: {} }, action) => {
         error: action.payload,
       };
     case WORKORDER_DETAILS_RESET:
-      return { workorder: {} };
-    default:
-      return state;
-  }
-};
-
-export const workorderFinishedReducer = (state = { workorder: {} }, action) => {
-  switch (action.type) {
-    case WORKORDER_FINISH_REQUEST:
-      return { loading: true, ...state };
-    case WORKORDER_FINISH_SUCCESS:
-      return {
-        loading: false,
-        success: true,
-        workorder: action.payload,
-      };
-    case WORKORDER_FINISH_FAIL:
-      return {
-        loading: false,
-        error: action.payload,
-      };
-    case WORKORDER_FINISH_RESET:
       return { workorder: {} };
     default:
       return state;

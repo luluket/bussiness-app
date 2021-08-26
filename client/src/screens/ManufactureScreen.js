@@ -465,6 +465,12 @@ const ManufactureScreen = () => {
                 ))}
               </tbody>
             </Table>
+            <Button
+              type="button"
+              onClick={() => history.push("/manufacture/export")}
+            >
+              Nova otprema
+            </Button>
           </>
         ) : (
           loadingProductExports === false &&
