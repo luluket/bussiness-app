@@ -182,6 +182,11 @@ const CentralScreen = () => {
       subitems: [],
       function: listRequisitions(),
     },
+    {
+      name: "Račun VP",
+      subitems: [],
+      function: listRequisitions(),
+    },
   ];
 
   return (

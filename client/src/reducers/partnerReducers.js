@@ -1,4 +1,7 @@
 import {
+  CUSTOMER_LIST_FAIL,
+  CUSTOMER_LIST_REQUEST,
+  CUSTOMER_LIST_SUCCESS,
   PARTNER_CREATE_FAIL,
   PARTNER_CREATE_REQUEST,
   PARTNER_CREATE_RESET,
@@ -84,6 +87,19 @@ export const supplierListReducer = (state = { suppliers: [] }, action) => {
     case SUPPLIER_LIST_SUCCESS:
       return { loading: false, suppliers: action.payload };
     case SUPPLIER_LIST_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const customerListReducer = (state = { customers: [] }, action) => {
+  switch (action.type) {
+    case CUSTOMER_LIST_REQUEST:
+      return { loading: true };
+    case CUSTOMER_LIST_SUCCESS:
+      return { loading: false, customers: action.payload };
+    case CUSTOMER_LIST_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

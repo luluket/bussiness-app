@@ -89,4 +89,19 @@ const getSuppliers = asyncHandler(async (req, res) => {
   res.json(suppliers);
 });
 
-export { getPartners, getPartner, createPartner, updatePartner, getSuppliers };
+// @desc Get all customers
+// @route GET /api/partners/customers
+// @access Public
+const getCustomers = asyncHandler(async (req, res) => {
+  const customers = await Partner.find({ type: "kupac" });
+  res.json(customers);
+});
+
+export {
+  getPartners,
+  getPartner,
+  createPartner,
+  updatePartner,
+  getSuppliers,
+  getCustomers,
+};

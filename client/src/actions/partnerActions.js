@@ -15,6 +15,9 @@ import {
   SUPPLIER_LIST_REQUEST,
   SUPPLIER_LIST_SUCCESS,
   SUPPLIER_LIST_FAIL,
+  CUSTOMER_LIST_REQUEST,
+  CUSTOMER_LIST_SUCCESS,
+  CUSTOMER_LIST_FAIL,
 } from "../constants/partnerConstants";
 
 export const listPartners = () => async (dispatch) => {
@@ -95,6 +98,22 @@ export const listSuppliers = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: SUPPLIER_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const listCustomers = () => async (dispatch) => {
+  try {
+    dispatch({ type: CUSTOMER_LIST_REQUEST });
+    const { data } = await axios.get("/api/partners/customers");
+    dispatch({ type: CUSTOMER_LIST_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: CUSTOMER_LIST_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

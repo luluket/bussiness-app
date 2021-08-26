@@ -25,7 +25,6 @@ export const listCentralReceipts = () => async (dispatch) => {
 };
 export const createReceipt = (receipt) => async (dispatch) => {
   try {
-    console.log(receipt);
     dispatch({ type: CENTRAL_RECEIPT_CREATE_REQUEST });
     const { data } = await axios.post("/api/central/receipts", receipt);
     dispatch({ type: CENTRAL_RECEIPT_CREATE_SUCCESS, payload: data });
