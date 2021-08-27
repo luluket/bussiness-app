@@ -22,6 +22,7 @@ import MaterialConsumption from "./models/MaterialConsumption.js";
 import ProductLager from "./models/ProductLager.js";
 import ProductExport from "./models/ProductExport.js";
 import CentralImport from "./models/CentralImport.js";
+import SaleReceipt from "./models/SaleReceipt.js";
 import connectDB from "./config/db.js";
 
 dotenv.config();
@@ -47,6 +48,7 @@ const importData = async () => {
     await MaterialConsumption.deleteMany();
     await ProductLager.deleteMany();
     await ProductExport.deleteMany();
+    await SaleReceipt.deleteMany();
 
     const createdUsers = await User.insertMany(users);
     const adminUser = createdUsers.find(({ role }) => role === "admin");
