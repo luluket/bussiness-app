@@ -17,10 +17,9 @@ const RequisitionCreateScreen = ({ history }) => {
   );
   const [destinationWarehouse, setDestinationWarehouse] = useState("");
   const [documentType, setDocumentType] = useState("trebovanje");
+  const [documentSubtype, setDocumentSubtype] = useState("ostalo");
   const [documentNumber, setDocumentNumber] = useState(0);
-  const [requestedArticles, setRequestedArticles] = useState([
-    { article: "", quantity: 0 },
-  ]);
+  const [requestedArticles, setRequestedArticles] = useState([]);
   const [rows, setRows] = useState("");
 
   const materialList = useSelector((state) => state.materialList);
@@ -52,29 +51,17 @@ const RequisitionCreateScreen = ({ history }) => {
   };
 
   const handleArticle = (index) => (event) => {
-    const requestedArticle = materials.find(
-      (item) => item._id === event.target.value
-    );
-    const { _id } = requestedArticle;
-    if (requestedArticles[index]) {
-      requestedArticles[index].article = _id;
-    } else {
-      requestedArticles.push({
-        article: _id,
-        quantity: 0,
-      });
-    }
+    let newArray = [...requestedArticles];
+    newArray[index] = {
+      article: event.target.value,
+    };
+    setRequestedArticles(newArray);
   };
 
   const handleQuantity = (index) => (event) => {
-    if (requestedArticles[index]) {
-      requestedArticles[index].quantity = event.target.value;
-    } else {
-      requestedArticles.push({
-        article: "",
-        quantity: event.target.value,
-      });
-    }
+    let newArray = [...requestedArticles];
+    newArray[index].quantity = event.target.value;
+    setRequestedArticles(newArray);
   };
 
   const submitHandler = (e) => {
@@ -84,6 +71,7 @@ const RequisitionCreateScreen = ({ history }) => {
         requestedArticles,
         documentNumber,
         documentType,
+        documentSubtype,
         isSent: true,
         isFullfilled: false,
       })
@@ -124,7 +112,7 @@ const RequisitionCreateScreen = ({ history }) => {
         </Row>
 
         <Row className="mb-3">
-          <Form.Group as={Col} md={6} controlId="documentType" className="mb-3">
+          <Form.Group as={Col} md={4} controlId="documentType" className="mb-3">
             <Form.Label>Tip dokumenta</Form.Label>
             <Form.Control
               type="number"
@@ -135,7 +123,21 @@ const RequisitionCreateScreen = ({ history }) => {
           </Form.Group>
           <Form.Group
             as={Col}
-            md={6}
+            md={4}
+            controlId="documentSubtype"
+            className="mb-3"
+          >
+            <Form.Label>Podtip dokumenta</Form.Label>
+            <Form.Control
+              type="number"
+              placeholder={documentSubtype}
+              value={documentSubtype}
+              disabled
+            ></Form.Control>
+          </Form.Group>
+          <Form.Group
+            as={Col}
+            md={4}
             controlId="documentNumber"
             className="mb-3"
           >

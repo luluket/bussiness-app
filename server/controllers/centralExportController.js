@@ -23,6 +23,7 @@ const createExport = asyncHandler(async (req, res) => {
     departureWarehouse: req.body.departureWarehouse,
     destinationWarehouse: req.body.destinationWarehouse,
     documentType: req.body.documentType,
+    documentSubtype: req.body.documentSubtype,
     documentNumber: req.body.documentNumber,
     exportedArticles: req.body.exportedArticles,
   });
@@ -31,6 +32,7 @@ const createExport = asyncHandler(async (req, res) => {
     departureWarehouse: req.body.departureWarehouse,
     destinationWarehouse: req.body.destinationWarehouse,
     documentType: "mđskl-ulaz",
+    documentSubtype: "ostalo",
     documentNumber: req.body.documentNumber,
     importedArticles: req.body.exportedArticles,
   });

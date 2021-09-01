@@ -12,9 +12,7 @@ const RateOfYieldCreateScreen = ({ history }) => {
   const dispatch = useDispatch();
 
   const [product, setProduct] = useState("");
-  const [components, setComponents] = useState([
-    { material: "", quantity: 0, factor: 0 },
-  ]);
+  const [components, setComponents] = useState([]);
   const [rows, setRows] = useState([]);
 
   //fetch every article type product
@@ -44,42 +42,25 @@ const RateOfYieldCreateScreen = ({ history }) => {
 
   // handle array of components - material + percentage in product
   const handleMaterial = (index) => (event) => {
-    const article = materials.find((item) => item._id === event.target.value);
-    if (components[index]) {
-      components[index].material = article;
-    } else {
-      components.push({
-        material: article,
-        quantity: 0,
-        factor: 0,
-      });
-    }
+    let newArray = [...components];
+    newArray[index] = {
+      material: event.target.value,
+    };
+    setComponents(newArray);
   };
 
   const handleQuantity = (index) => (event) => {
-    if (components[index]) {
-      components[index].quantity = event.target.value;
-    } else {
-      components.push({
-        material: "",
-        quantity: event.target.value,
-        factor: 0,
-      });
-    }
+    let newArray = [...components];
+    newArray[index].quantity = event.target.value;
+    setComponents(newArray);
   };
 
   const handleFactor = (index) => (event) => {
     document.getElementById("factorHeader").style.border = "black";
     document.getElementById(`factor-${index}`).style.color = "black";
-    if (components[index]) {
-      components[index].factor = event.target.value;
-    } else {
-      components.push({
-        material: "",
-        quantity: 0,
-        factor: event.target.value,
-      });
-    }
+    let newArray = [...components];
+    newArray[index].factor = event.target.value;
+    setComponents(newArray);
     if (components[index].factor > 1) {
       document.getElementById(`factor-${index}`).style.color = "red";
     }
@@ -174,7 +155,8 @@ const RateOfYieldCreateScreen = ({ history }) => {
                     <td>
                       <Form.Group controlId={`factor-${index}`}>
                         <Form.Control
-                          type="decimal"
+                          type="number"
+                          step="0.01"
                           placeholder="Unesite postotak"
                           onChange={handleFactor(index)}
                           autoComplete="off"

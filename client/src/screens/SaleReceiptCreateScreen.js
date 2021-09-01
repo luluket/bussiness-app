@@ -11,6 +11,7 @@ import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { SALE_RECEIPT_CREATE_RESET } from "../constants/saleReceiptConstants";
 import { createReceipt, listSaleReceipts } from "../actions/saleReceiptActions";
+
 const SaleReceiptCreateScreen = ({ history }) => {
   const dispatch = useDispatch();
 
@@ -57,9 +58,6 @@ const SaleReceiptCreateScreen = ({ history }) => {
   const addRow = () => {
     setRows([...rows, "row"]);
   };
-  useEffect(() => {
-    console.log(ids);
-  }, [ids]);
 
   const handleArticle = (index) => (event) => {
     let newArray = [...ids];
@@ -72,10 +70,6 @@ const SaleReceiptCreateScreen = ({ history }) => {
     };
     setSoldArticles(newArray2);
   };
-
-  useEffect(() => {
-    console.log(soldArticles);
-  }, [soldArticles]);
 
   useEffect(() => {
     if (ids) {

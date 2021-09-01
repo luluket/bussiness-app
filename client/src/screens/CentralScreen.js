@@ -257,7 +257,7 @@ const CentralScreen = () => {
                 {lager.map((item) => {
                   return (
                     <tr key={item._id}>
-                      <td>{item._id}</td>
+                      <td>{item.article._id}</td>
                       <td>{item.article.name}</td>
                       <td>{item.article.unit}</td>
                       <td>{item.quantity}</td>
@@ -282,7 +282,8 @@ const CentralScreen = () => {
               <thead>
                 <tr>
                   <th>ZAKLJUČEN</th>
-                  <th>DOKUMENT</th>
+                  <th>BROJ DOKUMENTA</th>
+                  <th>PODTIP DOKUMENTA</th>
                   <th>DATUM</th>
                   <th>VRIJEME</th>
                   <th>DOBAVLJAČ</th>
@@ -303,9 +304,8 @@ const CentralScreen = () => {
                           style={{ color: "green" }}
                         ></i>
                       </td>
-                      <td>
-                        {receipt.documentNumber}-{receipt.documentType}
-                      </td>
+                      <td>{receipt.documentNumber}</td>
+                      <td>{receipt.documentSubtype}</td>
                       <td>{receipt.createdAt.substring(0, 10)}</td>
                       <td>{receipt.createdAt.substring(11, 19)}</td>
                       <td>
@@ -346,7 +346,8 @@ const CentralScreen = () => {
               <thead>
                 <tr>
                   <th>ZAKLJUČEN</th>
-                  <th>DOKUMENT</th>
+                  <th>BROJ DOKUMENTA</th>
+                  <th>PODTIP DOKUMENTA</th>
                   <th>DATUM</th>
                   <th>VRIJEME</th>
                   <th>SKLADIŠTE</th>
@@ -367,9 +368,8 @@ const CentralScreen = () => {
                           style={{ color: "green" }}
                         ></i>
                       </td>
-                      <td>
-                        {item.documentNumber}-{item.documentType}
-                      </td>
+                      <td>{item.documentNumber}</td>
+                      <td>{item.documentSubtype}</td>
                       <td>{item.createdAt.substring(0, 10)}</td>
                       <td>{item.createdAt.substring(11, 19)}</td>
                       <td>{item.destinationWarehouse}</td>
@@ -457,7 +457,8 @@ const CentralScreen = () => {
                 <tr>
                   <th>ZAHTIJEVANO</th>
                   <th>ISPORUČENO</th>
-                  <th>DOKUMENT</th>
+                  <th>BROJ DOKUMENTA</th>
+                  <th>PODTIP DOKUMENTA</th>
                   <th>ARTIKLI</th>
                   <th>KOLIČINA</th>
                   <th>DATUM</th>
@@ -500,9 +501,8 @@ const CentralScreen = () => {
                           ></i>
                         )}
                       </td>
-                      <td>
-                        {item.documentNumber}-{item.documentType}
-                      </td>
+                      <td>{item.documentNumber}</td>
+                      <td>{item.documentSubtype}</td>
                       <td>
                         {item.requestedArticles.map((o) => (
                           <div>{`${o.article.name}\n`}</div>

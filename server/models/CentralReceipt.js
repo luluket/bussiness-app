@@ -10,6 +10,10 @@ const centralReceiptSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    documentSubtype: {
+      type: String,
+      required: true,
+    },
     documentNumber: {
       type: Number,
       required: true,

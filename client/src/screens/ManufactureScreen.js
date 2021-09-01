@@ -353,7 +353,8 @@ const ManufactureScreen = () => {
               <thead>
                 <tr>
                   <th>ZAKLJUČEN</th>
-                  <th>DOKUMENT</th>
+                  <th>BROJ DOKUMENTA</th>
+                  <th>PODTIP DOKUMENTA</th>
                   <th>DATUM</th>
                   <th>VRIJEME</th>
                   <th>SKLADIŠTE</th>
@@ -374,9 +375,8 @@ const ManufactureScreen = () => {
                           style={{ color: "green" }}
                         ></i>
                       </td>
-                      <td>
-                        {item.documentNumber}-{item.documentType}
-                      </td>
+                      <td>{item.documentNumber}</td>
+                      <td>{item.documentSubtype}</td>
                       <td>{item.createdAt.substring(0, 10)}</td>
                       <td>{item.createdAt.substring(11, 19)}</td>
                       <td>{item.departureWarehouse}</td>
@@ -691,7 +691,8 @@ const ManufactureScreen = () => {
                 <tr>
                   <th>ZAHTIJEVANO</th>
                   <th>ZAPRIMLJENO</th>
-                  <th>DOKUMENT</th>
+                  <th>BROJ DOKUMENTA</th>
+                  <th>PODTIP DOKUMENTA</th>
                   <th>ARTIKLI</th>
                   <th>KOLIČINA</th>
                   <th>DATUM</th>
@@ -734,9 +735,8 @@ const ManufactureScreen = () => {
                           ></i>
                         )}
                       </td>
-                      <td>
-                        {item.documentNumber}-{item.documentType}
-                      </td>
+                      <td>{item.documentNumber}</td>
+                      <td>{item.documentSubtype}</td>
                       <td>
                         {item.requestedArticles.map((o) => (
                           <div>{`${o.article.name}\n`}</div>

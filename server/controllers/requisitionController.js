@@ -30,12 +30,13 @@ const createRequisition = asyncHandler(async (req, res) => {
   const requisition = new Requisition({
     requestedArticles: req.body.requestedArticles,
     documentType: req.body.documentType,
+    documentSubtype: req.body.documentSubtype,
     documentNumber: req.body.documentNumber,
     isSent: true,
     isFullfilled: false,
   });
   const created = await requisition.save();
-  res.json(created);
+  res.status(201).json(created);
 });
 
 // @desc Create central export

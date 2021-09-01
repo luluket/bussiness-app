@@ -25,12 +25,11 @@ const CentralExportCreateScreen = ({ history }) => {
   );
   const [destinationWarehouse, setDestinationWarehouse] = useState("");
   const [documentType, setDocumentType] = useState("mđskl-izlaz");
+  const [documentSubtype, setDocumentSubtype] = useState("ostalo");
   const [documentNumber, setDocumentNumber] = useState();
   const [requisition, setRequisition] = useState({});
   const [lagerQuantities, setLagerQuantities] = useState([]);
-  const [exportedArticles, setExportedArticles] = useState([
-    { article: "", quantity: 0 },
-  ]);
+  const [exportedArticles, setExportedArticles] = useState([]);
   const [ids, setIds] = useState([]);
   const [rows, setRows] = useState("");
 
@@ -98,33 +97,21 @@ const CentralExportCreateScreen = ({ history }) => {
   };
 
   const handleArticle = (index) => (event) => {
-    dispatch(articleLagerQuantity(event.target.value)); // fetch article quantity as soon as name is set in form
-
-    const exportedArticle = lager.find(
-      (item) => item.article._id === event.target.value
-    );
-    const { article } = exportedArticle;
-    if (exportedArticles[index]) {
-      exportedArticles[index].article = article;
-    } else {
-      exportedArticles.push({
-        article: article,
-        quantity: 0,
-      });
-    }
+    let newArray = [...exportedArticles];
+    newArray[index] = {
+      article: event.target.value,
+    };
+    setExportedArticles(newArray);
   };
 
   const handleQuantity = (index) => (event) => {
     document.getElementById("quantityHeader").style.border = "black";
     document.getElementById(`quantity-${index}`).style.color = "black";
-    if (exportedArticles[index]) {
-      exportedArticles[index].quantity = event.target.value;
-    } else {
-      exportedArticles.push({
-        article: "",
-        quantity: event.target.value,
-      });
-    }
+
+    let newArray = [...exportedArticles];
+    newArray[index].quantity = event.target.value;
+    setExportedArticles(newArray);
+
     //if article name has been set in form, validate export quantity with lager quantity
     if (exportedArticles[index].article) {
       dispatch(articleLagerQuantity(exportedArticles[index].article._id));
@@ -148,6 +135,10 @@ const CentralExportCreateScreen = ({ history }) => {
       );
     }
   };
+
+  useEffect(() => {
+    console.log(exportedArticles);
+  }, [exportedArticles]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -192,6 +183,7 @@ const CentralExportCreateScreen = ({ history }) => {
             departureWarehouse,
             destinationWarehouse,
             documentType,
+            documentSubtype,
             documentNumber,
             exportedArticles,
           })
@@ -236,7 +228,7 @@ const CentralExportCreateScreen = ({ history }) => {
         </Row>
 
         <Row className="mb-3">
-          <Form.Group as={Col} md={6} controlId="documentType">
+          <Form.Group as={Col} md={4} controlId="documentType">
             <Form.Label>Tip dokumenta</Form.Label>
             <Form.Control
               type="number"
@@ -245,7 +237,16 @@ const CentralExportCreateScreen = ({ history }) => {
               disabled
             ></Form.Control>
           </Form.Group>
-          <Form.Group as={Col} md={6} controlId="documentNumber">
+          <Form.Group as={Col} md={4} controlId="documentSubtype">
+            <Form.Label>Podtip dokumenta</Form.Label>
+            <Form.Control
+              type="number"
+              value={documentSubtype}
+              placeholder={documentSubtype}
+              disabled
+            ></Form.Control>
+          </Form.Group>
+          <Form.Group as={Col} md={4} controlId="documentNumber">
             <Form.Label>Broj dokumenta</Form.Label>
             <Form.Control
               type="number"

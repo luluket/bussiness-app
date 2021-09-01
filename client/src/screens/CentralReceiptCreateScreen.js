@@ -15,11 +15,10 @@ const CentralReceiptCreateScreen = ({ history }) => {
   const dispatch = useDispatch();
 
   const [partner, setPartner] = useState("");
-  const [documentType, setDocumentType] = useState("ulazni račun");
+  const [documentType, setDocumentType] = useState("primka");
+  const [documentSubtype, setDocumentSubtype] = useState("ulazni račun");
   const [documentNumber, setDocumentNumber] = useState();
-  const [receivedArticles, setReceivedArticles] = useState([
-    { article: "", quantity: 0, purchasePrice: 0 },
-  ]);
+  const [receivedArticles, setReceivedArticles] = useState([]);
   const [rows, setRows] = useState([]);
 
   const supplierList = useSelector((state) => state.supplierList);
@@ -52,44 +51,23 @@ const CentralReceiptCreateScreen = ({ history }) => {
   };
 
   const handleArticle = (index) => (event) => {
-    const receivedArticle = articles.find(
-      (item) => item._id === event.target.value
-    );
-
-    const { _id } = receivedArticle;
-    if (receivedArticles[index]) {
-      receivedArticles[index].article = _id;
-    } else {
-      receivedArticles.push({
-        article: _id,
-        quantity: 0,
-        purchasePrice: 0,
-      });
-    }
+    let newArray = [...receivedArticles];
+    newArray[index] = {
+      article: event.target.value,
+    };
+    setReceivedArticles(newArray);
   };
 
   const handleQuantity = (index) => (event) => {
-    if (receivedArticles[index]) {
-      receivedArticles[index].quantity = event.target.value;
-    } else {
-      receivedArticles.push({
-        article: "",
-        quantity: event.target.value,
-        purchasePrice: 0,
-      });
-    }
+    let newArray = [...receivedArticles];
+    newArray[index].quantity = event.target.value;
+    setReceivedArticles(newArray);
   };
 
   const handlePurchasePrice = (index) => (event) => {
-    if (receivedArticles[index]) {
-      receivedArticles[index].purchasePrice = event.target.value;
-    } else {
-      receivedArticles.push({
-        article: "",
-        quantity: 0,
-        purchasePrice: event.target.value,
-      });
-    }
+    let newArray = [...receivedArticles];
+    newArray[index].purchasePrice = event.target.value;
+    setReceivedArticles(newArray);
   };
 
   const submitHandler = (e) => {
@@ -98,6 +76,7 @@ const CentralReceiptCreateScreen = ({ history }) => {
       createReceipt({
         partner,
         documentType,
+        documentSubtype,
         documentNumber,
         receivedArticles,
       })
@@ -136,7 +115,7 @@ const CentralReceiptCreateScreen = ({ history }) => {
             </Col>
           </Row>
           <Row className="mb-3">
-            <Col md={6}>
+            <Col md={4}>
               <Form.Group controlId="documentType">
                 <Form.Label>Tip dokumenta</Form.Label>
                 <Form.Control
@@ -147,7 +126,18 @@ const CentralReceiptCreateScreen = ({ history }) => {
                 ></Form.Control>
               </Form.Group>
             </Col>
-            <Col md={6}>
+            <Col md={4}>
+              <Form.Group controlId="documentSubtype">
+                <Form.Label>Podtip dokumenta</Form.Label>
+                <Form.Control
+                  type="number"
+                  value={documentSubtype}
+                  placeholder={documentSubtype}
+                  disabled
+                ></Form.Control>
+              </Form.Group>
+            </Col>
+            <Col md={4}>
               <Form.Group controlId="documentNumber">
                 <Form.Label>Broj dokumenta</Form.Label>
                 <Form.Control
@@ -201,7 +191,8 @@ const CentralReceiptCreateScreen = ({ history }) => {
                     </td>
                     <td>
                       <Form.Control
-                        type="decimal"
+                        type="number"
+                        step="0.01"
                         placeholder="Unesite nabavnu cijenu"
                         onChange={handlePurchasePrice(index)}
                       ></Form.Control>

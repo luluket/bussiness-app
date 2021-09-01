@@ -1,17 +1,8 @@
 import "react-bootstrap-drawer/lib/style.css";
 import { useState } from "react";
-import {
-  Collapse,
-  ListGroup,
-  Nav,
-  Col,
-  NavDropdown,
-  Navbar,
-} from "react-bootstrap";
+import { Collapse, ListGroup, Nav, Col } from "react-bootstrap";
 import { Drawer } from "react-bootstrap-drawer";
 import { useDispatch } from "react-redux";
-import { listLager } from "../actions/lagerActions";
-import { listCentralReceipts } from "../actions/centralReceiptActions";
 
 const Sidebar = ({ props }) => {
   const dispatch = useDispatch();
@@ -39,9 +30,9 @@ const Sidebar = ({ props }) => {
                         <>
                           <Nav.Item>{prop.name} </Nav.Item>
                           <ListGroup variant="flush">
-                            {prop.subitems.map((subitem) => {
+                            {prop.subitems.map((subitem, index) => {
                               return (
-                                <ListGroup.Item>
+                                <ListGroup.Item key={index}>
                                   <Nav.Item
                                     onClick={() => dispatch(subitem.function)}
                                   >
