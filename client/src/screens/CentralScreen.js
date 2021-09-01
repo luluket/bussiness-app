@@ -408,7 +408,8 @@ const CentralScreen = () => {
               <thead>
                 <tr>
                   <th>ZAKLJUČEN</th>
-                  <th>DOKUMENT</th>
+                  <th>BROJ DOKUMENTA</th>
+                  <th>PODTIP DOKUMENTA</th>
                   <th>DATUM</th>
                   <th>VRIJEME</th>
                   <th>SKLADIŠTE</th>
@@ -429,9 +430,8 @@ const CentralScreen = () => {
                           style={{ color: "green" }}
                         ></i>
                       </td>
-                      <td>
-                        {item.documentNumber}-{item.documentType}
-                      </td>
+                      <td>{item.documentNumber}</td>
+                      <td>{item.documentSubtype}</td>
                       <td>{item.createdAt.substring(0, 10)}</td>
                       <td>{item.createdAt.substring(11, 19)}</td>
                       <td>{item.departureWarehouse}</td>

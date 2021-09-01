@@ -36,7 +36,7 @@ const getWorkorder = asyncHandler(async (req, res) => {
   res.json(workorder);
 });
 
-// @desc Create workorder, update MaterialLager, create ProductLager article
+// @desc Create workorder in toDo phase
 // @route POST /api/workorders
 // @access Public
 const createWorkorder = asyncHandler(async (req, res) => {
@@ -92,6 +92,7 @@ const updateWorkorder = asyncHandler(async (req, res) => {
       //create material consumption document
       const materialConsumption = new MaterialConsumption({
         documentType: "utrošak materijala",
+        documentSubtype: "ostalo",
         documentNumber: req.body.documentNumber,
         workorder: req.body._id,
         article: req.body.article,

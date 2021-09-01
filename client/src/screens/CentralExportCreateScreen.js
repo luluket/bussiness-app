@@ -160,6 +160,7 @@ const CentralExportCreateScreen = ({ history }) => {
             destinationWarehouse,
             documentNumber,
             documentType,
+            documentSubtype,
             exportedArticles: requisition.requestedArticles,
           })
         );

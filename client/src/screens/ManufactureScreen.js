@@ -277,7 +277,7 @@ const ManufactureScreen = () => {
       subitems: [
         { name: "Lager", function: listMaterialLager() },
         { name: "Međuskladišnica ulaz", function: listMaterialImports() },
-        { name: "Međuskladišnica izlaz", function: listMaterialLager() },
+        // { name: "Međuskladišnica izlaz", function: listMaterialLager() },
         { name: "Utrošak materijala", function: listMaterialConsumptions() },
       ],
       function: listMaterialLager(),
@@ -441,7 +441,8 @@ const ManufactureScreen = () => {
               <thead>
                 <tr>
                   <th>ZAKLJUČEN</th>
-                  <th>DOKUMENT</th>
+                  <th>BROJ DOKUMENTA</th>
+                  <th>PODTIP DOKUMENTA</th>
                   <th>DATUM</th>
                   <th>VRIJEME</th>
                   <th>SKLADIŠTE</th>
@@ -456,9 +457,8 @@ const ManufactureScreen = () => {
                         style={{ color: "green" }}
                       ></i>
                     </td>
-                    <td>
-                      {item.documentNumber}-{item.documentType}
-                    </td>
+                    <td>{item.documentNumber}</td>
+                    <td>{item.documentSubtype}</td>
                     <td>{item.createdAt.substring(0, 10)}</td>
                     <td>{item.createdAt.substring(11, 19)}</td>
                     <td>{item.destinationWarehouse}</td>
@@ -499,7 +499,8 @@ const ManufactureScreen = () => {
               <thead>
                 <tr>
                   <th>ZAKLJUČEN</th>
-                  <th>DOKUMENT</th>
+                  <th>BROJ DOKUMENTA</th>
+                  <th>PODTIP DOKUMENTA</th>
                   <th>DATUM</th>
                   <th>VRIJEME</th>
                   <th>ARTIKL</th>
@@ -516,10 +517,8 @@ const ManufactureScreen = () => {
                           style={{ color: "green" }}
                         ></i>
                       </td>
-                      <td>
-                        {item.documentNumber}-{item.documentType}
-                      </td>
-
+                      <td>{item.documentNumber}</td>
+                      <td>{item.documentSubtype}</td>
                       <td>{item.createdAt.substring(0, 10)}</td>
                       <td>{item.createdAt.substring(11, 19)}</td>
                       <td>

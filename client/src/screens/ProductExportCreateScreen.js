@@ -20,10 +20,9 @@ const ProductExportCreateScreen = ({ history }) => {
   );
   const [destinationWarehouse, setDestinationWarehouse] = useState("");
   const [documentType, setDocumentType] = useState("mđskl-izlaz");
+  const [documentSubtype, setDocumentSubtype] = useState("ostalo");
   const [documentNumber, setDocumentNumber] = useState();
-  const [exportedArticles, setExportedArticles] = useState([
-    { article: "", quantity: 0, purchasePrice: 0, manufacturePrice: 0 },
-  ]);
+  const [exportedArticles, setExportedArticles] = useState([]);
   const [ids, setIds] = useState([]);
   const [rows, setRows] = useState("");
 
@@ -59,19 +58,13 @@ const ProductExportCreateScreen = ({ history }) => {
       (item) => item.article._id === event.target.value
     );
     const { article, purchasePrice, manufacturePrice } = exportedArticle;
-    console.log(article, purchasePrice, manufacturePrice);
-    if (exportedArticles[index]) {
-      exportedArticles[index].article = article._id;
-      exportedArticles[index].purchasePrice = purchasePrice;
-      exportedArticles[index].manufacturePrice = manufacturePrice;
-    } else {
-      exportedArticles.push({
-        article: article._id,
-        quantity: 0,
-        purchasePrice: purchasePrice,
-        manufacturePrice: manufacturePrice,
-      });
-    }
+    let newArray = [...exportedArticles];
+    newArray[index] = {
+      article: article._id,
+      purchasePrice: purchasePrice,
+      manufacturePrice: manufacturePrice,
+    };
+    setExportedArticles(newArray);
   };
 
   useEffect(() => {
@@ -80,17 +73,16 @@ const ProductExportCreateScreen = ({ history }) => {
     }
   }, [ids]);
 
+  useEffect(() => {
+    console.log(exportedArticles);
+  }, [exportedArticles]);
+
   const handleQuantity = (index) => (event) => {
     document.getElementById("quantityHeader").style.border = "black";
     document.getElementById(`quantity-${index}`).style.color = "black";
-    if (exportedArticles[index]) {
-      exportedArticles[index].quantity = event.target.value;
-    } else {
-      exportedArticles.push({
-        article: "",
-        quantity: event.target.value,
-      });
-    }
+    let newArray = [...exportedArticles];
+    newArray[index].quantity = event.target.value;
+    setExportedArticles(newArray);
 
     // if article name has been set in form, validate export quantity with lager quantity
     if (exportedArticles[index].article) {
@@ -119,6 +111,7 @@ const ProductExportCreateScreen = ({ history }) => {
           destinationWarehouse,
           exportedArticles,
           documentType,
+          documentSubtype,
           documentNumber,
         })
       );
@@ -158,7 +151,7 @@ const ProductExportCreateScreen = ({ history }) => {
           </Col>
         </Row>
         <Row className="mb-3">
-          <Col md={6}>
+          <Col md={4}>
             <Form.Group controlId="documentType" className="mb-3">
               <Form.Label>Tip dokumenta</Form.Label>
               <Form.Control
@@ -168,7 +161,17 @@ const ProductExportCreateScreen = ({ history }) => {
               ></Form.Control>
             </Form.Group>
           </Col>
-          <Col md={6}>
+          <Col md={4}>
+            <Form.Group controlId="documentSubtype" className="mb-3">
+              <Form.Label>Podtip dokumenta</Form.Label>
+              <Form.Control
+                type="text"
+                value={documentSubtype}
+                disabled
+              ></Form.Control>
+            </Form.Group>
+          </Col>
+          <Col md={4}>
             <Form.Group controlId="documentNumber" className="mb-3">
               <Form.Label>Broj dokumenta</Form.Label>
               <Form.Control
