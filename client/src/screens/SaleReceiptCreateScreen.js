@@ -16,7 +16,8 @@ const SaleReceiptCreateScreen = ({ history }) => {
   const dispatch = useDispatch();
 
   const [partner, setPartner] = useState("");
-  const [documentType, setDocumentType] = useState("izlazni račun");
+  const [documentType, setDocumentType] = useState("račun VP");
+  const [documentSubtype, setDocumentSubtype] = useState("izlazni račun");
   const [documentNumber, setDocumentNumber] = useState();
   const [soldArticles, setSoldArticles] = useState([]);
   const [rows, setRows] = useState([]);
@@ -82,9 +83,15 @@ const SaleReceiptCreateScreen = ({ history }) => {
     document.getElementById("quantityHeader").style.border = "black";
     let newArray = [...soldArticles];
     newArray[index].quantity = event.target.value;
-    newArray[index].base = event.target.value * sellingPrices[index] * 0.75;
-    newArray[index].pdv = event.target.value * sellingPrices[index] * 0.25;
-    newArray[index].sellingPrice = event.target.value * sellingPrices[index];
+    newArray[index].base = parseFloat(
+      (event.target.value * sellingPrices[index] * 0.75).toFixed(2)
+    );
+    newArray[index].pdv = parseFloat(
+      (event.target.value * sellingPrices[index] * 0.25).toFixed(2)
+    );
+    newArray[index].sellingPrice = parseFloat(
+      (event.target.value * sellingPrices[index]).toFixed(2)
+    );
     setSoldArticles(newArray);
   };
 
@@ -104,6 +111,7 @@ const SaleReceiptCreateScreen = ({ history }) => {
         createReceipt({
           partner,
           documentType,
+          documentSubtype,
           documentNumber,
           soldArticles,
         })
@@ -143,7 +151,7 @@ const SaleReceiptCreateScreen = ({ history }) => {
             </Col>
           </Row>
           <Row className="mb-3">
-            <Col md={6}>
+            <Col md={4}>
               <Form.Group controlId="documentType">
                 <Form.Label>Tip dokumenta</Form.Label>
                 <Form.Control
@@ -154,7 +162,18 @@ const SaleReceiptCreateScreen = ({ history }) => {
                 ></Form.Control>
               </Form.Group>
             </Col>
-            <Col md={6}>
+            <Col md={4}>
+              <Form.Group controlId="documentSubtype">
+                <Form.Label>Podtip dokumenta</Form.Label>
+                <Form.Control
+                  type="number"
+                  value={documentSubtype}
+                  placeholder={documentSubtype}
+                  disabled
+                ></Form.Control>
+              </Form.Group>
+            </Col>
+            <Col md={4}>
               <Form.Group controlId="documentNumber">
                 <Form.Label>Broj dokumenta</Form.Label>
                 <Form.Control

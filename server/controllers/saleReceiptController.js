@@ -16,10 +16,10 @@ const getReceipts = asyncHandler(async (req, res) => {
 // @route POST /api/sale/receipts
 // @access Public
 const createReceipt = asyncHandler(async (req, res) => {
-  console.log(req.body);
   const receipt = new SaleReceipt({
     partner: req.body.partner,
     documentType: req.body.documentType,
+    documentSubtype: req.body.documentSubtype,
     documentNumber: req.body.documentNumber,
     soldArticles: req.body.soldArticles,
   });
@@ -27,7 +27,6 @@ const createReceipt = asyncHandler(async (req, res) => {
   if (receiptCreated) {
     //update lager
     req.body.soldArticles.forEach(async (item) => {
-      console.log(item);
       const itemLager = await Lager.findOne({ article: item.article });
       itemLager.quantity -= item.quantity;
       await itemLager.save();
