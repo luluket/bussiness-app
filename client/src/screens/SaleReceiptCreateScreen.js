@@ -16,8 +16,8 @@ const SaleReceiptCreateScreen = ({ history }) => {
   const dispatch = useDispatch();
 
   const [partner, setPartner] = useState("");
-  const [documentType, setDocumentType] = useState("račun VP");
-  const [documentSubtype, setDocumentSubtype] = useState("izlazni račun");
+  const documentType = "račun VP";
+  const documentSubtype = "izlazni račun";
   const [documentNumber, setDocumentNumber] = useState();
   const [soldArticles, setSoldArticles] = useState([]);
   const [rows, setRows] = useState([]);
@@ -54,7 +54,7 @@ const SaleReceiptCreateScreen = ({ history }) => {
       dispatch(listSaleReceipts());
       history.push("/central");
     }
-  }, [dispatch, successCreate]);
+  }, [dispatch, history, successCreate]);
 
   const addRow = () => {
     setRows([...rows, "row"]);
@@ -77,7 +77,7 @@ const SaleReceiptCreateScreen = ({ history }) => {
       dispatch(articleLagerQuantities(ids));
       dispatch(articleLagerSellingPrices(ids));
     }
-  }, [ids]);
+  }, [dispatch, ids]);
 
   const handleQuantity = (index) => (event) => {
     document.getElementById("quantityHeader").style.border = "black";

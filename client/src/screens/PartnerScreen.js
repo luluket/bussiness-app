@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Row, Col, Table, NavItem } from "react-bootstrap";
+import { Form, Button, Row, Col, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
@@ -22,7 +22,6 @@ const PartnerScreen = ({ history, match }) => {
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
   const [telephone, setTelephone] = useState(0);
-  const [message, setMessage] = useState("");
 
   const partnerDetails = useSelector((state) => state.partnerDetails);
   const { loading, error, partner } = partnerDetails;
@@ -71,11 +70,7 @@ const PartnerScreen = ({ history, match }) => {
 
   useEffect(() => {
     dispatch(getPartnerDetails(match.params.id));
-  }, [match]);
-
-  const handleRowClick = (id) => {
-    history.push(`/central/receipt/${id}`);
-  };
+  }, [dispatch, match]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -100,9 +95,7 @@ const PartnerScreen = ({ history, match }) => {
   return (
     <Row>
       <Col md={4}>
-        {message && <Message variant="danger">{message}</Message>}
         {error && <Message variant="danger">{error}</Message>}
-        {/* {success && <Message variant="success">Profile Updated</Message>} */}
         {loading && <Loader />}
         <h2>
           {partner.name} {partner.surname}
@@ -246,26 +239,25 @@ const PartnerScreen = ({ history, match }) => {
                 <thead>
                   <tr>
                     <th>ZAKLJUČEN</th>
+                    <th>BROJ DOKUMENTA</th>
                     <th>DOKUMENT</th>
+                    <th>PODTIP DOKUMENTA</th>
                     <th>DATUM</th>
                     <th>VRIJEME</th>
                   </tr>
                 </thead>
                 <tbody>
                   {partnerReceipts.map((receipt) => (
-                    <tr
-                      key={receipt._id}
-                      onClick={() => handleRowClick(receipt._id)}
-                    >
+                    <tr key={receipt._id}>
                       <td>
                         <i
                           className="fas fa-check"
                           style={{ color: "green" }}
                         ></i>
                       </td>
-                      <td>
-                        {receipt.documentNumber}-{receipt.documentType}
-                      </td>
+                      <td>{receipt.documentNumber}</td>
+                      <td>{receipt.documentType}</td>
+                      <td>{receipt.documentSubtype}</td>
                       <td>{receipt.createdAt.substring(0, 10)}</td>
                       <td>{receipt.createdAt.substring(11, 19)}</td>
                     </tr>
@@ -284,26 +276,25 @@ const PartnerScreen = ({ history, match }) => {
                 <thead>
                   <tr>
                     <th>ZAKLJUČEN</th>
+                    <th>BROJ DOKUMENTA</th>
                     <th>DOKUMENT</th>
+                    <th>PODTIP DOKUMENTA</th>
                     <th>DATUM</th>
                     <th>VRIJEME</th>
                   </tr>
                 </thead>
                 <tbody>
                   {partnerPurchases.map((receipt) => (
-                    <tr
-                      key={receipt._id}
-                      onClick={() => handleRowClick(receipt._id)}
-                    >
+                    <tr key={receipt._id}>
                       <td>
                         <i
                           className="fas fa-check"
                           style={{ color: "green" }}
                         ></i>
                       </td>
-                      <td>
-                        {receipt.documentNumber}-{receipt.documentType}
-                      </td>
+                      <td>{receipt.documentNumber}</td>
+                      <td>{receipt.documentType}</td>
+                      <td>{receipt.documentSubtype}</td>
                       <td>{receipt.createdAt.substring(0, 10)}</td>
                       <td>{receipt.createdAt.substring(11, 19)}</td>
                     </tr>

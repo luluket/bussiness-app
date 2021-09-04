@@ -8,7 +8,6 @@ import { listRates } from "../actions/rateOfYieldActions";
 import { listWorkers } from "../actions/userActions";
 import { createWorkorder, listWorkorders } from "../actions/workorderActions";
 import { WORKORDER_CREATE_RESET } from "../constants/workorderConstants";
-import { RATE_LIST_RESET } from "../constants/rateOfYieldConstants";
 
 const WorkorderCreateScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -26,7 +25,7 @@ const WorkorderCreateScreen = ({ history }) => {
   const [totalManufacturePrice, setTotalManufacturePrice] = useState(0);
   const [lotNumber, setLotNumber] = useState(0);
   const [description, setDescription] = useState("");
-  const [toDo, setToDo] = useState(true);
+  const toDo = true;
 
   const [rows, setRows] = useState("");
 
@@ -50,8 +49,6 @@ const WorkorderCreateScreen = ({ history }) => {
   const workorderCreate = useSelector((state) => state.workorderCreate);
   const { success: successCreate } = workorderCreate;
 
-  // purchase prices of material multiplied by manufacturing product quantity equals total product purchase price
-
   useEffect(() => {
     if (!successCreate) {
       dispatch(listProducts());
@@ -64,7 +61,7 @@ const WorkorderCreateScreen = ({ history }) => {
       dispatch(listWorkorders());
       history.push("/manufacture");
     }
-  }, [dispatch, successCreate]);
+  }, [dispatch, history, successCreate]);
 
   useEffect(() => {
     if (
@@ -73,18 +70,22 @@ const WorkorderCreateScreen = ({ history }) => {
       materialQuantities
     ) {
       var purchasePrices = rate.components.map((item, index) =>
-        parseFloat(
-          productQuantity * item.quantity * materialPurchasePrices[index]
+        Number(
+          (
+            productQuantity *
+            item.quantity *
+            materialPurchasePrices[index]
+          ).toFixed(2)
         )
       );
       setTotalPurchasePrice(
-        purchasePrices.reduce((acc, item) => acc + item, 0).toFixed(2)
+        Number(purchasePrices.reduce((acc, item) => acc + item, 0).toFixed(2))
       );
     }
-  }, [productQuantity, rate]);
+  }, [productQuantity, materialPurchasePrices, materialQuantities, rate]);
 
   useEffect(() => {
-    setTotalManufacturePrice((totalPurchasePrice * 2.5).toFixed(2));
+    setTotalManufacturePrice(Number((totalPurchasePrice * 2.5).toFixed(2)));
   }, [totalPurchasePrice]);
 
   const handleRate = (event) => {
@@ -108,19 +109,14 @@ const WorkorderCreateScreen = ({ history }) => {
   useEffect(() => {
     dispatch(articleMaterialLagerQuantities(ids));
     dispatch(articleLagerPurchasePrices(ids));
-  }, [ids]);
+  }, [dispatch, ids]);
 
   const handleWorker = (index) => (event) => {
-    const worker = workerList.workers.find(
-      (worker) => worker._id === event.target.value
-    );
-    if (workers[index]) {
-      workers[index].user = worker;
-    } else {
-      workers.push({
-        user: worker,
-      });
-    }
+    let newArray = [...workers];
+    newArray[index] = {
+      user: event.target.value,
+    };
+    setWorkers(newArray);
   };
 
   const addRow = () => {
@@ -258,7 +254,7 @@ const WorkorderCreateScreen = ({ history }) => {
                 <Form.Control as="select" type="text" onChange={handleRate}>
                   <option value="">Izaberite normativ</option>
                   {rates.map((rate) => (
-                    <option value={rate._id}>
+                    <option value={rate._id} key={rate._id}>
                       {rate._id}-{rate.product.name}
                     </option>
                   ))}
@@ -327,13 +323,16 @@ const WorkorderCreateScreen = ({ history }) => {
                           {`${productQuantity * rate.quantity}*${
                             materialPurchasePrices[index]
                           }=`}
-                          {parseFloat(
-                            productQuantity *
+                          {Number(
+                            (
+                              productQuantity *
                               rate.quantity *
                               materialPurchasePrices[index]
-                          ).toFixed(2)}
+                            ).toFixed(2)
+                          )}
                         </td>
                       )}
+                      <td></td>
                       <td></td>
                     </tr>
                   ))}
@@ -342,12 +341,20 @@ const WorkorderCreateScreen = ({ history }) => {
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td style={{ fontWeight: "bold" }}>
-                      Σ={totalPurchasePrice}
-                    </td>
-                    <td style={{ fontWeight: "bold" }}>
-                      Σ = {totalManufacturePrice}
-                    </td>
+                    {!isNaN(totalPurchasePrice) ? (
+                      <td style={{ fontWeight: "bold" }}>
+                        Σ={totalPurchasePrice}
+                      </td>
+                    ) : (
+                      <td style={{ fontWeight: "bold" }}>Σ=</td>
+                    )}
+                    {!isNaN(totalManufacturePrice) ? (
+                      <td style={{ fontWeight: "bold" }}>
+                        Σ={totalManufacturePrice}
+                      </td>
+                    ) : (
+                      <td style={{ fontWeight: "bold" }}>Σ=</td>
+                    )}
                   </tr>
                 </tbody>
               </Table>

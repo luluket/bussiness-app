@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Form, Col, Button, Table, FormGroup } from "react-bootstrap";
+import { Form, Button, Table, FormGroup } from "react-bootstrap";
 import { listProducts } from "../actions/articleActions";
-import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { RATE_CREATE_RESET } from "../constants/rateOfYieldConstants";
 import { listMaterials } from "../actions/articleActions";
@@ -34,7 +33,7 @@ const RateOfYieldCreateScreen = ({ history }) => {
       dispatch(listRates());
       history.push("/manufacture");
     }
-  }, [dispatch, successCreate]);
+  }, [dispatch, history, successCreate]);
 
   const addRow = () => {
     setRows([...rows, "row"]);

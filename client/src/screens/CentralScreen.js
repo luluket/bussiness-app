@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { listLager } from "../actions/lagerActions";
-import { Table, Button, Row, Col, ListGroup } from "react-bootstrap";
+import { Table, Button, Row, Col } from "react-bootstrap";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { useHistory } from "react-router-dom";
@@ -29,7 +29,6 @@ const CentralScreen = () => {
 
   const history = useHistory();
 
-  // states to handle empty database tables
   const [showLagerNote, setShowLagerNote] = useState(false);
   const [showReceiptNote, setShowReceiptNote] = useState(false);
   const [showImportNote, setShowImportNote] = useState(false);
@@ -64,11 +63,8 @@ const CentralScreen = () => {
   const requisitionUnfullfilledList = useSelector(
     (state) => state.requisitionUnfullfilledList
   );
-  const {
-    loading: loadingUnfullfilledRequisitions,
-    error: errorUnfullfilledRequisitions,
-    requisitions: requisitionsUnfullfilled,
-  } = requisitionUnfullfilledList;
+  const { requisitions: requisitionsUnfullfilled } =
+    requisitionUnfullfilledList;
 
   const requisitionList = useSelector((state) => state.requisitionList);
   const {
@@ -103,7 +99,7 @@ const CentralScreen = () => {
       setShowImportNote(false);
       setSaleReceiptNote(false);
     }
-  }, [loadingLager]);
+  }, [dispatch, loadingLager]);
 
   useEffect(() => {
     if (loadingReceipts) {
@@ -120,7 +116,7 @@ const CentralScreen = () => {
       setShowImportNote(false);
       setSaleReceiptNote(false);
     }
-  }, [loadingReceipts]);
+  }, [dispatch, loadingReceipts]);
 
   useEffect(() => {
     if (loadingExports) {
@@ -137,7 +133,7 @@ const CentralScreen = () => {
       setShowImportNote(false);
       setSaleReceiptNote(false);
     }
-  }, [loadingExports]);
+  }, [dispatch, loadingExports]);
 
   useEffect(() => {
     if (loadingImports) {
@@ -154,7 +150,7 @@ const CentralScreen = () => {
       setShowRequisitionNote(false);
       setSaleReceiptNote(false);
     }
-  }, [loadingImports]);
+  }, [dispatch, loadingImports]);
 
   useEffect(() => {
     if (loadingRequisitions) {
@@ -172,7 +168,7 @@ const CentralScreen = () => {
       setShowImportNote(false);
       setSaleReceiptNote(false);
     }
-  }, [loadingRequisitions]);
+  }, [dispatch, loadingRequisitions]);
 
   useEffect(() => {
     if (loadingSaleReceipts) {
@@ -189,7 +185,7 @@ const CentralScreen = () => {
       setShowRequisitionNote(false);
       setShowImportNote(false);
     }
-  }, [loadingSaleReceipts]);
+  }, [dispatch, loadingSaleReceipts]);
 
   const props = [
     {
@@ -228,7 +224,7 @@ const CentralScreen = () => {
     <Row className="flex-xl-nowrap">
       <Col as={Sidebar} props={props} />
       <Col xs={12} md={9} lg={9}>
-        {requisitionsUnfullfilled.length != 0 && (
+        {requisitionsUnfullfilled.length !== 0 && (
           <Message variant="danger">
             <div onClick={() => dispatch(listRequisitions())}>
               Zahtjevi za otpremom materijala. Klikni za prikaz
@@ -239,7 +235,7 @@ const CentralScreen = () => {
         <hr></hr>
         {loadingLager && <Loader />}
         {errorLager && <Message variant="danger">{errorLager}</Message>}
-        {lager.length != 0 ? (
+        {lager.length !== 0 ? (
           <>
             <h2>LAGER LISTA</h2>
             <Table striped bordered responsive>
@@ -275,7 +271,7 @@ const CentralScreen = () => {
         )}
         {loadingReceipts && <Loader />}
         {errorReceipts && <Message variant="danger">{errorReceipts}</Message>}
-        {receipts.length != 0 ? (
+        {receipts.length !== 0 ? (
           <>
             <h2>PRIMKE</h2>
             <Table striped bordered hover responsive>
@@ -339,7 +335,7 @@ const CentralScreen = () => {
         )}
         {loadingExports && <Loader />}
         {errorExports && <Message variant="danger">{errorExports}</Message>}
-        {exports.length != 0 ? (
+        {exports.length !== 0 ? (
           <>
             <h2>MEĐUSKLADIŠNICA IZLAZ</h2>
             <Table striped bordered hover responsive>
@@ -401,7 +397,7 @@ const CentralScreen = () => {
         )}
         {loadingImports && <Loader />}
         {errorImports && <Message variant="danger">{errorImports}</Message>}
-        {imports.length != 0 ? (
+        {imports.length !== 0 ? (
           <>
             <h2>MEĐUSKLADIŠNICA ULAZ</h2>
             <Table striped bordered hover responsive>
@@ -449,7 +445,7 @@ const CentralScreen = () => {
         {errorRequisitions && (
           <Message variant="danger">{errorRequisitions}</Message>
         )}
-        {requisitions.length != 0 ? (
+        {requisitions.length !== 0 ? (
           <>
             <h2>TREBOVANJE </h2>
             <Table striped bordered hover responsive size="sm">
@@ -530,7 +526,7 @@ const CentralScreen = () => {
         {errorSaleReceipts && (
           <Message variant="danger">{errorSaleReceipts}</Message>
         )}
-        {saleReceipts.length != 0 ? (
+        {saleReceipts.length !== 0 ? (
           <>
             <h2>RAČUN VP</h2>
             <Table striped bordered hover responsive>

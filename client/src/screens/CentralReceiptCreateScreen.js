@@ -15,8 +15,8 @@ const CentralReceiptCreateScreen = ({ history }) => {
   const dispatch = useDispatch();
 
   const [partner, setPartner] = useState("");
-  const [documentType, setDocumentType] = useState("primka");
-  const [documentSubtype, setDocumentSubtype] = useState("ulazni račun");
+  const documentType = "primka";
+  const documentSubtype = "ulazni račun";
   const [documentNumber, setDocumentNumber] = useState();
   const [receivedArticles, setReceivedArticles] = useState([]);
   const [rows, setRows] = useState([]);
@@ -44,7 +44,7 @@ const CentralReceiptCreateScreen = ({ history }) => {
       dispatch(listCentralReceipts());
       history.push("/central");
     }
-  }, [dispatch, successCreate]);
+  }, [dispatch, history, successCreate]);
 
   const addRow = () => {
     setRows([...rows, "row"]);

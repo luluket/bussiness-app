@@ -33,14 +33,10 @@ const WorkorderScreen = ({ match, history }) => {
   const [workers, setWorkers] = useState([]);
 
   const workorderDetails = useSelector((state) => state.workorderDetails);
-  const {
-    loading: loadingWorkorder,
-    error: errorWorkorder,
-    workorder,
-  } = workorderDetails;
+  const { error: errorWorkorder, workorder } = workorderDetails;
 
   const rateList = useSelector((state) => state.rateList);
-  const { loading: loadinRates, error: errorRates, rates } = rateList;
+  const { rates } = rateList;
 
   const materialQuantities = useSelector(
     (state) => state.materialLagerQuantities.quantities
@@ -87,11 +83,19 @@ const WorkorderScreen = ({ match, history }) => {
       dispatch({ type: WORKORDER_UPDATE_RESET });
       history.push("/manufacture");
     }
-  }, [dispatch, match, history, workorder, successUpdate]);
+  }, [
+    dispatch,
+    match,
+    history,
+    workorder,
+    successUpdate,
+    workorderUpdated.inProgress,
+    workorderUpdated.message,
+  ]);
 
   useEffect(() => {
     dispatch(listWorkorderDetails(match.params.id));
-  }, [match.params.id]);
+  }, [dispatch, match]);
 
   useEffect(() => {
     setIds([]);
@@ -108,7 +112,7 @@ const WorkorderScreen = ({ match, history }) => {
       dispatch(articleLagerPurchasePrices(ids));
       dispatch(listRates());
     }
-  }, [ids]);
+  }, [dispatch, rate, ids]);
 
   const handleRate = (event) => {
     setRate(rates.find((rate) => rate._id === event.target.value));
@@ -122,21 +126,25 @@ const WorkorderScreen = ({ match, history }) => {
       materialQuantities
     ) {
       var purchasePrices = rate.components.map((item, index) =>
-        parseFloat(
-          productQuantity * item.quantity * materialPurchasePrices[index]
+        Number(
+          (
+            productQuantity *
+            item.quantity *
+            materialPurchasePrices[index]
+          ).toFixed(2)
         )
       );
       setTotalPurchasePrice(
-        purchasePrices.reduce((acc, item) => acc + item, 0).toFixed(2)
+        Number(purchasePrices.reduce((acc, item) => acc + item, 0).toFixed(2))
       );
     }
     if (productQuantity) {
       document.getElementById("quantityHeader").style.border = "black";
     }
-  }, [productQuantity, rate]);
+  }, [materialPurchasePrices, materialQuantities, productQuantity, rate]);
 
   useEffect(() => {
-    setTotalManufacturePrice((totalPurchasePrice * 2.5).toFixed(2));
+    setTotalManufacturePrice(Number((totalPurchasePrice * 2.5).toFixed(2)));
   }, [totalPurchasePrice]);
 
   const handleFinished = () => {
@@ -398,7 +406,7 @@ const WorkorderScreen = ({ match, history }) => {
                     )}
 
                     {rates &&
-                      rates.map((item) => {
+                      rates.forEach((item) => {
                         if (item._id !== rate._id) {
                           return (
                             <option value={item._id}>

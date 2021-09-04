@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
-import FormContainer from "../components/FormContainer";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { createPartner } from "../actions/partnerActions";
 import { useHistory } from "react-router-dom";
-import Loader from "../components/Loader";
-import Message from "../components/Message";
 import { PARTNER_CREATE_RESET } from "../constants/partnerConstants";
 
 const PartnerCreateScreen = () => {
@@ -25,9 +22,7 @@ const PartnerCreateScreen = () => {
   const [country, setCountry] = useState("");
 
   const partnerCreate = useSelector((state) => state.partnerCreate);
-  const { loading, success, partner } = partnerCreate;
-
-  console.log(partner);
+  const { success } = partnerCreate;
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -53,7 +48,7 @@ const PartnerCreateScreen = () => {
       dispatch({ type: PARTNER_CREATE_RESET });
       history.push("/partners");
     }
-  }, [success]);
+  }, [dispatch, history, success]);
 
   return (
     <>

@@ -15,12 +15,10 @@ import { PRODUCT_EXPORT_CREATE_RESET } from "../constants/productLagerConstants"
 const ProductExportCreateScreen = ({ history }) => {
   const dispatch = useDispatch();
 
-  const [departureWarehouse, setDepartureWarehouse] = useState(
-    "Skladište gotovih proizvoda"
-  );
+  const departureWarehouse = "Skladište gotovih proizvoda";
   const [destinationWarehouse, setDestinationWarehouse] = useState("");
-  const [documentType, setDocumentType] = useState("mđskl-izlaz");
-  const [documentSubtype, setDocumentSubtype] = useState("ostalo");
+  const documentType = "mđskl-izlaz";
+  const documentSubtype = "ostalo";
   const [documentNumber, setDocumentNumber] = useState();
   const [exportedArticles, setExportedArticles] = useState([]);
   const [ids, setIds] = useState([]);
@@ -46,7 +44,7 @@ const ProductExportCreateScreen = ({ history }) => {
       dispatch(productLagerQuantities());
       dispatch(listProductLager());
     }
-  }, [dispatch, successCreate]);
+  }, [dispatch, history, successCreate]);
 
   const addRow = () => {
     setRows([...rows, "row"]);
@@ -71,7 +69,7 @@ const ProductExportCreateScreen = ({ history }) => {
     if (ids) {
       dispatch(productLagerQuantities(ids));
     }
-  }, [ids]);
+  }, [dispatch, ids]);
 
   useEffect(() => {
     console.log(exportedArticles);

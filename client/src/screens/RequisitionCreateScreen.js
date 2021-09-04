@@ -12,26 +12,19 @@ import {
 const RequisitionCreateScreen = ({ history }) => {
   const dispatch = useDispatch();
 
-  const [departureWarehouse, setDepartureWarehouse] = useState(
-    "skladište materijala"
-  );
+  const departureWarehouse = "skladište materijala";
   const [destinationWarehouse, setDestinationWarehouse] = useState("");
-  const [documentType, setDocumentType] = useState("trebovanje");
-  const [documentSubtype, setDocumentSubtype] = useState("ostalo");
+  const documentType = "trebovanje";
+  const documentSubtype = "ostalo";
   const [documentNumber, setDocumentNumber] = useState(0);
   const [requestedArticles, setRequestedArticles] = useState([]);
   const [rows, setRows] = useState("");
 
   const materialList = useSelector((state) => state.materialList);
-  const {
-    loading: loadingMaterials,
-    error: errorMaterials,
-    materials,
-  } = materialList;
+  const { materials } = materialList;
 
   const requisitionCreate = useSelector((state) => state.requisitionCreate);
   const {
-    loading: loadingCreate,
     success: successCreate,
     error: errorCreate,
     requisition,
@@ -44,7 +37,7 @@ const RequisitionCreateScreen = ({ history }) => {
       dispatch(listRequisitions());
       history.push("/manufacture");
     }
-  }, [dispatch, successCreate]);
+  }, [dispatch, history, successCreate]);
 
   const addRow = () => {
     setRows([...rows, "row"]);

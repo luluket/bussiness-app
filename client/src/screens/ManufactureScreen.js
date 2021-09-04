@@ -122,7 +122,7 @@ const ManufactureScreen = () => {
       setShowRateNote(false);
       setShowProductExportNote(false);
     }
-  }, [loadingMaterialLager]);
+  }, [dispatch, loadingMaterialLager]);
 
   useEffect(() => {
     if (loadingImports) {
@@ -143,7 +143,7 @@ const ManufactureScreen = () => {
       setShowRateNote(false);
       setShowProductExportNote(false);
     }
-  }, [loadingImports]);
+  }, [dispatch, loadingImports]);
 
   useEffect(() => {
     if (loadingConsumptions) {
@@ -164,7 +164,7 @@ const ManufactureScreen = () => {
       setShowRequisitionNote(false);
       setShowRateNote(false);
     }
-  }, [loadingConsumptions]);
+  }, [dispatch, loadingConsumptions]);
 
   useEffect(() => {
     if (loadingProductLager) {
@@ -185,7 +185,7 @@ const ManufactureScreen = () => {
       setShowRateNote(false);
       setShowProductExportNote(false);
     }
-  }, [loadingProductLager]);
+  }, [dispatch, loadingProductLager]);
 
   useEffect(() => {
     if (loadingProductExports) {
@@ -206,7 +206,7 @@ const ManufactureScreen = () => {
       setShowRequisitionNote(false);
       setShowRateNote(false);
     }
-  }, [loadingProductExports]);
+  }, [dispatch, loadingProductExports]);
 
   useEffect(() => {
     if (loadingWorkorders) {
@@ -227,7 +227,7 @@ const ManufactureScreen = () => {
       setShowRateNote(false);
       setShowProductExportNote(false);
     }
-  }, [loadingWorkorders]);
+  }, [dispatch, loadingWorkorders]);
 
   useEffect(() => {
     if (loadingRequisitions) {
@@ -248,7 +248,7 @@ const ManufactureScreen = () => {
       setShowRateNote(false);
       setShowProductExportNote(false);
     }
-  }, [loadingRequisitions]);
+  }, [dispatch, loadingRequisitions]);
 
   useEffect(() => {
     if (loadingRates) {
@@ -269,7 +269,7 @@ const ManufactureScreen = () => {
       setShowRequisitionNote(false);
       setShowProductExportNote(false);
     }
-  }, [loadingRates]);
+  }, [dispatch, loadingRates]);
 
   const props = [
     {
@@ -314,7 +314,7 @@ const ManufactureScreen = () => {
         {errorMaterialLager && (
           <Message variant="danger">{errorMaterialLager}</Message>
         )}
-        {materialLager.length != 0 ? (
+        {materialLager.length !== 0 ? (
           <>
             <h2>SKLADIŠTE MATERIJALA - LAGER LISTA</h2>
             <Table striped bordered responsive>
@@ -346,7 +346,7 @@ const ManufactureScreen = () => {
         )}
         {loadingImports && <Loader />}
         {errorImports && <Message variant="danger">{errorImports}</Message>}
-        {imports.length != 0 ? (
+        {imports.length !== 0 ? (
           <>
             <h2>SKLADIŠTE MATERIJALA - MEĐUSKLADIŠNICA ULAZ</h2>
             <Table striped bordered hover responsive>
@@ -363,12 +363,7 @@ const ManufactureScreen = () => {
               <tbody>
                 {imports.map((item) => {
                   return (
-                    <tr
-                      key={item._id}
-                      // onClick={() =>
-                      //   history.push(`/central/item/${item._id}`)
-                      // }
-                    >
+                    <tr key={item._id}>
                       <td>
                         <i
                           className="fas fa-check"
@@ -396,7 +391,7 @@ const ManufactureScreen = () => {
         {errorProductLager && (
           <Message variant="danger">{errorProductLager}</Message>
         )}
-        {productLager.length != 0 ? (
+        {productLager.length !== 0 ? (
           <>
             <h2>SKLADIŠTE GOTOVIH PROIZVODA - LAGER LISTA</h2>
             <Table striped bordered responsive>
@@ -492,7 +487,7 @@ const ManufactureScreen = () => {
         {errorConsumptions && (
           <Message variant="danger">{errorConsumptions}</Message>
         )}
-        {consumptions && consumptions.length != 0 ? (
+        {consumptions && consumptions.length !== 0 ? (
           <>
             <h2>SKLADIŠTE MATERIJALA - UTROŠAK MATERIJALA</h2>
             <Table striped bordered responsive size="sm">
@@ -542,7 +537,7 @@ const ManufactureScreen = () => {
         {errorWorkorders && (
           <Message variant="danger">{errorWorkorders}</Message>
         )}
-        {workorders && workorders.length != 0 ? (
+        {workorders && workorders.length !== 0 ? (
           <>
             <h2>SKLADIŠTE GOTOVIH PROIZVODA - RADNI NALOZI</h2>
             <Table striped bordered hover responsive size="sm">
@@ -631,7 +626,7 @@ const ManufactureScreen = () => {
         )}
         {loadingRates && <Loader />}
         {errorRates && <Message variant="danger">{errorRates}</Message>}
-        {rates.length != 0 ? (
+        {rates.length !== 0 ? (
           <>
             <h2>NORMATIVI</h2>
             <Table striped bordered hover responsive>
@@ -682,7 +677,7 @@ const ManufactureScreen = () => {
         {errorRequisitions && (
           <Message variant="danger">{errorRequisitions}</Message>
         )}
-        {requisitions.length != 0 ? (
+        {requisitions.length !== 0 ? (
           <>
             <h2>TREBOVANJE</h2>
             <Table striped bordered hover responsive size="sm">

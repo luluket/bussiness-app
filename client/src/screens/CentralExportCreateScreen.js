@@ -20,15 +20,12 @@ import {
 const CentralExportCreateScreen = ({ history }) => {
   const dispatch = useDispatch();
 
-  const [departureWarehouse, setDepartureWarehouse] = useState(
-    "Centralno skladište"
-  );
+  const departureWarehouse = "Centralno skladište";
   const [destinationWarehouse, setDestinationWarehouse] = useState("");
-  const [documentType, setDocumentType] = useState("mđskl-izlaz");
-  const [documentSubtype, setDocumentSubtype] = useState("ostalo");
+  const documentType = "mđskl-izlaz";
+  const documentSubtype = "ostalo";
   const [documentNumber, setDocumentNumber] = useState();
   const [requisition, setRequisition] = useState({});
-  const [lagerQuantities, setLagerQuantities] = useState([]);
   const [exportedArticles, setExportedArticles] = useState([]);
   const [ids, setIds] = useState([]);
   const [rows, setRows] = useState("");
@@ -42,29 +39,18 @@ const CentralExportCreateScreen = ({ history }) => {
   const requisitionUnfullfilledList = useSelector(
     (state) => state.requisitionUnfullfilledList
   );
-  const {
-    loading: loadingUnfullfilledRequisitions,
-    error: errorUnfullfilledRequisitions,
-    requisitions: requisitionsUnfullfilled,
-  } = requisitionUnfullfilledList;
+  const { requisitions: requisitionsUnfullfilled } =
+    requisitionUnfullfilledList;
 
   const lagerArticleQuantity = useSelector(
     (state) => state.lagerArticleQuantity
   );
-  const {
-    loading: loadingQuantity,
-    success: successQuantity,
-    quantity: articleQuantity,
-  } = lagerArticleQuantity;
+  const { quantity: articleQuantity } = lagerArticleQuantity;
 
   const lagerArticleQuantities = useSelector(
     (state) => state.lagerArticleQuantities
   );
-  const {
-    loading: loadingQuantities,
-    success: successQuantities,
-    quantities: articleQuantities,
-  } = lagerArticleQuantities;
+  const { quantities: articleQuantities } = lagerArticleQuantities;
 
   useEffect(() => {
     dispatch(listLagerMaterials());
@@ -74,12 +60,11 @@ const CentralExportCreateScreen = ({ history }) => {
       dispatch(listCentralExports());
       history.push("/central");
     }
-  }, [dispatch, successCreate]);
+  }, [dispatch, history, successCreate]);
 
   // upon requisition selection, fetch requested articles quantities from central lager list
   useEffect(() => {
-    setLagerQuantities([]);
-    if (Object.keys(requisition).length != 0) {
+    if (Object.keys(requisition).length !== 0) {
       requisition.requestedArticles.forEach((item) => {
         setIds((ids) => [...ids, item.article._id]);
       });
@@ -90,7 +75,7 @@ const CentralExportCreateScreen = ({ history }) => {
   // array of article ids sent to lager to fetch quantites
   useEffect(() => {
     dispatch(articleLagerQuantities(ids));
-  }, [ids]);
+  }, [dispatch, ids]);
 
   const addRow = () => {
     setRows([...rows, "row"]);
@@ -124,7 +109,6 @@ const CentralExportCreateScreen = ({ history }) => {
   const handleRequisition = (event) => {
     if (event.target.value === "") {
       setRequisition({});
-      setLagerQuantities([]);
       setIds([]);
       setDocumentNumber(0);
     } else {
@@ -135,10 +119,6 @@ const CentralExportCreateScreen = ({ history }) => {
       );
     }
   };
-
-  useEffect(() => {
-    console.log(exportedArticles);
-  }, [exportedArticles]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -169,7 +149,7 @@ const CentralExportCreateScreen = ({ history }) => {
     } else {
       // if exported quantities are inside lager quantities, submit form
       var overexported = false;
-      exportedArticles.map((item) => {
+      exportedArticles.forEach((item) => {
         dispatch(articleLagerQuantity(item.article));
         if (item.quantity > articleQuantity) {
           overexported = true;
@@ -268,7 +248,7 @@ const CentralExportCreateScreen = ({ history }) => {
           </Form.Control>
         </Form.Group>
 
-        {Object.keys(requisition).length != 0 && (
+        {Object.keys(requisition).length !== 0 && (
           <Table size="sm" bordered responsive>
             <thead>
               <tr>

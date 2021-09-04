@@ -3,22 +3,9 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import HomeScreen from "./screens/HomeScreen";
-import ProductScreen from "./screens/ProductScreen";
-import CartScreen from "./screens/CartScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import ProfileScreen from "./screens/ProfileScreen";
-import ShippingScreen from "./screens/ShippingScreen";
-import PaymentScreen from "./screens/PaymentScreen";
-import PlaceOrderScreen from "./screens/PlaceOrderScreen";
-import OrderScreen from "./screens/OrderScreen";
-import OrderListScreen from "./screens/OrderListScreen";
-import UserListScreen from "./screens/UserListScreen";
-import UserEditScreen from "./screens/UserEditScreen";
-import ProductListScreen from "./screens/ProductListScreen";
-import ProductEditScreen from "./screens/ProductEditScreen";
-
 import MenuScreen from "./screens/MenuScreen";
 import UserScreen from "./screens/UserScreen";
 import PartnerListScreen from "./screens/PartnerListScreen";
@@ -29,7 +16,6 @@ import ArticleScreen from "./screens/ArticleScreen";
 import ArticleCreateScreen from "./screens/ArticleCreateScreen";
 import CentralScreen from "./screens/CentralScreen";
 import CentralReceiptCreateScreen from "./screens/CentralReceiptCreateScreen";
-import CentralReceiptScreen from "./screens/CentralReceiptScreen";
 import CentralExportCreateScreen from "./screens/CentralExportCreateScreen";
 import ManufactureScreen from "./screens/ManufactureScreen";
 import RateOfYieldCreateScreen from "./screens/RateOfYieldCreateScreen";
@@ -46,7 +32,7 @@ const App = () => {
       <main className="py-3">
         <Container>
           <Switch>
-            <Route path="/menu" component={MenuScreen} />
+            <Route path="/" component={MenuScreen} exact />
             <Route exact path="/articles" component={ArticleListScreen} />
             <Route path="/article/:id" component={ArticleScreen} />
             <Route path="/articles/create" component={ArticleCreateScreen} />
@@ -58,11 +44,6 @@ const App = () => {
               component={PartnerCreateScreen}
             />
             <Route path="/central" component={CentralScreen} exact />
-            <Route
-              path="/central/receipt/:id"
-              component={CentralReceiptScreen}
-              exact
-            />
             <Route
               path="/central/receipt"
               component={CentralReceiptCreateScreen}
@@ -105,41 +86,9 @@ const App = () => {
               exact
             />
             <Route path="/user/:id" component={UserScreen} />
-
-            <Route path="/shipping" component={ShippingScreen} />
-            <Route path="/order/:id" component={OrderScreen} />
-            <Route path="/admin/orderlist" component={OrderListScreen} />
-            <Route path="/payment" component={PaymentScreen} />
-            <Route path="/placeorder" component={PlaceOrderScreen} />
             <Route path="/login" component={LoginScreen} />
             <Route path="/register" component={RegisterScreen} />
             <Route path="/profile" component={ProfileScreen} />
-            <Route path="/product/:id" component={ProductScreen} />
-            <Route path="/cart/:id?" component={CartScreen} />
-            <Route path="/admin/userlist" component={UserListScreen} exact />
-            <Route path="/admin/user/:id/edit" component={UserEditScreen} />
-            <Route
-              path="/admin/productlist"
-              component={ProductListScreen}
-              exact
-            />
-            <Route
-              path="/admin/productlist/:pageNumber"
-              component={ProductListScreen}
-              exact
-            />
-            <Route
-              path="/admin/product/:id/edit"
-              component={ProductEditScreen}
-            />
-            <Route path="/" component={MenuScreen} exact />
-            <Route path="/page/:pageNumber" component={HomeScreen} exact />
-            <Route
-              path="/search/:keyword/page/:pageNumber"
-              component={HomeScreen}
-              exact
-            />
-            <Route path="/search/:keyword" component={HomeScreen} exact />
           </Switch>
         </Container>
       </main>

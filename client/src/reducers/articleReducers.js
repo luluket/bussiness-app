@@ -40,7 +40,7 @@ export const articleListReducer = (state = { articles: [] }, action) => {
 export const articleDetailsReducer = (state = { article: {} }, action) => {
   switch (action.type) {
     case ARTICLE_DETAILS_REQUEST:
-      return { loading: true, ...state };
+      return { loading: true };
     case ARTICLE_DETAILS_SUCCESS:
       return { loading: false, article: action.payload };
     case ARTICLE_DETAILS_FAIL:

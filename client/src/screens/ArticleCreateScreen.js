@@ -17,14 +17,14 @@ const ArticleCreateScreen = ({ history }) => {
   const [unit, setUnit] = useState("");
 
   const articleCreate = useSelector((state) => state.articleCreate);
-  const { success: successCreate, article } = articleCreate;
+  const { success: successCreate } = articleCreate;
 
   useEffect(() => {
     if (successCreate) {
       dispatch({ type: ARTICLE_CREATE_RESET });
       history.push("/articles");
     }
-  }, [successCreate]);
+  }, [dispatch, history, successCreate]);
 
   const submitHandler = (e) => {
     e.preventDefault();

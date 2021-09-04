@@ -45,55 +45,55 @@ const RegisterScreen = ({ location, history }) => {
       {loading && <Loader />}
       <Form onSubmit={submitHandler}>
         <Form.Group controlId="name" className="mb-3">
-          <Form.Label>Name</Form.Label>
+          <Form.Label>Ime</Form.Label>
           <Form.Control
             type="name"
-            placeholder="Enter name"
+            placeholder="Unesite ime"
             value={name}
             onChange={(e) => setName(e.target.value)}
           ></Form.Control>
         </Form.Group>
 
         <Form.Group controlId="email" className="mb-3">
-          <Form.Label>Email Address</Form.Label>
+          <Form.Label>Email Adresa</Form.Label>
           <Form.Control
             type="email"
-            placeholder="Enter email"
+            placeholder="Enesite email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           ></Form.Control>
         </Form.Group>
 
         <Form.Group controlId="password" className="mb-3">
-          <Form.Label>Password</Form.Label>
+          <Form.Label>Lozinka</Form.Label>
           <Form.Control
             type="password"
-            placeholder="Enter password"
+            placeholder="Unesite lozinku"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           ></Form.Control>
         </Form.Group>
 
         <Form.Group controlId="confirmPassword" className="mb-3">
-          <Form.Label>Confirm Password</Form.Label>
+          <Form.Label>Ponovite lozinku</Form.Label>
           <Form.Control
             type="password"
-            placeholder="Confirm password"
+            placeholder="Ponovno unesite lozinku"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           ></Form.Control>
         </Form.Group>
 
         <Button type="submit" variant="primary">
-          Register
+          Registracija
         </Button>
       </Form>
 
       <Row className="py-3">
         <Col>
-          Have an Account?{" "}
+          Imate račun?{" "}
           <Link to={redirect ? `/login?redirect=${redirect}` : "/login"}>
-            Login
+            Prijavite se
           </Link>
         </Col>
       </Row>
