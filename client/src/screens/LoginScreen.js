@@ -62,7 +62,7 @@ const LoginScreen = ({ location, history }) => {
         <Col>
           Novi korisnik?{" "}
           <Link to={redirect ? `/register?redirect=${redirect}` : "/register"}>
-            Registerirajte se
+            Registrirajte se
           </Link>
         </Col>
       </Row>

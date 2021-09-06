@@ -39,7 +39,7 @@ const RegisterScreen = ({ location, history }) => {
 
   return (
     <FormContainer>
-      <h1>Sign Up</h1>
+      <h1>Registracija</h1>
       {message && <Message variant="danger">{message}</Message>}
       {error && <Message variant="danger">{error}</Message>}
       {loading && <Loader />}
@@ -85,7 +85,7 @@ const RegisterScreen = ({ location, history }) => {
         </Form.Group>
 
         <Button type="submit" variant="primary">
-          Registracija
+          Registrirajte se
         </Button>
       </Form>
 
