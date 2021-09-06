@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
 import { listArticles } from "../actions/articleActions";
 import { Table, Button, Row, Col } from "react-bootstrap";
@@ -27,6 +28,9 @@ const ArticleListScreen = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Artikli</title>
+      </Helmet>
       {loading ? (
         <Loader />
       ) : error ? (

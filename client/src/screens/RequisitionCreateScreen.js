@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Form, Col, Button, Table } from "react-bootstrap";
 import Message from "../components/Message";
@@ -73,6 +74,9 @@ const RequisitionCreateScreen = ({ history }) => {
 
   return (
     <>
+      <Helmet>
+        <title>Novo trebovanje</title>
+      </Helmet>
       <h1>NOVI DOKUMENT - TREBOVANJE</h1>
       {errorCreate && <Message variant="danger">{errorCreate}</Message>}
 

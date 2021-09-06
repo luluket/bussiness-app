@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
 import { listMaterialLager } from "../actions/materialLagerActions";
 import { Table, Button, Row, Col } from "react-bootstrap";
@@ -306,6 +307,9 @@ const ManufactureScreen = () => {
 
   return (
     <Row className="flex-xl-nowrap">
+      <Helmet>
+        <title>Proizvodnja</title>
+      </Helmet>
       <Col as={Sidebar} props={props} />
       <Col xs={12} md={9} lg={9}>
         <h1 className="text-center">PROIZVODNI POGON</h1>

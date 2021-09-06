@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Form, Col, Button, Table } from "react-bootstrap";
 import { listCustomers } from "../actions/partnerActions";
@@ -121,6 +122,9 @@ const SaleReceiptCreateScreen = ({ history }) => {
 
   return (
     <>
+      <Helmet>
+        <title>Novi račun VP</title>
+      </Helmet>
       <h1>RAČUN VP - CENTRALNO SKLADIŠTE</h1>
       {errorCreate && <Message variant="danger">{errorCreate}</Message>}
       {loadingCustomers ? (

@@ -4,6 +4,9 @@
   "description": "mern commerce",
   "main": "server.js",
   "type": "module",
+  "engines": {
+    "node": "v14.17.1"
+  },
   "scripts": {
     "start": "node server/server.js",
     "server": "nodemon server/server.js --ignore client",

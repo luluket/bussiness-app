@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { listPartners } from "../actions/partnerActions";
@@ -30,6 +31,9 @@ const PartnerListScreen = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Partneri</title>
+      </Helmet>
       <h1>Zaposleni</h1>
 
       {loadingUsers ? (

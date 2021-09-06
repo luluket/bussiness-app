@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
 import { Form, Button, Table, FormGroup } from "react-bootstrap";
 import { listProducts } from "../actions/articleActions";
@@ -85,6 +86,9 @@ const RateOfYieldCreateScreen = ({ history }) => {
 
   return (
     <>
+      <Helmet>
+        <title>Novi normativ</title>
+      </Helmet>
       <h1>NOVI NORMATIV</h1>
       {errorCreate && <Message variant="danger">{errorCreate}</Message>}
 

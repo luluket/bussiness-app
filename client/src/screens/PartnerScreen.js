@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Helmet } from "react-helmet";
 import { Form, Button, Row, Col, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
@@ -93,221 +94,229 @@ const PartnerScreen = ({ history, match }) => {
   };
 
   return (
-    <Row>
-      <Col md={4}>
-        {error && <Message variant="danger">{error}</Message>}
-        {loading && <Loader />}
-        <h2>
-          {partner.name} {partner.surname}
-        </h2>
-        <Form onSubmit={submitHandler}>
-          <Row className="mb-3">
-            <Col lg={6} md={6} sm={12}>
-              <Form.Group controlId="name">
-                <Form.Label>Ime</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                ></Form.Control>
-              </Form.Group>
-            </Col>
+    <>
+      {partner && (
+        <Helmet>
+          <title>{`${partner.name} ${partner.surname}`}</title>
+        </Helmet>
+      )}
 
-            <Col lg={6} md={6} sm={12}>
-              <Form.Group controlId="surname">
-                <Form.Label>Prezime</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={surname}
-                  onChange={(e) => setSurname(e.target.value)}
-                ></Form.Control>
-              </Form.Group>
-            </Col>
-          </Row>
-          <Form.Group controlId="oib">
-            <Form.Label>OIB</Form.Label>
-            <Form.Control
-              type="number"
-              value={oib}
-              onChange={(e) => setOib(e.target.value)}
-              style={{ width: "15rem" }}
-            ></Form.Control>
-          </Form.Group>
+      <Row>
+        <Col md={4}>
+          {error && <Message variant="danger">{error}</Message>}
+          {loading && <Loader />}
+          <h2>
+            {partner.name} {partner.surname}
+          </h2>
+          <Form onSubmit={submitHandler}>
+            <Row className="mb-3">
+              <Col lg={6} md={6} sm={12}>
+                <Form.Group controlId="name">
+                  <Form.Label>Ime</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  ></Form.Control>
+                </Form.Group>
+              </Col>
 
-          <Form.Group controlId="type" className="mb-3">
-            <Form.Label>Vrsta</Form.Label>
-            <Form.Control
-              as="select"
-              type="name"
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-              style={{ width: "15rem" }}
-            >
-              <option>Izaberite vrstu partnera</option>
-              <option value="dobavljač">dobavljač</option>
-              <option value="kupac">kupac</option>
-            </Form.Control>
-          </Form.Group>
+              <Col lg={6} md={6} sm={12}>
+                <Form.Group controlId="surname">
+                  <Form.Label>Prezime</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={surname}
+                    onChange={(e) => setSurname(e.target.value)}
+                  ></Form.Control>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Form.Group controlId="oib">
+              <Form.Label>OIB</Form.Label>
+              <Form.Control
+                type="number"
+                value={oib}
+                onChange={(e) => setOib(e.target.value)}
+                style={{ width: "15rem" }}
+              ></Form.Control>
+            </Form.Group>
 
-          <Form.Group controlId="email" className="mb-3">
-            <Form.Label>Email</Form.Label>
-            <Form.Control
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              style={{ width: "15rem" }}
-            ></Form.Control>
-          </Form.Group>
+            <Form.Group controlId="type" className="mb-3">
+              <Form.Label>Vrsta</Form.Label>
+              <Form.Control
+                as="select"
+                type="name"
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+                style={{ width: "15rem" }}
+              >
+                <option>Izaberite vrstu partnera</option>
+                <option value="dobavljač">dobavljač</option>
+                <option value="kupac">kupac</option>
+              </Form.Control>
+            </Form.Group>
 
-          <Row className="mb-3">
-            <Col lg={6} md={6} sm={12}>
-              <Form.Group controlId="street" className="mb-3">
-                <Form.Label>Ulica</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={street}
-                  onChange={(e) => setStreet(e.target.value)}
-                ></Form.Control>
-              </Form.Group>
-            </Col>
-            <Col lg={6} md={6} sm={12}>
-              <Form.Group controlId="houseNumber" className="mb-3">
-                <Form.Label>Kućni broj</Form.Label>
-                <Form.Control
-                  type="number"
-                  value={houseNumber}
-                  onChange={(e) => setHouseNumber(e.target.value)}
-                ></Form.Control>
-              </Form.Group>
-            </Col>
-          </Row>
+            <Form.Group controlId="email" className="mb-3">
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                style={{ width: "15rem" }}
+              ></Form.Control>
+            </Form.Group>
 
-          <Row className="mb-3">
-            <Col lg={4} md={4} sm={12}>
-              <Form.Group controlId="zip" className="mb-3">
-                <Form.Label>Poštanski broj</Form.Label>
-                <Form.Control
-                  type="number"
-                  value={zip}
-                  onChange={(e) => setZip(e.target.value)}
-                ></Form.Control>
-              </Form.Group>
-            </Col>
-            <Col lg={4} md={4} sm={12}>
-              <Form.Group controlId="city" className="mb-3">
-                <Form.Label>Grad</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                ></Form.Control>
-              </Form.Group>
-            </Col>
-            <Col lg={4} md={4} sm={12}>
-              <Form.Group controlId="country" className="mb-3">
-                <Form.Label>Država</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={country}
-                  onChange={(e) => setCountry(e.target.value)}
-                ></Form.Control>
-              </Form.Group>
-            </Col>
-          </Row>
+            <Row className="mb-3">
+              <Col lg={6} md={6} sm={12}>
+                <Form.Group controlId="street" className="mb-3">
+                  <Form.Label>Ulica</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={street}
+                    onChange={(e) => setStreet(e.target.value)}
+                  ></Form.Control>
+                </Form.Group>
+              </Col>
+              <Col lg={6} md={6} sm={12}>
+                <Form.Group controlId="houseNumber" className="mb-3">
+                  <Form.Label>Kućni broj</Form.Label>
+                  <Form.Control
+                    type="number"
+                    value={houseNumber}
+                    onChange={(e) => setHouseNumber(e.target.value)}
+                  ></Form.Control>
+                </Form.Group>
+              </Col>
+            </Row>
 
-          <Form.Group controlId="telephone" className="mb-3">
-            <Form.Label>Telefon</Form.Label>
-            <Form.Control
-              type="text"
-              value={telephone}
-              onChange={(e) => setTelephone(e.target.value)}
-              style={{ width: "15rem" }}
-            ></Form.Control>
-          </Form.Group>
+            <Row className="mb-3">
+              <Col lg={4} md={4} sm={12}>
+                <Form.Group controlId="zip" className="mb-3">
+                  <Form.Label>Poštanski broj</Form.Label>
+                  <Form.Control
+                    type="number"
+                    value={zip}
+                    onChange={(e) => setZip(e.target.value)}
+                  ></Form.Control>
+                </Form.Group>
+              </Col>
+              <Col lg={4} md={4} sm={12}>
+                <Form.Group controlId="city" className="mb-3">
+                  <Form.Label>Grad</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                  ></Form.Control>
+                </Form.Group>
+              </Col>
+              <Col lg={4} md={4} sm={12}>
+                <Form.Group controlId="country" className="mb-3">
+                  <Form.Label>Država</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={country}
+                    onChange={(e) => setCountry(e.target.value)}
+                  ></Form.Control>
+                </Form.Group>
+              </Col>
+            </Row>
 
-          <Button type="submit" variant="primary">
-            Izmijeni
-          </Button>
-        </Form>
-      </Col>
-      <Col md={8}>
-        {partner.type === "dobavljač" ? (
-          <>
-            <h2>Primke</h2>
-            {partnerReceipts ? (
-              <Table striped bordered hover responsive className="table-sm">
-                <thead>
-                  <tr>
-                    <th>ZAKLJUČEN</th>
-                    <th>BROJ DOKUMENTA</th>
-                    <th>DOKUMENT</th>
-                    <th>PODTIP DOKUMENTA</th>
-                    <th>DATUM</th>
-                    <th>VRIJEME</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {partnerReceipts.map((receipt) => (
-                    <tr key={receipt._id}>
-                      <td>
-                        <i
-                          className="fas fa-check"
-                          style={{ color: "green" }}
-                        ></i>
-                      </td>
-                      <td>{receipt.documentNumber}</td>
-                      <td>{receipt.documentType}</td>
-                      <td>{receipt.documentSubtype}</td>
-                      <td>{receipt.createdAt.substring(0, 10)}</td>
-                      <td>{receipt.createdAt.substring(11, 19)}</td>
+            <Form.Group controlId="telephone" className="mb-3">
+              <Form.Label>Telefon</Form.Label>
+              <Form.Control
+                type="text"
+                value={telephone}
+                onChange={(e) => setTelephone(e.target.value)}
+                style={{ width: "15rem" }}
+              ></Form.Control>
+            </Form.Group>
+
+            <Button type="submit" variant="primary">
+              Izmijeni
+            </Button>
+          </Form>
+        </Col>
+        <Col md={8}>
+          {partner.type === "dobavljač" ? (
+            <>
+              <h2>Primke</h2>
+              {partnerReceipts ? (
+                <Table striped bordered hover responsive className="table-sm">
+                  <thead>
+                    <tr>
+                      <th>ZAKLJUČEN</th>
+                      <th>BROJ DOKUMENTA</th>
+                      <th>DOKUMENT</th>
+                      <th>PODTIP DOKUMENTA</th>
+                      <th>DATUM</th>
+                      <th>VRIJEME</th>
                     </tr>
-                  ))}
-                </tbody>
-              </Table>
-            ) : (
-              <h2>Nema zaprimljene robe</h2>
-            )}
-          </>
-        ) : (
-          <>
-            <h2>Narudžbe</h2>
-            {partnerPurchases ? (
-              <Table striped bordered hover responsive className="table-sm">
-                <thead>
-                  <tr>
-                    <th>ZAKLJUČEN</th>
-                    <th>BROJ DOKUMENTA</th>
-                    <th>DOKUMENT</th>
-                    <th>PODTIP DOKUMENTA</th>
-                    <th>DATUM</th>
-                    <th>VRIJEME</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {partnerPurchases.map((receipt) => (
-                    <tr key={receipt._id}>
-                      <td>
-                        <i
-                          className="fas fa-check"
-                          style={{ color: "green" }}
-                        ></i>
-                      </td>
-                      <td>{receipt.documentNumber}</td>
-                      <td>{receipt.documentType}</td>
-                      <td>{receipt.documentSubtype}</td>
-                      <td>{receipt.createdAt.substring(0, 10)}</td>
-                      <td>{receipt.createdAt.substring(11, 19)}</td>
+                  </thead>
+                  <tbody>
+                    {partnerReceipts.map((receipt) => (
+                      <tr key={receipt._id}>
+                        <td>
+                          <i
+                            className="fas fa-check"
+                            style={{ color: "green" }}
+                          ></i>
+                        </td>
+                        <td>{receipt.documentNumber}</td>
+                        <td>{receipt.documentType}</td>
+                        <td>{receipt.documentSubtype}</td>
+                        <td>{receipt.createdAt.substring(0, 10)}</td>
+                        <td>{receipt.createdAt.substring(11, 19)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              ) : (
+                <h2>Nema zaprimljene robe</h2>
+              )}
+            </>
+          ) : (
+            <>
+              <h2>Narudžbe</h2>
+              {partnerPurchases ? (
+                <Table striped bordered hover responsive className="table-sm">
+                  <thead>
+                    <tr>
+                      <th>ZAKLJUČEN</th>
+                      <th>BROJ DOKUMENTA</th>
+                      <th>DOKUMENT</th>
+                      <th>PODTIP DOKUMENTA</th>
+                      <th>DATUM</th>
+                      <th>VRIJEME</th>
                     </tr>
-                  ))}
-                </tbody>
-              </Table>
-            ) : (
-              <h2>Nema zaprimljene robe</h2>
-            )}
-          </>
-        )}
-      </Col>
-    </Row>
+                  </thead>
+                  <tbody>
+                    {partnerPurchases.map((receipt) => (
+                      <tr key={receipt._id}>
+                        <td>
+                          <i
+                            className="fas fa-check"
+                            style={{ color: "green" }}
+                          ></i>
+                        </td>
+                        <td>{receipt.documentNumber}</td>
+                        <td>{receipt.documentType}</td>
+                        <td>{receipt.documentSubtype}</td>
+                        <td>{receipt.createdAt.substring(0, 10)}</td>
+                        <td>{receipt.createdAt.substring(11, 19)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              ) : (
+                <h2>Nema zaprimljene robe</h2>
+              )}
+            </>
+          )}
+        </Col>
+      </Row>
+    </>
   );
 };
 export default PartnerScreen;

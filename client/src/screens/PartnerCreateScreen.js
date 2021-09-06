@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Helmet } from "react-helmet";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { createPartner } from "../actions/partnerActions";
@@ -52,6 +53,9 @@ const PartnerCreateScreen = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Novi partner</title>
+      </Helmet>
       <h1>NOVI PARTNER</h1>
       <Form onSubmit={submitHandler}>
         <Row className="mb-3">

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Helmet } from "react-helmet";
 import { Form, Row, Col, Button, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { listProducts } from "../actions/articleActions";
@@ -146,6 +147,9 @@ const WorkorderCreateScreen = ({ history }) => {
   };
   return (
     <>
+      <Helmet>
+        <title>Novi radni nalog</title>
+      </Helmet>
       <h1>Novi radni nalog</h1>
       <Form onSubmit={submitHandler}>
         <Row className="mb-3">

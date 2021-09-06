@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Helmet } from "react-helmet";
 import FormContainer from "../components/FormContainer";
 import { Form, Button } from "react-bootstrap";
 import axios from "axios";
@@ -58,86 +59,91 @@ const ArticleCreateScreen = ({ history }) => {
     }
   };
   return (
-    <FormContainer>
-      <h1>NOVI ARTIKAL</h1>
-      <Form onSubmit={submitHandler}>
-        <Form.Group controlId="name" className="mb-3">
-          <Form.Label>Naziv artikla</Form.Label>
-          <Form.Control
-            type="name"
-            placeholder="Unesite naziv artikla"
-            onChange={(e) => setName(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+    <>
+      <Helmet>
+        <title>Novi Artikl</title>
+      </Helmet>
+      <FormContainer>
+        <h1>NOVI ARTIKL</h1>
+        <Form onSubmit={submitHandler}>
+          <Form.Group controlId="name" className="mb-3">
+            <Form.Label>Naziv artikla</Form.Label>
+            <Form.Control
+              type="name"
+              placeholder="Unesite naziv artikla"
+              onChange={(e) => setName(e.target.value)}
+            ></Form.Control>
+          </Form.Group>
 
-        <Form.Group controlId="type" className="mb-3">
-          <Form.Label>Vrsta artikla</Form.Label>
-          <Form.Control
-            as="select"
-            type="string"
-            onChange={(e) => setType(e.target.value)}
-          >
-            <option>Izaberite vrstu artikla</option>
-            <option value="materijal">materijal</option>
-            <option value="proizvod">proizvod</option>
-          </Form.Control>
-        </Form.Group>
+          <Form.Group controlId="type" className="mb-3">
+            <Form.Label>Vrsta artikla</Form.Label>
+            <Form.Control
+              as="select"
+              type="string"
+              onChange={(e) => setType(e.target.value)}
+            >
+              <option>Izaberite vrstu artikla</option>
+              <option value="materijal">materijal</option>
+              <option value="proizvod">proizvod</option>
+            </Form.Control>
+          </Form.Group>
 
-        <Form.Group controlId="image" className="mb-3">
-          <Form.Label>Slika</Form.Label>
-          <Form.Control
-            type="text"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-            disabled
-          ></Form.Control>
-          <Form.File
-            id="image-file"
-            custom
-            onChange={uploadFileHandler}
-          ></Form.File>
-        </Form.Group>
+          <Form.Group controlId="image" className="mb-3">
+            <Form.Label>Slika</Form.Label>
+            <Form.Control
+              type="text"
+              value={image}
+              onChange={(e) => setImage(e.target.value)}
+              disabled
+            ></Form.Control>
+            <Form.File
+              id="image-file"
+              custom
+              onChange={uploadFileHandler}
+            ></Form.File>
+          </Form.Group>
 
-        <Form.Group controlId="pdv" className="mb-3">
-          <Form.Label>PDV</Form.Label>
-          <Form.Control
-            as="select"
-            type="string"
-            onChange={(e) => setPdv(e.target.value)}
-          >
-            <option>Izaberite PDV</option>
-            <option value="PDV  25 - porez na dodanu vrijednost">
-              PDV 25 - porez na dodanu vrijednost
-            </option>
-          </Form.Control>
-        </Form.Group>
+          <Form.Group controlId="pdv" className="mb-3">
+            <Form.Label>PDV</Form.Label>
+            <Form.Control
+              as="select"
+              type="string"
+              onChange={(e) => setPdv(e.target.value)}
+            >
+              <option>Izaberite PDV</option>
+              <option value="PDV  25 - porez na dodanu vrijednost">
+                PDV 25 - porez na dodanu vrijednost
+              </option>
+            </Form.Control>
+          </Form.Group>
 
-        <Form.Group controlId="description" className="mb-3">
-          <Form.Label>Opis artikla</Form.Label>
-          <Form.Control
-            as="textarea"
-            style={{ height: 150 }}
-            type="text"
-            placeholder="Unesite opis proizvoda"
-            onChange={(e) => setDescription(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+          <Form.Group controlId="description" className="mb-3">
+            <Form.Label>Opis artikla</Form.Label>
+            <Form.Control
+              as="textarea"
+              style={{ height: 150 }}
+              type="text"
+              placeholder="Unesite opis proizvoda"
+              onChange={(e) => setDescription(e.target.value)}
+            ></Form.Control>
+          </Form.Group>
 
-        <Form.Group controlId="unit" className="mb-3">
-          <Form.Label>Jedinica mjere</Form.Label>
-          <Form.Control
-            as="select"
-            type="text"
-            onChange={(e) => setUnit(e.target.value)}
-          >
-            <option>Izaberite jedinicu mjere</option>
-            <option value="komad">komad</option>
-            <option value="kilogram">kilogram</option>
-          </Form.Control>
-        </Form.Group>
-        <Button type="submit">Unesi</Button>
-      </Form>
-    </FormContainer>
+          <Form.Group controlId="unit" className="mb-3">
+            <Form.Label>Jedinica mjere</Form.Label>
+            <Form.Control
+              as="select"
+              type="text"
+              onChange={(e) => setUnit(e.target.value)}
+            >
+              <option>Izaberite jedinicu mjere</option>
+              <option value="komad">komad</option>
+              <option value="kilogram">kilogram</option>
+            </Form.Control>
+          </Form.Group>
+          <Button type="submit">Unesi</Button>
+        </Form>
+      </FormContainer>
+    </>
   );
 };
 

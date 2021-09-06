@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
 import {
   listWorkorderDetails,
@@ -222,6 +223,9 @@ const WorkorderScreen = ({ match, history }) => {
 
   return (
     <>
+      <Helmet>
+        <title>Radni nalog</title>
+      </Helmet>
       {errorWorkorder && <Message variant="danger">{errorWorkorder}</Message>}
       <Row className="mb-3" style={{ fontSize: "2rem" }}>
         <Col md={4}>

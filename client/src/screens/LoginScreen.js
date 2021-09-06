@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,6 +30,9 @@ const LoginScreen = ({ location, history }) => {
 
   return (
     <FormContainer>
+      <Helmet>
+        <title>Prijava</title>
+      </Helmet>
       <h1>Prijava</h1>
       {error && <Message variant="danger">{error}</Message>}
       {loading && <Loader />}
